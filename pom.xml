@@ -69,7 +69,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.example.shopflowers.Main</mainClass>
+                    <mainClass>com.example.shopflowers.ShopFlowersApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

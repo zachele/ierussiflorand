@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.shopflowers.controller.graphic.AdminProductGraphicController"
+      spacing="15"
+      prefWidth="900"
+      prefHeight="600"
+      style="-fx-padding: 20;">
+
+    <Label text="Gestione Prodotti Admin"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="10" vgap="10">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="nameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Prezzo:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="priceField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Colore:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="colorField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Varietà:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="varietyField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Stock:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="stockField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+            <Button text="Aggiungi prodotto" onAction="#handleAddProduct"/>
+            <Button text="Aggiorna prodotto" onAction="#handleUpdateProduct"/>
+            <Button text="Elimina prodotto" onAction="#handleDeleteProduct"/>
+        </HBox>
+    </GridPane>
+
+    <Label fx:id="messageLabel" text="" />
+
+    <TableView fx:id="productTable" prefHeight="350">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+            <TableColumn fx:id="nameColumn" text="Nome" prefWidth="160"/>
+            <TableColumn fx:id="priceColumn" text="Prezzo" prefWidth="100"/>
+            <TableColumn fx:id="colorColumn" text="Colore" prefWidth="120"/>
+            <TableColumn fx:id="varietyColumn" text="Varietà" prefWidth="180"/>
+            <TableColumn fx:id="stockColumn" text="Stock" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+</VBox>
