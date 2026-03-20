@@ -60,6 +60,8 @@ public class AdminProductGraphicController {
 
     @FXML
     public void initialize() {
+        System.out.println("AdminProductGraphicController.initialize() chiamato");
+
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -95,8 +97,9 @@ public class AdminProductGraphicController {
 
         } catch (NumberFormatException e) {
             messageLabel.setText("Prezzo o stock non validi.");
+            e.printStackTrace();
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante il salvataggio nel database.");
+            messageLabel.setText("Errore durante il salvataggio nel database: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -124,8 +127,9 @@ public class AdminProductGraphicController {
 
         } catch (NumberFormatException e) {
             messageLabel.setText("Prezzo o stock non validi.");
+            e.printStackTrace();
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'aggiornamento del prodotto.");
+            messageLabel.setText("Errore durante l'aggiornamento del prodotto: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -146,7 +150,7 @@ public class AdminProductGraphicController {
             selectedProduct = null;
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'eliminazione del prodotto.");
+            messageLabel.setText("Errore durante l'eliminazione del prodotto: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -154,10 +158,18 @@ public class AdminProductGraphicController {
     private void loadProducts() {
         try {
             List<FlowerProduct> products = browseCatalogController.getAllProducts();
+
+            System.out.println("Prodotti caricati: " + products.size());
+            for (FlowerProduct p : products) {
+                System.out.println(p);
+            }
+
             ObservableList<FlowerProduct> observableProducts = FXCollections.observableArrayList(products);
             productTable.setItems(observableProducts);
+            productTable.refresh();
+
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento prodotti.");
+            messageLabel.setText("Errore nel caricamento prodotti: " + e.getMessage());
             e.printStackTrace();
         }
     }
