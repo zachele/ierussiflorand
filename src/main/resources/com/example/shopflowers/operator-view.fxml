@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      alignment="CENTER"
+      spacing="20"
+      prefWidth="600"
+      prefHeight="400"
+      style="-fx-padding: 30;">
+
+    <Label text="Area Operatore"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <Label text="Schermata operatore non ancora implementata."/>
+</VBox>

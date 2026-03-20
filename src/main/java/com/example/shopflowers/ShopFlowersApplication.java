@@ -10,11 +10,11 @@ public class ShopFlowersApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(
-                ShopFlowersApplication.class.getResource("/com/example/shopflowers/admin-product-view.fxml")
+                ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
         );
 
-        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
-        stage.setTitle("Shop Flowers - Gestione Prodotti");
+        Scene scene = new Scene(fxmlLoader.load(), 500, 350);
+        stage.setTitle("Shop Flowers - Login");
         stage.setScene(scene);
         stage.show();
     }
