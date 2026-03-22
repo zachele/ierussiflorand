@@ -13,6 +13,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.example.shopflowers.ShopFlowersApplication;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
 public class CustomerCatalogGraphicController {
 
     @FXML
@@ -134,5 +141,31 @@ public class CustomerCatalogGraphicController {
         cartTable.refresh();
 
         totalLabel.setText("Totale carrello: € " + customerCartController.getCartTotal());
+    }
+    @FXML
+    private void handleGoToCheckout() {
+        if (customerCartController.isCartEmpty()) {
+            messageLabel.setText("Il carrello è vuoto.");
+            return;
+        }
+
+        try {
+            CheckoutGraphicController.setCartController(customerCartController);
+
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/checkout-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 800, 550);
+
+            Stage stage = (Stage) productTable.getScene().getWindow();
+            stage.setTitle("Shop Flowers - Checkout");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura del checkout.");
+            e.printStackTrace();
+        }
     }
 }

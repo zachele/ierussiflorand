@@ -47,7 +47,9 @@ public class CustomerCartController {
         }
         return total;
     }
-
+    public boolean isCartEmpty() {
+        return cartItems.isEmpty();
+    }
     public void clearCart() {
         cartItems.clear();
     }

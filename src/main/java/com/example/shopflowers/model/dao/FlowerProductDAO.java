@@ -105,4 +105,16 @@ public class FlowerProductDAO {
             preparedStatement.executeUpdate();
         }
     }
+    public void updateStock(int productId, int newStockQuantity) throws SQLException {
+        String query = "UPDATE flower_product SET stock_quantity = ? WHERE id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, newStockQuantity);
+            preparedStatement.setInt(2, productId);
+
+            preparedStatement.executeUpdate();
+        }
+    }
 }

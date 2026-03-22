@@ -52,4 +52,5 @@
 
     <Label fx:id="totalLabel" text="Totale carrello: € 0.0" />
 
+    <Button text="Vai al checkout" onAction="#handleGoToCheckout" />
 </VBox>
