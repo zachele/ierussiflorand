@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.application;
 
 import com.example.shopflowers.model.dao.FlowerProductDAO;
+import com.example.shopflowers.model.dao.OrderDAO;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.model.entity.Order;
@@ -11,18 +12,20 @@ import java.util.List;
 public class CheckoutController {
 
     private final FlowerProductDAO flowerProductDAO;
+    private final OrderDAO orderDAO;
 
     public CheckoutController() {
         this.flowerProductDAO = new FlowerProductDAO();
+        this.orderDAO = new OrderDAO();
     }
 
-    public Order createOrder(List<CartItem> cartItems, String deliveryMode, String paymentMethod) {
+    public Order createOrder(String username, List<CartItem> cartItems, String deliveryMode, String paymentMethod) {
         double total = 0;
         for (CartItem item : cartItems) {
             total += item.getTotalPrice();
         }
 
-        return new Order(cartItems, deliveryMode, paymentMethod, total);
+        return new Order(username, cartItems, deliveryMode, paymentMethod, total);
     }
 
     public boolean confirmOrder(Order order) throws SQLException {
@@ -41,6 +44,9 @@ public class CheckoutController {
                 return false;
             }
         }
+
+        int orderId = orderDAO.saveOrder(order);
+        orderDAO.saveOrderItems(orderId, order);
 
         for (CartItem item : items) {
             FlowerProduct productFromDb = flowerProductDAO.findById(item.getProduct().getId());

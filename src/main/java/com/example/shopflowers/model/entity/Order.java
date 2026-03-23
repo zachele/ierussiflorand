@@ -4,16 +4,26 @@ import java.util.List;
 
 public class Order {
 
+    private String username;
     private List<CartItem> items;
     private String deliveryMode;
     private String paymentMethod;
     private double total;
 
-    public Order(List<CartItem> items, String deliveryMode, String paymentMethod, double total) {
+    public Order(String username, List<CartItem> items, String deliveryMode, String paymentMethod, double total) {
+        this.username = username;
         this.items = items;
         this.deliveryMode = deliveryMode;
         this.paymentMethod = paymentMethod;
         this.total = total;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public List<CartItem> getItems() {

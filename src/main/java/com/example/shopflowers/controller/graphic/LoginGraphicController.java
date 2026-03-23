@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import com.example.shopflowers.util.Session;
+
 public class LoginGraphicController {
 
     @FXML
@@ -39,7 +41,7 @@ public class LoginGraphicController {
                 messageLabel.setText("Credenziali non valide.");
                 return;
             }
-
+            Session.setSession(user.getUsername(), user.getRole());
             switch (user.getRole()) {
                 case "ADMIN" -> openView("/com/example/shopflowers/admin-product-view.fxml", "Shop Flowers - Admin");
                 case "CUSTOMER" -> openView("/com/example/shopflowers/catalog-view.fxml", "Shop Flowers - Catalogo");

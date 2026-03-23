@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.example.shopflowers.util.Session;
+
 public class CheckoutGraphicController {
 
     @FXML
@@ -81,6 +83,7 @@ public class CheckoutGraphicController {
 
         try {
             Order order = checkoutController.createOrder(
+                    Session.getLoggedUsername(),
                     sharedCartController.getCartItems(),
                     deliveryMode,
                     paymentMethod
@@ -100,7 +103,6 @@ public class CheckoutGraphicController {
 
         } catch (Exception e) {
             messageLabel.setText("Errore durante la conferma dell'ordine.");
-            e.printStackTrace();
         }
     }
     @FXML
@@ -119,13 +121,14 @@ public class CheckoutGraphicController {
 
         } catch (IOException e) {
             messageLabel.setText("Errore nel ritorno al catalogo.");
-            e.printStackTrace();
         }
     }
 
     @FXML
     private void handleLogout() {
         try {
+            Session.clearSession();
+
             FXMLLoader loader = new FXMLLoader(
                     ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
             );
@@ -139,7 +142,6 @@ public class CheckoutGraphicController {
 
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");
-            e.printStackTrace();
         }
     }
 }

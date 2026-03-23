@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.example.shopflowers.util.Session;
+
 public class CustomerCatalogGraphicController {
 
     @FXML
@@ -201,6 +203,8 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleLogout() {
         try {
+            Session.clearSession();
+
             FXMLLoader loader = new FXMLLoader(
                     ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
             );
