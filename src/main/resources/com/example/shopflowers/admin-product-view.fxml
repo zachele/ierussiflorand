@@ -18,8 +18,11 @@
       prefHeight="600"
       style="-fx-padding: 20;">
 
-    <Label text="Gestione Prodotti Admin"
-           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+    <HBox spacing="15">
+        <Label text="Gestione Prodotti Admin"
+               style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+        <Button text="Logout" onAction="#handleLogout"/>
+    </HBox>
 
     <GridPane hgap="10" vgap="10">
         <padding>

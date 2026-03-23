@@ -12,6 +12,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.example.shopflowers.ShopFlowersApplication;
+import com.example.shopflowers.util.Session;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
 public class AdminProductGraphicController {
 
     @FXML
@@ -183,5 +191,25 @@ public class AdminProductGraphicController {
         varietyField.clear();
         stockField.clear();
         productTable.getSelectionModel().clearSelection();
+    }
+    @FXML
+    private void handleLogout() {
+        try {
+            Session.clearSession();
+
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 500, 350);
+
+            Stage stage = (Stage) productTable.getScene().getWindow();
+            stage.setTitle("Shop Flowers - Login");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore durante il logout.");
+        }
     }
 }
