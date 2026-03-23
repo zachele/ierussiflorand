@@ -51,10 +51,8 @@ public class LoginGraphicController {
 
         } catch (SQLException e) {
             messageLabel.setText("Errore durante il login.");
-            e.printStackTrace();
         } catch (IOException e) {
             messageLabel.setText("Errore nel caricamento della schermata.");
-            e.printStackTrace();
         }
     }
 

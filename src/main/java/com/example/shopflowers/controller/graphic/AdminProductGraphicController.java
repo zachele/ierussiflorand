@@ -97,10 +97,8 @@ public class AdminProductGraphicController {
 
         } catch (NumberFormatException e) {
             messageLabel.setText("Prezzo o stock non validi.");
-            e.printStackTrace();
         } catch (SQLException e) {
             messageLabel.setText("Errore durante il salvataggio nel database: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -127,10 +125,8 @@ public class AdminProductGraphicController {
 
         } catch (NumberFormatException e) {
             messageLabel.setText("Prezzo o stock non validi.");
-            e.printStackTrace();
         } catch (SQLException e) {
             messageLabel.setText("Errore durante l'aggiornamento del prodotto: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -151,7 +147,6 @@ public class AdminProductGraphicController {
 
         } catch (SQLException e) {
             messageLabel.setText("Errore durante l'eliminazione del prodotto: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -170,7 +165,6 @@ public class AdminProductGraphicController {
 
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento prodotti: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 

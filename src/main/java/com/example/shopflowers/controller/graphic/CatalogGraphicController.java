@@ -55,7 +55,6 @@ public class CatalogGraphicController {
             ObservableList<FlowerProduct> observableProducts = FXCollections.observableArrayList(products);
             productTable.setItems(observableProducts);
         } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

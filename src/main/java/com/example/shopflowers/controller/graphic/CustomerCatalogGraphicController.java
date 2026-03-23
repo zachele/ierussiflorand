@@ -134,7 +134,6 @@ public class CustomerCatalogGraphicController {
             productTable.setItems(observableProducts);
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento prodotti.");
-            e.printStackTrace();
         }
     }
 
@@ -171,7 +170,6 @@ public class CustomerCatalogGraphicController {
 
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura del checkout.");
-            e.printStackTrace();
         }
     }
     @FXML
@@ -218,7 +216,6 @@ public class CustomerCatalogGraphicController {
 
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");
-            e.printStackTrace();
         }
     }
     private CartItem selectedCartItem;
