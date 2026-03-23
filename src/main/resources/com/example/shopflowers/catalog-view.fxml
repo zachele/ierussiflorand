@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -16,6 +18,13 @@
       prefWidth="900"
       prefHeight="650"
       style="-fx-padding: 20;">
+
+    <MenuBar>
+        <Menu text="Impostazioni">
+            <MenuItem text="I miei ordini" onAction="#handleMyOrders"/>
+            <MenuItem text="Logout" onAction="#handleLogout"/>
+        </Menu>
+    </MenuBar>
 
     <Label text="Catalogo Cliente"
            style="-fx-font-size: 22px; -fx-font-weight: bold;" />
@@ -55,7 +64,6 @@
     <HBox spacing="10">
         <Button text="Rimuovi selezionato" onAction="#handleRemoveFromCart" />
         <Button text="Svuota carrello" onAction="#handleClearCart" />
-        <Button text="Vai al checkout" onAction="#handleGoToCheckout" />
-        <Button text="Logout" onAction="#handleLogout" />
+        <Button text="Pagamento" onAction="#handleGoToCheckout"/>
     </HBox>
 </VBox>

@@ -218,5 +218,23 @@ public class CustomerCatalogGraphicController {
             messageLabel.setText("Errore durante il logout.");
         }
     }
+    @FXML
+    private void handleMyOrders() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/customer-orders-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1000, 650);
+
+            Stage stage = (Stage) productTable.getScene().getWindow();
+            stage.setTitle("Shop Flowers - I miei ordini");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura dello storico ordini.");
+        }
+    }
     private CartItem selectedCartItem;
 }

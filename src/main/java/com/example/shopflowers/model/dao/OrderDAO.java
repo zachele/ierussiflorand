@@ -113,4 +113,31 @@ public class OrderDAO {
 
         return items;
     }
+    public List<OrderSummary> findOrdersByUsername(String username) throws SQLException {
+        String query = "SELECT id, username, delivery_mode, payment_method, total, order_date FROM orders WHERE username = ? ORDER BY order_date DESC";
+        List<OrderSummary> orders = new ArrayList<>();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    OrderSummary order = new OrderSummary(
+                            resultSet.getInt("id"),
+                            resultSet.getString("username"),
+                            resultSet.getString("delivery_mode"),
+                            resultSet.getString("payment_method"),
+                            resultSet.getDouble("total"),
+                            resultSet.getTimestamp("order_date").toString()
+                    );
+
+                    orders.add(order);
+                }
+            }
+        }
+
+        return orders;
+    }
 }
