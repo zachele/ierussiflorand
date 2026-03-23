@@ -3,6 +3,8 @@ package com.example.shopflowers.model.entity;
 public class User {
 
     private int id;
+    private String name;
+    private String surname;
     private String username;
     private String password;
     private String role;
@@ -10,14 +12,18 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String password, String role) {
+    public User(int id, String name, String surname, String username, String password, String role) {
         this.id = id;
+        this.name = name;
+        this.surname = surname;
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
-    public User(String username, String password, String role) {
+    public User(String name, String surname, String username, String password, String role) {
+        this.name = name;
+        this.surname = surname;
         this.username = username;
         this.password = password;
         this.role = role;
@@ -29,6 +35,22 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getUsername() {

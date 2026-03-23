@@ -65,4 +65,22 @@ public class LoginGraphicController {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    private void handleGoToRegister() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/register-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 550, 420);
+
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setTitle("Shop Flowers - Registrazione");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura della registrazione.");
+        }
+    }
 }
