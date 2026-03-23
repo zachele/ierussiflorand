@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class OrderDAO {
 
@@ -15,7 +16,8 @@ public class OrderDAO {
         String query = "INSERT INTO orders (username, delivery_mode, payment_method, total) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement =
+                     connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, order.getUsername());
             preparedStatement.setString(2, order.getDeliveryMode());
