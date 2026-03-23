@@ -52,5 +52,10 @@
 
     <Label fx:id="totalLabel" text="Totale carrello: € 0.0" />
 
-    <Button text="Vai al checkout" onAction="#handleGoToCheckout" />
+    <HBox spacing="10">
+        <Button text="Rimuovi selezionato" onAction="#handleRemoveFromCart" />
+        <Button text="Svuota carrello" onAction="#handleClearCart" />
+        <Button text="Vai al checkout" onAction="#handleGoToCheckout" />
+        <Button text="Logout" onAction="#handleLogout" />
+    </HBox>
 </VBox>

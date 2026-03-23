@@ -9,6 +9,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import com.example.shopflowers.ShopFlowersApplication;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
 public class CheckoutGraphicController {
 
     @FXML
@@ -93,6 +100,45 @@ public class CheckoutGraphicController {
 
         } catch (Exception e) {
             messageLabel.setText("Errore durante la conferma dell'ordine.");
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleBackToCatalog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/catalog-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 900, 650);
+
+            Stage stage = (Stage) checkoutTable.getScene().getWindow();
+            stage.setTitle("Shop Flowers - Catalogo Cliente");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore nel ritorno al catalogo.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 500, 350);
+
+            Stage stage = (Stage) checkoutTable.getScene().getWindow();
+            stage.setTitle("Shop Flowers - Login");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore durante il logout.");
             e.printStackTrace();
         }
     }

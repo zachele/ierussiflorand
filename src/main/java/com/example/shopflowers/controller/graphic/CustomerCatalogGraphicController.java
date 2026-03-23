@@ -65,7 +65,8 @@ public class CustomerCatalogGraphicController {
     private Label totalLabel;
 
     private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
-    private final CustomerCartController customerCartController = new CustomerCartController();
+
+    private static final CustomerCartController customerCartController = new CustomerCartController();
 
     private FlowerProduct selectedProduct;
 
@@ -84,6 +85,9 @@ public class CustomerCatalogGraphicController {
 
         productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedProduct = newSelection;
+        });
+        cartTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            selectedCartItem = newSelection;
         });
 
         loadProducts();
@@ -168,4 +172,50 @@ public class CustomerCatalogGraphicController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleRemoveFromCart() {
+        if (selectedCartItem == null) {
+            messageLabel.setText("Seleziona prima un articolo del carrello.");
+            return;
+        }
+
+        customerCartController.removeFromCart(selectedCartItem.getProduct().getId());
+        selectedCartItem = null;
+        refreshCart();
+        messageLabel.setText("Articolo rimosso dal carrello.");
+    }
+
+    @FXML
+    private void handleClearCart() {
+        if (customerCartController.isCartEmpty()) {
+            messageLabel.setText("Il carrello è già vuoto.");
+            return;
+        }
+
+        customerCartController.clearCart();
+        selectedCartItem = null;
+        refreshCart();
+        messageLabel.setText("Carrello svuotato.");
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 500, 350);
+
+            Stage stage = (Stage) productTable.getScene().getWindow();
+            stage.setTitle("Shop Flowers - Login");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore durante il logout.");
+            e.printStackTrace();
+        }
+    }
+    private CartItem selectedCartItem;
 }

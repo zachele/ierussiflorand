@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -36,7 +37,11 @@
     <Label text="Metodo di pagamento:" />
     <TextField fx:id="paymentField" promptText="Es. Carta, PayPal, Contanti" />
 
-    <Button text="Conferma ordine" onAction="#handleConfirmOrder" />
+    <HBox spacing="10">
+        <Button text="Conferma ordine" onAction="#handleConfirmOrder" />
+        <Button text="Torna al catalogo" onAction="#handleBackToCatalog" />
+        <Button text="Logout" onAction="#handleLogout" />
+    </HBox>
 
     <Label fx:id="messageLabel" text="" />
 
