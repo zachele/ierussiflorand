@@ -9,6 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import com.example.shopflowers.model.entity.OrderItemSummary;
+import com.example.shopflowers.model.entity.OrderSummary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDAO {
 
@@ -52,5 +57,60 @@ public class OrderDAO {
 
             preparedStatement.executeBatch();
         }
+    }
+    public List<OrderSummary> findAllOrders() throws SQLException {
+        String query = "SELECT id, username, delivery_mode, payment_method, total, order_date FROM orders ORDER BY order_date DESC";
+        List<OrderSummary> orders = new ArrayList<>();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                OrderSummary order = new OrderSummary(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("delivery_mode"),
+                        resultSet.getString("payment_method"),
+                        resultSet.getDouble("total"),
+                        resultSet.getTimestamp("order_date").toString()
+                );
+
+                orders.add(order);
+            }
+        }
+
+        return orders;
+    }
+
+    public List<OrderItemSummary> findItemsByOrderId(int orderId) throws SQLException {
+        String query = """
+            SELECT fp.name AS product_name, oi.quantity, oi.unit_price
+            FROM order_item oi
+            JOIN flower_product fp ON oi.product_id = fp.id
+            WHERE oi.order_id = ?
+            """;
+
+        List<OrderItemSummary> items = new ArrayList<>();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, orderId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    OrderItemSummary item = new OrderItemSummary(
+                            resultSet.getString("product_name"),
+                            resultSet.getInt("quantity"),
+                            resultSet.getDouble("unit_price")
+                    );
+
+                    items.add(item);
+                }
+            }
+        }
+
+        return items;
     }
 }
