@@ -164,7 +164,7 @@ public class CustomerCatalogGraphicController {
             Scene scene = new Scene(loader.load(), 800, 550);
 
             Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Shop Flowers - Checkout");
+            stage.setTitle("Ierussi Flowers - Pagamento");
             stage.setScene(scene);
             stage.show();
 
@@ -210,7 +210,7 @@ public class CustomerCatalogGraphicController {
             Scene scene = new Scene(loader.load(), 500, 350);
 
             Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Shop Flowers - Login");
+            stage.setTitle("Ierussi Flowers - Login");
             stage.setScene(scene);
             stage.show();
 
@@ -228,12 +228,30 @@ public class CustomerCatalogGraphicController {
             Scene scene = new Scene(loader.load(), 1000, 650);
 
             Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Shop Flowers - I miei ordini");
+            stage.setTitle("Ierussi Flowers - I miei ordini");
             stage.setScene(scene);
             stage.show();
 
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura dello storico ordini.");
+        }
+    }
+    @FXML
+    private void handleCompanyInfo() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/company-info-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 900, 650);
+
+            Stage stage = (Stage) productTable.getScene().getWindow();
+            stage.setTitle("Ierussi Flowers - Informazioni Azienda");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura della pagina azienda.");
         }
     }
     private CartItem selectedCartItem;
