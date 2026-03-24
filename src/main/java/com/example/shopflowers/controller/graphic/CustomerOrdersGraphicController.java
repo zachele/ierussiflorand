@@ -1,6 +1,5 @@
 package com.example.shopflowers.controller.graphic;
 
-import com.example.shopflowers.ShopFlowersApplication;
 import com.example.shopflowers.controller.application.CustomerOrdersController;
 import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
@@ -8,8 +7,6 @@ import com.example.shopflowers.util.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -17,6 +14,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+
+import com.example.shopflowers.util.SceneNavigator;
 
 public class CustomerOrdersGraphicController {
 
@@ -100,42 +99,25 @@ public class CustomerOrdersGraphicController {
             messageLabel.setText("Errore nel caricamento dettagli ordine.");
         }
     }
-
     @FXML
     private void handleBackToCatalog() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/catalog-view.fxml")
+            SceneNavigator.goTo(
+                    (Stage) orderTable.getScene().getWindow(),
+                    "/com/example/shopflowers/catalog-view.fxml",
+                    "Shop Flowers - Catalogo Cliente",
+                    900,
+                    650
             );
-
-            Scene scene = new Scene(loader.load(), 900, 650);
-
-            Stage stage = (Stage) orderTable.getScene().getWindow();
-            stage.setTitle("Shop Flowers - Catalogo Cliente");
-            stage.setScene(scene);
-            stage.show();
 
         } catch (IOException e) {
             messageLabel.setText("Errore nel ritorno al catalogo.");
         }
     }
-
     @FXML
     private void handleLogout() {
-        try{
-            Session.clearSession();
-
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
-            );
-
-            Scene scene = new Scene(loader.load(), 500, 350);
-
-            Stage stage = (Stage) orderTable.getScene().getWindow();
-            stage.setTitle("Shop Flowers - Login");
-            stage.setScene(scene);
-            stage.show();
-
+        try {
+            SceneNavigator.logoutToLogin((Stage) orderTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");
         }

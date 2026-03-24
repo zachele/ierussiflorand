@@ -2,6 +2,7 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.LoginController;
 import com.example.shopflowers.model.entity.User;
+
 import com.example.shopflowers.ShopFlowersApplication;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,11 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
 import com.example.shopflowers.util.Session;
+import com.example.shopflowers.util.SceneNavigator;
 
 public class LoginGraphicController {
 
@@ -68,17 +69,13 @@ public class LoginGraphicController {
     @FXML
     private void handleGoToRegister() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/register-view.fxml")
+            SceneNavigator.goTo(
+                    (Stage) usernameField.getScene().getWindow(),
+                    "/com/example/shopflowers/register-view.fxml",
+                    "Shop Flowers - Registrazione",
+                    550,
+                    420
             );
-
-            Scene scene = new Scene(loader.load(), 550, 420);
-
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setTitle("Shop Flowers - Registrazione");
-            stage.setScene(scene);
-            stage.show();
-
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura della registrazione.");
         }

@@ -12,15 +12,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
 import java.util.List;
-
-import com.example.shopflowers.ShopFlowersApplication;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-
-import com.example.shopflowers.util.Session;
+import com.example.shopflowers.util.SceneNavigator;
 
 public class CustomerCatalogGraphicController {
 
@@ -157,16 +151,13 @@ public class CustomerCatalogGraphicController {
         try {
             CheckoutGraphicController.setCartController(customerCartController);
 
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/checkout-view.fxml")
+            SceneNavigator.goTo(
+                    (Stage) productTable.getScene().getWindow(),
+                    "/com/example/shopflowers/checkout-view.fxml",
+                    "Shop Flowers - Checkout",
+                    800,
+                    550
             );
-
-            Scene scene = new Scene(loader.load(), 800, 550);
-
-            Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Ierussi Flowers - Pagamento");
-            stage.setScene(scene);
-            stage.show();
 
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura del checkout.");
@@ -197,23 +188,10 @@ public class CustomerCatalogGraphicController {
         refreshCart();
         messageLabel.setText("Carrello svuotato.");
     }
-
     @FXML
     private void handleLogout() {
         try {
-            Session.clearSession();
-
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
-            );
-
-            Scene scene = new Scene(loader.load(), 500, 350);
-
-            Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Ierussi Flowers - Login");
-            stage.setScene(scene);
-            stage.show();
-
+            SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");
         }
@@ -221,16 +199,13 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleMyOrders() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/customer-orders-view.fxml")
+            SceneNavigator.goTo(
+                    (Stage) productTable.getScene().getWindow(),
+                    "/com/example/shopflowers/customer-orders-view.fxml",
+                    "Shop Flowers - I miei ordini",
+                    1000,
+                    650
             );
-
-            Scene scene = new Scene(loader.load(), 1000, 650);
-
-            Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Ierussi Flowers - I miei ordini");
-            stage.setScene(scene);
-            stage.show();
 
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura dello storico ordini.");
@@ -239,16 +214,13 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleCompanyInfo() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/company-info-view.fxml")
+            SceneNavigator.goTo(
+                    (Stage) productTable.getScene().getWindow(),
+                    "/com/example/shopflowers/company-info-view.fxml",
+                    "Shop Flowers - Informazioni Azienda",
+                    900,
+                    650
             );
-
-            Scene scene = new Scene(loader.load(), 900, 650);
-
-            Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Ierussi Flowers - Informazioni Azienda");
-            stage.setScene(scene);
-            stage.show();
 
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura della pagina azienda.");
