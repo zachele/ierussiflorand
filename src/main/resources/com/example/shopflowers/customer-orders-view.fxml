@@ -32,6 +32,7 @@
             <TableColumn fx:id="paymentColumn" text="Pagamento" prefWidth="160" />
             <TableColumn fx:id="totalColumn" text="Totale" prefWidth="120" />
             <TableColumn fx:id="dateColumn" text="Data" prefWidth="240" />
+            <TableColumn fx:id="statusColumn" text="Stato" prefWidth="140" />
         </columns>
     </TableView>
 

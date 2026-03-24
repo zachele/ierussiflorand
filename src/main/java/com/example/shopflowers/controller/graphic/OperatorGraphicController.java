@@ -56,6 +56,11 @@ public class OperatorGraphicController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private ComboBox<String> statusComboBox;
+
+    private OrderSummary selectedOrder;
+
     private final OperatorOrdersController operatorOrdersController = new OperatorOrdersController();
 
     @FXML
@@ -71,8 +76,16 @@ public class OperatorGraphicController {
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
+        statusComboBox.setItems(FXCollections.observableArrayList(
+                "IN_PREPARAZIONE",
+                "PRONTO",
+                "CONSEGNATO"
+        ));
+
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                selectedOrder = newSelection;
+                statusComboBox.setValue(newSelection.getStatus());
                 loadOrderItems(newSelection.getId());
             }
         });
@@ -82,9 +95,14 @@ public class OperatorGraphicController {
 
     private void loadOrders() {
         try {
-            List<OrderSummary> orders = operatorOrdersController.getAllOrders();
+            List<OrderSummary> orders = showingCompletedOrders
+                    ? operatorOrdersController.getCompletedOrders()
+                    : operatorOrdersController.getActiveOrders();
+
             ObservableList<OrderSummary> observableOrders = FXCollections.observableArrayList(orders);
             orderTable.setItems(observableOrders);
+            orderItemsTable.getItems().clear();
+            selectedOrder = null;
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento ordini.");
         }
@@ -120,4 +138,41 @@ public class OperatorGraphicController {
             messageLabel.setText("Errore durante il logout.");
         }
     }
+    @FXML
+    private void handleUpdateStatus() {
+        if (selectedOrder == null) {
+            messageLabel.setText("Seleziona prima un ordine.");
+            return;
+        }
+
+        String newStatus = statusComboBox.getValue();
+        if (newStatus == null || newStatus.isBlank()) {
+            messageLabel.setText("Seleziona uno stato valido.");
+            return;
+        }
+
+        try {
+            operatorOrdersController.updateOrderStatus(selectedOrder.getId(), newStatus);
+            messageLabel.setText("Stato ordine aggiornato.");
+            loadOrders();
+            orderItemsTable.getItems().clear();
+            selectedOrder = null;
+        } catch (SQLException e) {
+            messageLabel.setText("Errore durante l'aggiornamento dello stato.");
+        }
+    }
+    @FXML
+    private void handleShowActiveOrders() {
+        showingCompletedOrders = false;
+        messageLabel.setText("");
+        loadOrders();
+    }
+
+    @FXML
+    private void handleShowCompletedOrders() {
+        showingCompletedOrders = true;
+        messageLabel.setText("");
+        loadOrders();
+    }
+    private boolean showingCompletedOrders = false;
 }

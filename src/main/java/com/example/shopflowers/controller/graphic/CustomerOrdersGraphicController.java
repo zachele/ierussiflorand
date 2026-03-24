@@ -53,6 +53,9 @@ public class CustomerOrdersGraphicController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private TableColumn<OrderSummary, String> statusColumn;
+
     private final CustomerOrdersController customerOrdersController = new CustomerOrdersController();
 
     @FXML
@@ -66,6 +69,8 @@ public class CustomerOrdersGraphicController {
         productColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {

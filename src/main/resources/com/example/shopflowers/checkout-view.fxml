@@ -34,6 +34,9 @@
     <Label text="Modalità di consegna:" />
     <ComboBox fx:id="deliveryModeComboBox" prefWidth="200" />
 
+    <Label text="Indirizzo di consegna:" />
+    <TextField fx:id="addressField" promptText="Inserisci indirizzo solo per consegna" />
+
     <Label text="Metodo di pagamento:" />
     <TextField fx:id="paymentField" promptText="Es. Carta, PayPal, Contanti" />
 

@@ -22,4 +22,15 @@ public class OperatorOrdersController {
     public List<OrderItemSummary> getItemsByOrderId(int orderId) throws SQLException {
         return orderDAO.findItemsByOrderId(orderId);
     }
+
+    public void updateOrderStatus(int orderId, String newStatus) throws SQLException {
+        orderDAO.updateOrderStatus(orderId, newStatus);
+    }
+    public List<OrderSummary> getActiveOrders() throws SQLException {
+        return orderDAO.findActiveOrders();
+    }
+
+    public List<OrderSummary> getCompletedOrders() throws SQLException {
+        return orderDAO.findCompletedOrders();
+    }
 }

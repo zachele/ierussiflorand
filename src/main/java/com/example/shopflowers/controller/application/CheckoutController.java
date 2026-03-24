@@ -19,13 +19,22 @@ public class CheckoutController {
         this.orderDAO = new OrderDAO();
     }
 
-    public Order createOrder(String username, List<CartItem> cartItems, String deliveryMode, String paymentMethod) {
+    public Order createOrder(String username, java.util.List<CartItem> cartItems,
+                             String deliveryMode, String deliveryAddress, String paymentMethod) {
         double total = 0;
         for (CartItem item : cartItems) {
             total += item.getTotalPrice();
         }
 
-        return new Order(username, cartItems, deliveryMode, paymentMethod, total);
+        return new Order(
+                username,
+                cartItems,
+                deliveryMode,
+                deliveryAddress,
+                paymentMethod,
+                "IN_PREPARAZIONE",
+                total
+        );
     }
 
     public boolean confirmOrder(Order order) throws SQLException {

@@ -7,14 +7,19 @@ public class Order {
     private String username;
     private List<CartItem> items;
     private String deliveryMode;
+    private String deliveryAddress;
     private String paymentMethod;
+    private String status;
     private double total;
 
-    public Order(String username, List<CartItem> items, String deliveryMode, String paymentMethod, double total) {
+    public Order(String username, List<CartItem> items, String deliveryMode, String deliveryAddress,
+                 String paymentMethod, String status, double total) {
         this.username = username;
         this.items = items;
         this.deliveryMode = deliveryMode;
+        this.deliveryAddress = deliveryAddress;
         this.paymentMethod = paymentMethod;
+        this.status = status;
         this.total = total;
     }
 
@@ -22,39 +27,27 @@ public class Order {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public List<CartItem> getItems() {
         return items;
-    }
-
-    public void setItems(List<CartItem> items) {
-        this.items = items;
     }
 
     public String getDeliveryMode() {
         return deliveryMode;
     }
 
-    public void setDeliveryMode(String deliveryMode) {
-        this.deliveryMode = deliveryMode;
+    public String getDeliveryAddress() {
+        return deliveryAddress;
     }
 
     public String getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
+    public String getStatus() {
+        return status;
     }
 
     public double getTotal() {
         return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
     }
 }

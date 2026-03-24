@@ -42,7 +42,12 @@ public class CheckoutGraphicController {
     private TextField paymentField;
 
     @FXML
+    private TextField addressField;
+
+    @FXML
     private Label messageLabel;
+
+
 
     private static CustomerCartController sharedCartController;
 
@@ -60,6 +65,15 @@ public class CheckoutGraphicController {
 
         deliveryModeComboBox.setItems(FXCollections.observableArrayList("CONSEGNA", "RITIRO"));
 
+        deliveryModeComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if ("RITIRO".equals(newValue)) {
+                addressField.setDisable(true);
+                addressField.clear();
+            } else {
+                addressField.setDisable(false);
+            }
+        });
+
         if (sharedCartController != null) {
             checkoutTable.setItems(FXCollections.observableArrayList(sharedCartController.getCartItems()));
             totalLabel.setText("Totale ordine: € " + sharedCartController.getCartTotal());
@@ -75,10 +89,20 @@ public class CheckoutGraphicController {
 
         String deliveryMode = deliveryModeComboBox.getValue();
         String paymentMethod = paymentField.getText();
+        String address = addressField.getText();
 
         if (deliveryMode == null || paymentMethod == null || paymentMethod.isBlank()) {
             messageLabel.setText("Compila tutti i campi del checkout.");
             return;
+        }
+
+        if ("CONSEGNA".equals(deliveryMode) && (address == null || address.isBlank())) {
+            messageLabel.setText("Inserisci l'indirizzo di consegna.");
+            return;
+        }
+
+        if ("RITIRO".equals(deliveryMode)) {
+            address = null;
         }
 
         try {
@@ -86,6 +110,7 @@ public class CheckoutGraphicController {
                     Session.getLoggedUsername(),
                     sharedCartController.getCartItems(),
                     deliveryMode,
+                    address,
                     paymentMethod
             );
 
@@ -105,6 +130,7 @@ public class CheckoutGraphicController {
             messageLabel.setText("Errore durante la conferma dell'ordine.");
         }
     }
+
     @FXML
     private void handleBackToCatalog() {
         try {
