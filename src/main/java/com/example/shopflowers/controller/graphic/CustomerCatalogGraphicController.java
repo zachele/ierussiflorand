@@ -154,9 +154,7 @@ public class CustomerCatalogGraphicController {
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
                     "/com/example/shopflowers/checkout-view.fxml",
-                    "Shop Flowers - Checkout",
-                    800,
-                    550
+                    "Shop Flowers - Checkout"
             );
 
         } catch (IOException e) {
@@ -202,9 +200,7 @@ public class CustomerCatalogGraphicController {
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
                     "/com/example/shopflowers/customer-orders-view.fxml",
-                    "Shop Flowers - I miei ordini",
-                    1000,
-                    650
+                    "Shop Flowers - I miei ordini"
             );
 
         } catch (IOException e) {
@@ -217,9 +213,7 @@ public class CustomerCatalogGraphicController {
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
                     "/com/example/shopflowers/company-info-view.fxml",
-                    "Shop Flowers - Informazioni Azienda",
-                    900,
-                    650
+                    "Shop Flowers - Informazioni Azienda"
             );
 
         } catch (IOException e) {

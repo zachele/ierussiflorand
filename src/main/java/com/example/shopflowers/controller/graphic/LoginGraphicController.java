@@ -72,9 +72,7 @@ public class LoginGraphicController {
             SceneNavigator.goTo(
                     (Stage) usernameField.getScene().getWindow(),
                     "/com/example/shopflowers/register-view.fxml",
-                    "Shop Flowers - Registrazione",
-                    550,
-                    420
+                    "Shop Flowers - Registrazione"
             );
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura della registrazione.");

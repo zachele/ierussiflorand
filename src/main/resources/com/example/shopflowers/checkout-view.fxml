@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -9,43 +8,68 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.shopflowers.controller.graphic.CheckoutGraphicController"
       spacing="15"
-      prefWidth="800"
-      prefHeight="550"
+      prefWidth="900"
+      prefHeight="650"
       style="-fx-padding: 20;">
 
-    <Label text="Checkout Cliente"
-           style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+    <MenuBar>
+        <Menu text="Navigazione">
+            <MenuItem text="Torna al catalogo" onAction="#handleBackToCatalog"/>
+            <MenuItem text="Logout" onAction="#handleLogout"/>
+        </Menu>
+    </MenuBar>
 
-    <TableView fx:id="checkoutTable" prefHeight="250">
+    <Label text="Checkout Cliente"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="checkoutTable" prefHeight="200">
         <columns>
-            <TableColumn fx:id="productColumn" text="Prodotto" prefWidth="250" />
-            <TableColumn fx:id="quantityColumn" text="Quantità" prefWidth="120" />
-            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="150" />
+            <TableColumn fx:id="productColumn" text="Prodotto" prefWidth="300"/>
+            <TableColumn fx:id="quantityColumn" text="Quantità" prefWidth="150"/>
+            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="200"/>
         </columns>
     </TableView>
 
-    <Label fx:id="totalLabel" text="Totale ordine: € 0.0" />
+    <Label fx:id="totalLabel"
+           text="Totale ordine: € 0.0"
+           style="-fx-font-size: 16px; -fx-font-weight: bold;" />
 
     <Label text="Modalità di consegna:" />
-    <ComboBox fx:id="deliveryModeComboBox" prefWidth="200" />
+    <ComboBox fx:id="deliveryModeComboBox" prefWidth="250" />
 
     <Label text="Indirizzo di consegna:" />
     <TextField fx:id="addressField" promptText="Inserisci indirizzo solo per consegna" />
 
+    <HBox spacing="20">
+        <VBox spacing="8">
+            <Label text="Giorno ritiro:" />
+            <DatePicker fx:id="pickupDatePicker" prefWidth="180" />
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="Ora ritiro:" />
+            <ComboBox fx:id="pickupTimeComboBox" prefWidth="180" />
+        </VBox>
+    </HBox>
+
     <Label text="Metodo di pagamento:" />
     <TextField fx:id="paymentField" promptText="Es. Carta, PayPal, Contanti" />
 
-    <HBox spacing="10">
-        <Button text="Conferma ordine" onAction="#handleConfirmOrder" />
-        <Button text="Torna al catalogo" onAction="#handleBackToCatalog" />
-        <Button text="Logout" onAction="#handleLogout" />
+    <HBox spacing="12">
+        <Button text="Conferma ordine" onAction="#handleConfirmOrder"/>
+        <Button text="Torna al catalogo" onAction="#handleBackToCatalog"/>
+        <Button text="Logout" onAction="#handleLogout"/>
     </HBox>
 
     <Label fx:id="messageLabel" text="" />
-
 </VBox>

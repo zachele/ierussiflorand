@@ -20,7 +20,8 @@ public class CheckoutController {
     }
 
     public Order createOrder(String username, java.util.List<CartItem> cartItems,
-                             String deliveryMode, String deliveryAddress, String paymentMethod) {
+                             String deliveryMode, String deliveryAddress,
+                             String pickupDate, String pickupTime, String paymentMethod) {
         double total = 0;
         for (CartItem item : cartItems) {
             total += item.getTotalPrice();
@@ -31,6 +32,8 @@ public class CheckoutController {
                 cartItems,
                 deliveryMode,
                 deliveryAddress,
+                pickupDate,
+                pickupTime,
                 paymentMethod,
                 "IN_PREPARAZIONE",
                 total

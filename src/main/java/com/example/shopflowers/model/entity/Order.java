@@ -4,20 +4,24 @@ import java.util.List;
 
 public class Order {
 
-    private String username;
-    private List<CartItem> items;
-    private String deliveryMode;
-    private String deliveryAddress;
-    private String paymentMethod;
-    private String status;
-    private double total;
+    private final String username;
+    private final List<CartItem> items;
+    private final String deliveryMode;
+    private final String deliveryAddress;
+    private final String pickupDate;
+    private final String pickupTime;
+    private final String paymentMethod;
+    private final String status;
+    private final double total;
 
     public Order(String username, List<CartItem> items, String deliveryMode, String deliveryAddress,
-                 String paymentMethod, String status, double total) {
+                 String pickupDate, String pickupTime, String paymentMethod, String status, double total) {
         this.username = username;
         this.items = items;
         this.deliveryMode = deliveryMode;
         this.deliveryAddress = deliveryAddress;
+        this.pickupDate = pickupDate;
+        this.pickupTime = pickupTime;
         this.paymentMethod = paymentMethod;
         this.status = status;
         this.total = total;
@@ -37,6 +41,14 @@ public class Order {
 
     public String getDeliveryAddress() {
         return deliveryAddress;
+    }
+
+    public String getPickupDate() {
+        return pickupDate;
+    }
+
+    public String getPickupTime() {
+        return pickupTime;
     }
 
     public String getPaymentMethod() {

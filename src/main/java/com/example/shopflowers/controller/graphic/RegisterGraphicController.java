@@ -67,9 +67,7 @@ public class RegisterGraphicController {
         SceneNavigator.goTo(
                 (Stage) nameField.getScene().getWindow(),
                 "/com/example/shopflowers/login-view.fxml",
-                "Shop Flowers - Login",
-                500,
-                350
+                "Shop Flowers - Login"
         );
     }
 }

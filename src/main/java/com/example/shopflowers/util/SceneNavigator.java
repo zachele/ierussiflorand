@@ -12,19 +12,20 @@ public class SceneNavigator {
     private SceneNavigator() {
     }
 
-    public static void goTo(Stage stage, String fxmlPath, String title, double width, double height) throws IOException {
+    public static void goTo(Stage stage, String fxmlPath, String title) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 ShopFlowersApplication.class.getResource(fxmlPath)
         );
 
-        Scene scene = new Scene(loader.load(), width, height);
+        Scene scene = new Scene(loader.load());
         stage.setTitle(title);
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 
     public static void logoutToLogin(Stage stage) throws IOException {
         Session.clearSession();
-        goTo(stage, "/com/example/shopflowers/login-view.fxml", "Shop Flowers - Login", 500, 350);
+        goTo(stage, "/com/example/shopflowers/login-view.fxml", "Shop Flowers - Login");
     }
 }

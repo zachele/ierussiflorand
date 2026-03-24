@@ -17,9 +17,7 @@ public class CompanyInfoGraphicController {
             SceneNavigator.goTo(
                     (Stage) messageLabel.getScene().getWindow(),
                     "/com/example/shopflowers/catalog-view.fxml",
-                    "Shop Flowers - Catalogo Cliente",
-                    900,
-                    650
+                    "Shop Flowers - Catalogo Cliente"
             );
 
         } catch (IOException e) {

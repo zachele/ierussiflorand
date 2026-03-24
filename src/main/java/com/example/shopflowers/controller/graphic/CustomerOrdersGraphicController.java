@@ -105,9 +105,7 @@ public class CustomerOrdersGraphicController {
             SceneNavigator.goTo(
                     (Stage) orderTable.getScene().getWindow(),
                     "/com/example/shopflowers/catalog-view.fxml",
-                    "Shop Flowers - Catalogo Cliente",
-                    900,
-                    650
+                    "Shop Flowers - Catalogo Cliente"
             );
 
         } catch (IOException e) {

@@ -44,6 +44,12 @@ public class CheckoutGraphicController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private DatePicker pickupDatePicker;
+
+    @FXML
+    private ComboBox<String> pickupTimeComboBox;
+
 
 
     private static CustomerCartController sharedCartController;
@@ -62,18 +68,35 @@ public class CheckoutGraphicController {
 
         deliveryModeComboBox.setItems(FXCollections.observableArrayList("CONSEGNA", "RITIRO"));
 
+        pickupTimeComboBox.setItems(FXCollections.observableArrayList(
+                "09:00", "09:30", "10:00", "10:30",
+                "11:00", "11:30", "12:00", "12:30",
+                "16:00", "16:30", "17:00", "17:30",
+                "18:00", "18:30", "19:00"
+        ));
+
+        addressField.setDisable(true);
+        pickupDatePicker.setDisable(true);
+        pickupTimeComboBox.setDisable(true);
+
         deliveryModeComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if ("RITIRO".equals(newValue)) {
+            if ("CONSEGNA".equals(newValue)) {
+                addressField.setDisable(false);
+                pickupDatePicker.setDisable(true);
+                pickupTimeComboBox.setDisable(true);
+                pickupDatePicker.setValue(null);
+                pickupTimeComboBox.setValue(null);
+            } else if ("RITIRO".equals(newValue)) {
                 addressField.setDisable(true);
                 addressField.clear();
-            } else {
-                addressField.setDisable(false);
+                pickupDatePicker.setDisable(false);
+                pickupTimeComboBox.setDisable(false);
             }
         });
 
         if (sharedCartController != null) {
             checkoutTable.setItems(FXCollections.observableArrayList(sharedCartController.getCartItems()));
-            totalLabel.setText("Totale ordine: € " + sharedCartController.getCartTotal());
+            totalLabel.setText(String.format("Totale ordine: € %.2f", 0.0));
         }
     }
 
@@ -87,18 +110,29 @@ public class CheckoutGraphicController {
         String deliveryMode = deliveryModeComboBox.getValue();
         String paymentMethod = paymentField.getText();
         String address = addressField.getText();
+        String pickupDate = null;
+        String pickupTime = null;
 
         if (deliveryMode == null || paymentMethod == null || paymentMethod.isBlank()) {
             messageLabel.setText("Compila tutti i campi del checkout.");
             return;
         }
 
-        if ("CONSEGNA".equals(deliveryMode) && (address == null || address.isBlank())) {
-            messageLabel.setText("Inserisci l'indirizzo di consegna.");
-            return;
+        if ("CONSEGNA".equals(deliveryMode)) {
+            if (address == null || address.isBlank()) {
+                messageLabel.setText("Inserisci l'indirizzo di consegna.");
+                return;
+            }
         }
 
         if ("RITIRO".equals(deliveryMode)) {
+            if (pickupDatePicker.getValue() == null || pickupTimeComboBox.getValue() == null) {
+                messageLabel.setText("Seleziona giorno e ora del ritiro.");
+                return;
+            }
+
+            pickupDate = pickupDatePicker.getValue().toString();
+            pickupTime = pickupTimeComboBox.getValue();
             address = null;
         }
 
@@ -108,6 +142,8 @@ public class CheckoutGraphicController {
                     sharedCartController.getCartItems(),
                     deliveryMode,
                     address,
+                    pickupDate,
+                    pickupTime,
                     paymentMethod
             );
 
@@ -121,6 +157,10 @@ public class CheckoutGraphicController {
             sharedCartController.clearCart();
             checkoutTable.getItems().clear();
             totalLabel.setText("Totale ordine: € 0.0");
+            addressField.clear();
+            pickupDatePicker.setValue(null);
+            pickupTimeComboBox.setValue(null);
+            paymentField.clear();
             messageLabel.setText("Ordine confermato con successo.");
 
         } catch (Exception e) {
@@ -134,9 +174,7 @@ public class CheckoutGraphicController {
             SceneNavigator.goTo(
                     (Stage) checkoutTable.getScene().getWindow(),
                     "/com/example/shopflowers/catalog-view.fxml",
-                    "Shop Flowers - Catalogo Cliente",
-                    900,
-                    650
+                    "Shop Flowers - Catalogo Cliente"
             );
 
         } catch (IOException e) {
