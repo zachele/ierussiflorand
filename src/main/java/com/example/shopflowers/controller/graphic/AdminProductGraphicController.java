@@ -68,8 +68,6 @@ public class AdminProductGraphicController {
 
     @FXML
     public void initialize() {
-        System.out.println("AdminProductGraphicController.initialize() chiamato");
-
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -161,10 +159,7 @@ public class AdminProductGraphicController {
     private void loadProducts() {
         try {
             List<FlowerProduct> products = browseCatalogController.getAllProducts();
-
-            System.out.println("Prodotti caricati: " + products.size());
             for (FlowerProduct p : products) {
-                System.out.println(p);
             }
 
             ObservableList<FlowerProduct> observableProducts = FXCollections.observableArrayList(products);
