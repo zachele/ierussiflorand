@@ -1,15 +1,12 @@
 package com.example.shopflowers.controller.graphic;
 
-import com.example.shopflowers.ShopFlowersApplication;
+
 import com.example.shopflowers.controller.application.OperatorOrdersController;
 import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
-import com.example.shopflowers.util.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -17,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import com.example.shopflowers.util.SceneNavigator;
 
 public class OperatorGraphicController {
 
@@ -121,23 +119,12 @@ public class OperatorGraphicController {
     @FXML
     private void handleLogout() {
         try {
-            Session.clearSession();
-
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
-            );
-
-            Scene scene = new Scene(loader.load(), 500, 350);
-
-            Stage stage = (Stage) orderTable.getScene().getWindow();
-            stage.setTitle("Shop Flowers - Login");
-            stage.setScene(scene);
-            stage.show();
-
+            SceneNavigator.logoutToLogin((Stage) orderTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");
         }
     }
+
     @FXML
     private void handleUpdateStatus() {
         if (selectedOrder == null) {
@@ -161,6 +148,7 @@ public class OperatorGraphicController {
             messageLabel.setText("Errore durante l'aggiornamento dello stato.");
         }
     }
+
     @FXML
     private void handleShowActiveOrders() {
         showingCompletedOrders = false;

@@ -1,10 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
-import com.example.shopflowers.ShopFlowersApplication;
 import com.example.shopflowers.controller.application.RegisterController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -12,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import com.example.shopflowers.util.SceneNavigator;
 
 public class RegisterGraphicController {
 
@@ -66,15 +64,12 @@ public class RegisterGraphicController {
     }
 
     private void goToLogin() throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
+        SceneNavigator.goTo(
+                (Stage) nameField.getScene().getWindow(),
+                "/com/example/shopflowers/login-view.fxml",
+                "Shop Flowers - Login",
+                500,
+                350
         );
-
-        Scene scene = new Scene(loader.load(), 500, 350);
-
-        Stage stage = (Stage) nameField.getScene().getWindow();
-        stage.setTitle("Shop Flowers - Login");
-        stage.setScene(scene);
-        stage.show();
     }
 }

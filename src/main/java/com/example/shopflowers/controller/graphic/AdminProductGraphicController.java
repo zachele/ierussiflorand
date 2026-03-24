@@ -8,17 +8,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.sql.SQLException;
 import java.util.List;
-
-import com.example.shopflowers.ShopFlowersApplication;
-import com.example.shopflowers.util.Session;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import com.example.shopflowers.util.SceneNavigator;
 
 public class AdminProductGraphicController {
 
@@ -159,8 +153,6 @@ public class AdminProductGraphicController {
     private void loadProducts() {
         try {
             List<FlowerProduct> products = browseCatalogController.getAllProducts();
-            for (FlowerProduct p : products) {
-            }
 
             ObservableList<FlowerProduct> observableProducts = FXCollections.observableArrayList(products);
             productTable.setItems(observableProducts);
@@ -187,22 +179,11 @@ public class AdminProductGraphicController {
         stockField.clear();
         productTable.getSelectionModel().clearSelection();
     }
+
     @FXML
     private void handleLogout() {
         try {
-            Session.clearSession();
-
-            FXMLLoader loader = new FXMLLoader(
-                    ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
-            );
-
-            Scene scene = new Scene(loader.load(), 500, 350);
-
-            Stage stage = (Stage) productTable.getScene().getWindow();
-            stage.setTitle("Shop Flowers - Login");
-            stage.setScene(scene);
-            stage.show();
-
+            SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");
         }
