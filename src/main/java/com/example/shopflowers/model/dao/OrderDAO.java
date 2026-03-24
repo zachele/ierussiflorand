@@ -62,22 +62,57 @@ public class OrderDAO {
 
     public List<OrderSummary> findAllOrders() throws SQLException {
         String query = "SELECT id, username, delivery_mode, delivery_address, payment_method, status, total, order_date FROM orders ORDER BY order_date DESC";
-        return findOrdersByQuery(query);
+        List<OrderSummary> orders = new ArrayList<>();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                OrderSummary order = new OrderSummary(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("delivery_mode"),
+                        resultSet.getString("delivery_address"),
+                        resultSet.getString("payment_method"),
+                        resultSet.getString("status"),
+                        resultSet.getDouble("total"),
+                        resultSet.getTimestamp("order_date").toString()
+                );
+                orders.add(order);
+            }
+        }
+
+        return orders;
     }
 
     public List<OrderSummary> findOrdersByUsername(String username) throws SQLException {
         String query = "SELECT id, username, delivery_mode, delivery_address, payment_method, status, total, order_date FROM orders WHERE username = ? ORDER BY order_date DESC";
-        return findOrdersByQuery(query, username);
-    }
+        List<OrderSummary> orders = new ArrayList<>();
 
-    public List<OrderSummary> findActiveOrders() throws SQLException {
-        String query = "SELECT id, username, delivery_mode, delivery_address, payment_method, status, total, order_date FROM orders WHERE status <> 'CONSEGNATO' ORDER BY order_date DESC";
-        return findOrdersByQuery(query);
-    }
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-    public List<OrderSummary> findCompletedOrders() throws SQLException {
-        String query = "SELECT id, username, delivery_mode, delivery_address, payment_method, status, total, order_date FROM orders WHERE status = 'CONSEGNATO' ORDER BY order_date DESC";
-        return findOrdersByQuery(query);
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    OrderSummary order = new OrderSummary(
+                            resultSet.getInt("id"),
+                            resultSet.getString("username"),
+                            resultSet.getString("delivery_mode"),
+                            resultSet.getString("delivery_address"),
+                            resultSet.getString("payment_method"),
+                            resultSet.getString("status"),
+                            resultSet.getDouble("total"),
+                            resultSet.getTimestamp("order_date").toString()
+                    );
+                    orders.add(order);
+                }
+            }
+        }
+
+        return orders;
     }
 
     public List<OrderItemSummary> findItemsByOrderId(int orderId) throws SQLException {
@@ -97,7 +132,12 @@ public class OrderDAO {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    items.add(mapOrderItemSummary(resultSet));
+                    OrderItemSummary item = new OrderItemSummary(
+                            resultSet.getString("product_name"),
+                            resultSet.getInt("quantity"),
+                            resultSet.getDouble("unit_price")
+                    );
+                    items.add(item);
                 }
             }
         }
@@ -116,45 +156,59 @@ public class OrderDAO {
             preparedStatement.executeUpdate();
         }
     }
+    public List<OrderSummary> findActiveOrders() throws SQLException {
+        String query = "SELECT id, username, delivery_mode, delivery_address, payment_method, status, total, order_date " +
+                "FROM orders WHERE status <> 'CONSEGNATO' ORDER BY order_date DESC";
 
-    private List<OrderSummary> findOrdersByQuery(String query, String... params) throws SQLException {
         List<OrderSummary> orders = new ArrayList<>();
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            for (int i = 0; i < params.length; i++) {
-                preparedStatement.setString(i + 1, params[i]);
-            }
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    orders.add(mapOrderSummary(resultSet));
-                }
+            while (resultSet.next()) {
+                OrderSummary order = new OrderSummary(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("delivery_mode"),
+                        resultSet.getString("delivery_address"),
+                        resultSet.getString("payment_method"),
+                        resultSet.getString("status"),
+                        resultSet.getDouble("total"),
+                        resultSet.getTimestamp("order_date").toString()
+                );
+                orders.add(order);
             }
         }
 
         return orders;
     }
 
-    private OrderSummary mapOrderSummary(ResultSet resultSet) throws SQLException {
-        return new OrderSummary(
-                resultSet.getInt("id"),
-                resultSet.getString("username"),
-                resultSet.getString("delivery_mode"),
-                resultSet.getString("delivery_address"),
-                resultSet.getString("payment_method"),
-                resultSet.getString("status"),
-                resultSet.getDouble("total"),
-                resultSet.getTimestamp("order_date").toString()
-        );
-    }
+    public List<OrderSummary> findCompletedOrders() throws SQLException {
+        String query = "SELECT id, username, delivery_mode, delivery_address, payment_method, status, total, order_date " +
+                "FROM orders WHERE status = 'CONSEGNATO' ORDER BY order_date DESC";
 
-    private OrderItemSummary mapOrderItemSummary(ResultSet resultSet) throws SQLException {
-        return new OrderItemSummary(
-                resultSet.getString("product_name"),
-                resultSet.getInt("quantity"),
-                resultSet.getDouble("unit_price")
-        );
+        List<OrderSummary> orders = new ArrayList<>();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                OrderSummary order = new OrderSummary(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("delivery_mode"),
+                        resultSet.getString("delivery_address"),
+                        resultSet.getString("payment_method"),
+                        resultSet.getString("status"),
+                        resultSet.getDouble("total"),
+                        resultSet.getTimestamp("order_date").toString()
+                );
+                orders.add(order);
+            }
+        }
+
+        return orders;
     }
 }
