@@ -20,7 +20,6 @@ public class SceneNavigator {
         Scene scene = new Scene(loader.load());
         stage.setTitle(title);
         stage.setScene(scene);
-        stage.setMaximized(true);
         stage.show();
     }
 

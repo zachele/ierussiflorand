@@ -13,10 +13,9 @@ public class ShopFlowersApplication extends Application {
                 ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
         );
 
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+        Scene scene = new Scene(fxmlLoader.load(), 1500, 800);
         stage.setTitle("Ierussi Florand - Login");
         stage.setScene(scene);
-        stage.setMaximized(true);
         stage.show();
     }
 

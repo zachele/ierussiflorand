@@ -17,8 +17,8 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.shopflowers.controller.graphic.AdminProductGraphicController"
       spacing="15"
-      prefWidth="900"
-      prefHeight="600"
+      prefWidth="1500"
+      prefHeight="800"
       style="-fx-padding: 20;">
 
     <MenuBar>

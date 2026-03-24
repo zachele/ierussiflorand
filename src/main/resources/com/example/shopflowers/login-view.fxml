@@ -14,8 +14,8 @@
       fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController"
       alignment="CENTER"
       spacing="20"
-      prefWidth="500"
-      prefHeight="350"
+      prefWidth="1500"
+      prefHeight="800"
       style="-fx-padding: 30;">
 
     <Label text="Ierussi Florand"

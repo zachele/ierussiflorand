@@ -18,12 +18,12 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.shopflowers.controller.graphic.CheckoutGraphicController"
       spacing="15"
-      prefWidth="900"
-      prefHeight="650"
+      prefWidth="1500"
+      prefHeight="800"
       style="-fx-padding: 20;">
 
     <MenuBar>
-        <Menu text="Navigazione">
+        <Menu text="Impostazioni">
             <MenuItem text="Torna al catalogo" onAction="#handleBackToCatalog"/>
             <MenuItem text="Logout" onAction="#handleLogout"/>
         </Menu>

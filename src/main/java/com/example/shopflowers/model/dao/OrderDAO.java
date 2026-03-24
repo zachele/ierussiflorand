@@ -41,7 +41,7 @@ public class OrderDAO {
             }
         }
 
-        throw new SQLException("Impossibile ottenere l'ID dell'ordine creato.");
+        throw new SQLException("Impossibile ottenere l' ID dell'ordine creato.");
     }
 
     public void saveOrderItems(int orderId, Order order) throws SQLException {
