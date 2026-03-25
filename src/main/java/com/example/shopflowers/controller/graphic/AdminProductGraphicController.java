@@ -14,9 +14,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.shopflowers.util.SceneNavigator;
 
-import com.example.shopflowers.controller.application.ManageOperatorController;
-import javafx.scene.control.PasswordField;
-
 public class AdminProductGraphicController {
 
     @FXML
@@ -58,21 +55,8 @@ public class AdminProductGraphicController {
     @FXML
     private Label messageLabel;
 
-    @FXML
-    private TextField operatorNameField;
-
-    @FXML
-    private TextField operatorSurnameField;
-
-    @FXML
-    private TextField operatorUsernameField;
-
-    @FXML
-    private PasswordField operatorPasswordField;
-
     private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
     private final ManageProductsController manageProductsController = new ManageProductsController();
-    private final ManageOperatorController manageOperatorController = new ManageOperatorController();
 
     private FlowerProduct selectedProduct;
 
@@ -205,29 +189,15 @@ public class AdminProductGraphicController {
         }
     }
     @FXML
-    private void handleCreateOperator() {
-        String name = operatorNameField.getText();
-        String surname = operatorSurnameField.getText();
-        String username = operatorUsernameField.getText();
-        String password = operatorPasswordField.getText();
-
+    private void handleGoToOperatorManagement() {
         try {
-            boolean created = manageOperatorController.createOperator(name, surname, username, password);
-
-            if (!created) {
-                messageLabel.setText("Dati non validi o username già esistente.");
-                return;
-            }
-
-            operatorNameField.clear();
-            operatorSurnameField.clear();
-            operatorUsernameField.clear();
-            operatorPasswordField.clear();
-
-            messageLabel.setText("Operatore creato con successo.");
-
-        } catch (SQLException e) {
-            messageLabel.setText("Errore durante la creazione dell'operatore.");
+            SceneNavigator.goTo(
+                    (Stage) productTable.getScene().getWindow(),
+                    "/com/example/shopflowers/operator-management-view.fxml",
+                    "Shop Flowers - Gestione Operatori"
+            );
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura della gestione operatori.");
         }
     }
 }

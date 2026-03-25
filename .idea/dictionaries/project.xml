@@ -22,6 +22,7 @@
       <w>Metodo</w>
       <w>Modalità</w>
       <w>Nuovo</w>
+      <w>Operatori</w>
       <w>Orari</w>
       <w>Ordini</w>
       <w>Pagamento</w>
@@ -33,6 +34,7 @@
       <w>Rimuovi</w>
       <w>Ruolo</w>
       <w>Stato</w>
+      <w>Stipendio</w>
       <w>Svuota</w>
       <w>Telefono</w>
       <w>Torna</w>
@@ -41,8 +43,10 @@
       <w>acquisti</w>
       <w>aggiornato</w>
       <w>aggiunto</w>
+      <w>all'area</w>
       <w>alla</w>
       <w>allo</w>
+      <w>annuali</w>
       <w>applicazione</w>
       <w>articolo</w>
       <w>attenzione</w>
@@ -52,12 +56,14 @@
       <w>completata</w>
       <w>completati</w>
       <w>consegnato</w>
+      <w>contratto</w>
       <w>correttamente</w>
       <w>creato</w>
       <w>creazione</w>
       <w>cura</w>
       <w>dedicata</w>
       <w>dell'operatore</w>
+      <w>dell'utente</w>
       <w>della</w>
       <w>dello</w>
       <w>dettagli</w>
@@ -71,12 +77,14 @@
       <w>eventi</w>
       <w>facilmente</w>
       <w>fiori</w>
+      <w>gestione</w>
       <w>indirizzo</w>
       <w>l'aggiornamento</w>
       <w>l'azienda</w>
       <w>l'eliminazione</w>
       <w>l'id</w>
       <w>l'obiettivo</w>
+      <w>lavorative</w>
       <w>lavorativi</w>
       <w>mancante</w>
       <w>mezzi</w>
@@ -84,9 +92,11 @@
       <w>modificare</w>
       <w>nata</w>
       <w>nell'apertura</w>
+      <w>nuovo</w>
       <w>occasioni</w>
       <w>offrire</w>
       <w>operatore</w>
+      <w>operatori</w>
       <w>ordine</w>
       <w>ordini</w>
       <w>ottenere</w>

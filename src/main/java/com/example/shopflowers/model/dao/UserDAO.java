@@ -51,10 +51,14 @@ public class UserDAO {
     }
 
     public void save(User user) throws SQLException {
+        saveAndReturnId(user);
+    }
+
+    public int saveAndReturnId(User user) throws SQLException {
         String query = "INSERT INTO users (name, surname, username, password, role) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getSurname());
@@ -63,6 +67,14 @@ public class UserDAO {
             preparedStatement.setString(5, user.getRole());
 
             preparedStatement.executeUpdate();
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
         }
+
+        throw new SQLException("Impossibile ottenere l' ID dell'utente creato.");
     }
 }
