@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -57,6 +58,27 @@
         </HBox>
     </GridPane>
 
+    <Label text="Creazione Nuovo Operatore"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="operatorNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Cognome:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="operatorSurnameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Username:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="operatorUsernameField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Password:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <PasswordField fx:id="operatorPasswordField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <Button text="Crea operatore" onAction="#handleCreateOperator"/>
+        </HBox>
+    </GridPane>
+
     <Label fx:id="messageLabel" text="" />
 
     <TableView fx:id="productTable" prefHeight="350">
@@ -69,5 +91,4 @@
             <TableColumn fx:id="stockColumn" text="Stock" prefWidth="100"/>
         </columns>
     </TableView>
-
 </VBox>

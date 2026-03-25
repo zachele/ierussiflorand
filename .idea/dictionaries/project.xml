@@ -36,20 +36,26 @@
       <w>Torna</w>
       <w>Totale</w>
       <w>Varietà</w>
+      <w>acquisti</w>
       <w>aggiornato</w>
       <w>aggiunto</w>
       <w>alla</w>
       <w>allo</w>
       <w>applicazione</w>
       <w>articolo</w>
+      <w>attenzione</w>
       <w>azienda</w>
       <w>caricamento</w>
+      <w>cliente</w>
       <w>completata</w>
       <w>completati</w>
       <w>consegnato</w>
       <w>correttamente</w>
       <w>creato</w>
+      <w>creazione</w>
+      <w>cura</w>
       <w>dedicata</w>
+      <w>dell'operatore</w>
       <w>della</w>
       <w>dello</w>
       <w>dettagli</w>
@@ -59,6 +65,8 @@
       <w>eliminato</w>
       <w>esistente</w>
       <w>essere</w>
+      <w>estetica</w>
+      <w>eventi</w>
       <w>facilmente</w>
       <w>fiori</w>
       <w>indirizzo</w>
@@ -66,12 +74,15 @@
       <w>l'azienda</w>
       <w>l'eliminazione</w>
       <w>l'id</w>
+      <w>l'obiettivo</w>
       <w>lavorativi</w>
       <w>mancante</w>
       <w>mezzi</w>
       <w>miei</w>
       <w>modificare</w>
+      <w>nata</w>
       <w>nell'apertura</w>
+      <w>occasioni</w>
       <w>offrire</w>
       <w>ordine</w>
       <w>ordini</w>
@@ -79,8 +90,11 @@
       <w>pagamento</w>
       <w>preparazione</w>
       <w>prodotto</w>
+      <w>propone</w>
       <w>pubblici</w>
+      <w>qualità</w>
       <w>quantità</w>
+      <w>quotidiani</w>
       <w>raggiungibile</w>
       <w>registrazione</w>
       <w>richiesta</w>
@@ -91,6 +105,7 @@
       <w>sede</w>
       <w>selezionato</w>
       <w>siamo</w>
+      <w>speciali</w>
       <w>stato</w>
       <w>storico</w>
       <w>superiore</w>
@@ -102,6 +117,7 @@
       <w>valide</w>
       <w>validi</w>
       <w>valido</w>
+      <w>vendita</w>
       <w>zona</w>
     </words>
   </dictionary>
