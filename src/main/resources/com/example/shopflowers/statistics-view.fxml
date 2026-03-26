@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.shopflowers.controller.graphic.StatisticsGraphicController"
+      spacing="20"
+      prefWidth="1200"
+      prefHeight="800"
+      style="-fx-padding: 20;">
+
+    <MenuBar>
+        <Menu text="Impostazioni">
+            <MenuItem text="Torna ai prodotti" onAction="#handleBackToAdmin"/>
+            <MenuItem text="Logout" onAction="#handleLogout"/>
+        </Menu>
+    </MenuBar>
+
+    <Label text="Statistiche Vendite"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="20" vgap="18">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <Label text="Totale ordini:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="totalOrdersLabel" text="-" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Totale ricavi:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="totalRevenueLabel" text="-" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Ordini consegnati:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label fx:id="deliveredOrdersLabel" text="-" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Ordini attivi:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="activeOrdersLabel" text="-" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Clienti registrati:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <Label fx:id="totalClientsLabel" text="-" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Operatori registrati:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <Label fx:id="totalOperatorsLabel" text="-" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+        <Label text="Prodotto più venduto:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <Label fx:id="mostSoldProductLabel" text="-" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Label fx:id="messageLabel" text="" />
+</VBox>

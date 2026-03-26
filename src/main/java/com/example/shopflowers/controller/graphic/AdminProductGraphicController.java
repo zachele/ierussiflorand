@@ -200,4 +200,16 @@ public class AdminProductGraphicController {
             messageLabel.setText("Errore nell'apertura della gestione operatori.");
         }
     }
+    @FXML
+    private void handleGoToStatistics() {
+        try {
+            SceneNavigator.goTo(
+                    (Stage) productTable.getScene().getWindow(),
+                    "/com/example/shopflowers/statistics-view.fxml",
+                    "Shop Flowers - Statistiche Vendite"
+            );
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura delle statistiche.");
+        }
+    }
 }

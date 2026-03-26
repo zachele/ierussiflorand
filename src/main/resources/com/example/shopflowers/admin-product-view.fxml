@@ -22,9 +22,10 @@
       style="-fx-padding: 20;">
 
     <MenuBar>
-        <Menu text="Impostazioni">
+        <Menu text="Gestione">
             <MenuItem text="Prodotti"/>
             <MenuItem text="Nuovo operatore" onAction="#handleGoToOperatorManagement"/>
+            <MenuItem text="Statistiche vendite" onAction="#handleGoToStatistics"/>
             <MenuItem text="Logout" onAction="#handleLogout"/>
         </Menu>
     </MenuBar>
