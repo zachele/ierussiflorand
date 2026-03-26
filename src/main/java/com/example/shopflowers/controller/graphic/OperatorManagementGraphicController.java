@@ -1,15 +1,22 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.ManageOperatorController;
+import com.example.shopflowers.model.entity.User;
 import com.example.shopflowers.util.SceneNavigator;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class OperatorManagementGraphicController {
 
@@ -35,9 +42,38 @@ public class OperatorManagementGraphicController {
     private TextField annualHoursField;
 
     @FXML
+    private TableView<User> operatorTable;
+
+    @FXML
+    private TableColumn<User, Integer> idColumn;
+
+    @FXML
+    private TableColumn<User, String> nameColumn;
+
+    @FXML
+    private TableColumn<User, String> surnameColumn;
+
+    @FXML
+    private TableColumn<User, String> usernameColumn;
+
+    @FXML
     private Label messageLabel;
 
     private final ManageOperatorController manageOperatorController = new ManageOperatorController();
+    private User selectedOperator;
+
+    @FXML
+    public void initialize() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+
+        operatorTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+            selectedOperator = newSelection);
+
+        loadOperators();
+    }
 
     @FXML
     private void handleCreateOperator() {
@@ -57,18 +93,29 @@ public class OperatorManagementGraphicController {
                 return;
             }
 
-            nameField.clear();
-            surnameField.clear();
-            usernameField.clear();
-            passwordField.clear();
-            salaryField.clear();
-            contractYearField.clear();
-            annualHoursField.clear();
-
+            clearFields();
+            loadOperators();
             messageLabel.setText("Operatore creato con successo.");
 
         } catch (SQLException e) {
             messageLabel.setText("Errore durante la creazione dell'operatore.");
+        }
+    }
+
+    @FXML
+    private void handleDeleteOperator() {
+        if (selectedOperator == null) {
+            messageLabel.setText("Seleziona prima un operatore.");
+            return;
+        }
+
+        try {
+            manageOperatorController.deleteOperator(selectedOperator.getId());
+            selectedOperator = null;
+            loadOperators();
+            messageLabel.setText("Operatore eliminato con successo.");
+        } catch (SQLException e) {
+            messageLabel.setText("Errore durante l'eliminazione dell'operatore.");
         }
     }
 
@@ -92,5 +139,25 @@ public class OperatorManagementGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");
         }
+    }
+
+    private void loadOperators() {
+        try {
+            List<User> operators = manageOperatorController.getAllOperators();
+            ObservableList<User> observableOperators = FXCollections.observableArrayList(operators);
+            operatorTable.setItems(observableOperators);
+        } catch (SQLException e) {
+            messageLabel.setText("Errore nel caricamento operatori.");
+        }
+    }
+
+    private void clearFields() {
+        nameField.clear();
+        surnameField.clear();
+        usernameField.clear();
+        passwordField.clear();
+        salaryField.clear();
+        contractYearField.clear();
+        annualHoursField.clear();
     }
 }

@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class UserDAO {
 
     public User findByUsernameAndPassword(String username, String password) throws SQLException {
@@ -76,5 +77,38 @@ public class UserDAO {
         }
 
         throw new SQLException("Impossibile ottenere l' ID dell'utente creato.");
+    }
+    public java.util.List<User> findAllOperators() throws SQLException {
+        String query = "SELECT id, name, surname, username, password, role FROM users WHERE role = 'OPERATOR' ORDER BY surname, name";
+        java.util.List<User> operators = new java.util.ArrayList<>();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                operators.add(new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("surname"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("role")
+                ));
+            }
+        }
+
+        return operators;
+    }
+
+    public void deleteById(int userId) throws SQLException {
+        String query = "DELETE FROM users WHERE id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+        }
     }
 }

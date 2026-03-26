@@ -23,4 +23,14 @@ public class OperatorDetailsDAO {
             preparedStatement.executeUpdate();
         }
     }
+    public void deleteByUserId(int userId) throws SQLException {
+        String query = "DELETE FROM operator_details WHERE user_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+        }
+    }
 }

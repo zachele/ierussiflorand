@@ -6,6 +6,7 @@ import com.example.shopflowers.model.entity.OperatorDetails;
 import com.example.shopflowers.model.entity.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ManageOperatorController {
 
@@ -56,6 +57,16 @@ public class ManageOperatorController {
         OperatorDetails operatorDetails = new OperatorDetails(userId, salary, contractYear, annualHours);
         operatorDetailsDAO.save(operatorDetails);
 
+        return true;
+    }
+
+    public List<User> getAllOperators() throws SQLException {
+        return userDAO.findAllOperators();
+    }
+
+    public boolean deleteOperator(int userId) throws SQLException {
+        operatorDetailsDAO.deleteByUserId(userId);
+        userDAO.deleteById(userId);
         return true;
     }
 }

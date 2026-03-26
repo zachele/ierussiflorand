@@ -7,6 +7,8 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -16,7 +18,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.shopflowers.controller.graphic.OperatorManagementGraphicController"
       spacing="15"
-      prefWidth="1500"
+      prefWidth="1200"
       prefHeight="800"
       style="-fx-padding: 20;">
 
@@ -61,9 +63,21 @@
 
         <HBox spacing="10" GridPane.rowIndex="7" GridPane.columnIndex="1">
             <Button text="Crea operatore" onAction="#handleCreateOperator"/>
-            <Button text="Torna ai prodotti" onAction="#handleBackToAdmin"/>
+            <Button text="Elimina selezionato" onAction="#handleDeleteOperator"/>
         </HBox>
     </GridPane>
+
+    <Label text="Operatori registrati"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="operatorTable" prefHeight="260">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="nameColumn" text="Nome" prefWidth="180"/>
+            <TableColumn fx:id="surnameColumn" text="Cognome" prefWidth="180"/>
+            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="220"/>
+        </columns>
+    </TableView>
 
     <Label fx:id="messageLabel" text="" />
 </VBox>
