@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Hyperlink?>
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -36,8 +37,10 @@
             <Button text="Login" onAction="#handleLogin"/>
             <Button text="Registrati" onAction="#handleGoToRegister"/>
         </HBox>
+        <VBox spacing="8" GridPane.rowIndex="3" GridPane.columnIndex="1">
+            <Hyperlink text="Cambia password" onAction="#handleGoToChangePassword"/>
+        </VBox>
     </GridPane>
-
     <Label fx:id="messageLabel" text="" />
 
 </VBox>

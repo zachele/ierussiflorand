@@ -123,5 +123,30 @@ public class UserDAO {
             preparedStatement.executeUpdate();
         }
     }
+    public boolean existsByUsernameAndPassword(String username, String password) throws SQLException {
+        String query = "SELECT id FROM users WHERE username = ? AND password = ?";
 
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+
+    public void updatePassword(String username, String newPassword) throws SQLException {
+        String query = "UPDATE users SET password = ? WHERE username = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeUpdate();
+        }
+    }
 }

@@ -78,4 +78,16 @@ public class LoginGraphicController {
             messageLabel.setText("Errore nell'apertura della registrazione.");
         }
     }
+    @FXML
+    private void handleGoToChangePassword() {
+        try {
+            SceneNavigator.goTo(
+                    (Stage) usernameField.getScene().getWindow(),
+                    "/com/example/shopflowers/change-password-view.fxml",
+                    "Shop Flowers - Cambio Password"
+            );
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura del cambio password.");
+        }
+    }
 }
