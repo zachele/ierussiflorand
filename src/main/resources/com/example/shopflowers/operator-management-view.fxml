@@ -18,12 +18,12 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.shopflowers.controller.graphic.OperatorManagementGraphicController"
       spacing="15"
-      prefWidth="1200"
+      prefWidth="1500"
       prefHeight="800"
       style="-fx-padding: 20;">
 
     <MenuBar>
-        <Menu text="Impostazioni">
+        <Menu text="Navigazione">
             <MenuItem text="Torna ai prodotti" onAction="#handleBackToAdmin"/>
             <MenuItem text="Logout" onAction="#handleLogout"/>
         </Menu>
@@ -32,7 +32,7 @@
     <Label text="Gestione Operatori"
            style="-fx-font-size: 24px; -fx-font-weight: bold;" />
 
-    <Label text="Crea nuovo operatore"
+    <Label text="Crea o modifica operatore"
            style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
     <GridPane hgap="12" vgap="12">
@@ -63,7 +63,9 @@
 
         <HBox spacing="10" GridPane.rowIndex="7" GridPane.columnIndex="1">
             <Button text="Crea operatore" onAction="#handleCreateOperator"/>
+            <Button text="Aggiorna selezionato" onAction="#handleUpdateOperator"/>
             <Button text="Elimina selezionato" onAction="#handleDeleteOperator"/>
+            <Button text="Torna ai prodotti" onAction="#handleBackToAdmin"/>
         </HBox>
     </GridPane>
 
@@ -72,10 +74,13 @@
 
     <TableView fx:id="operatorTable" prefHeight="260">
         <columns>
-            <TableColumn fx:id="idColumn" text="ID" prefWidth="80"/>
-            <TableColumn fx:id="nameColumn" text="Nome" prefWidth="180"/>
-            <TableColumn fx:id="surnameColumn" text="Cognome" prefWidth="180"/>
-            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="220"/>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="70"/>
+            <TableColumn fx:id="nameColumn" text="Nome" prefWidth="140"/>
+            <TableColumn fx:id="surnameColumn" text="Cognome" prefWidth="140"/>
+            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="180"/>
+            <TableColumn fx:id="salaryColumn" text="Stipendio" prefWidth="120"/>
+            <TableColumn fx:id="contractYearColumn" text="Anno contratto" prefWidth="130"/>
+            <TableColumn fx:id="annualHoursColumn" text="Ore annuali" prefWidth="120"/>
         </columns>
     </TableView>
 

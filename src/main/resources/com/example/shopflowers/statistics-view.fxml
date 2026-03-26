@@ -12,7 +12,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.shopflowers.controller.graphic.StatisticsGraphicController"
       spacing="20"
-      prefWidth="1200"
+      prefWidth="1500"
       prefHeight="800"
       style="-fx-padding: 20;">
 
