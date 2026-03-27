@@ -2,7 +2,6 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.controller.application.RecommendationController;
-import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.RecommendationRequest;
 import com.example.shopflowers.model.entity.RecommendationResult;
 import com.example.shopflowers.util.SceneNavigator;
@@ -46,6 +45,9 @@ public class RecommendationGraphicController {
     private TableColumn<RecommendationResult, String> varietyColumn;
 
     @FXML
+    private TableColumn<RecommendationResult, String> budgetColumn;
+
+    @FXML
     private TableColumn<RecommendationResult, String> reasonColumn;
 
     @FXML
@@ -74,6 +76,7 @@ public class RecommendationGraphicController {
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("productPrice"));
         colorColumn.setCellValueFactory(new PropertyValueFactory<>("productColor"));
         varietyColumn.setCellValueFactory(new PropertyValueFactory<>("productVariety"));
+        budgetColumn.setCellValueFactory(new PropertyValueFactory<>("budgetCompatibility"));
         reasonColumn.setCellValueFactory(new PropertyValueFactory<>("reason"));
 
         recommendationTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
@@ -107,9 +110,16 @@ public class RecommendationGraphicController {
             recommendationTable.setItems(FXCollections.observableArrayList(results));
 
             if (results.isEmpty()) {
-                messageLabel.setText("Nessun risultato trovato con questi criteri.");
+                messageLabel.setText("Nessuna proposta disponibile con questi criteri.");
+                return;
+            }
+
+            boolean allWithinBudget = results.stream().allMatch(RecommendationResult::isWithinBudget);
+
+            if (allWithinBudget) {
+                messageLabel.setText("Mostrate le migliori proposte compatibili con il budget.");
             } else {
-                messageLabel.setText("Proposte caricate con successo.");
+                messageLabel.setText("Nessuna proposta perfettamente entro budget: mostrate le alternative più vicine.");
             }
 
         } catch (SQLException e) {

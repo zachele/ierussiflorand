@@ -5,11 +5,13 @@ public class RecommendationResult {
     private final FlowerProduct product;
     private final String reason;
     private final int score;
+    private final boolean withinBudget;
 
-    public RecommendationResult(FlowerProduct product, String reason, int score) {
+    public RecommendationResult(FlowerProduct product, String reason, int score, boolean withinBudget) {
         this.product = product;
         this.reason = reason;
         this.score = score;
+        this.withinBudget = withinBudget;
     }
 
     public FlowerProduct getProduct() {
@@ -22,6 +24,14 @@ public class RecommendationResult {
 
     public int getScore() {
         return score;
+    }
+
+    public boolean isWithinBudget() {
+        return withinBudget;
+    }
+
+    public String getBudgetCompatibility() {
+        return withinBudget ? "Entro budget" : "Vicino al budget";
     }
 
     public String getProductName() {

@@ -1,6 +1,6 @@
 package com.example.shopflowers.model.entity;
 
-public class RecommendationRequest {
+public class RecommendationRequest{
 
     private final String occasion;
     private final String style;

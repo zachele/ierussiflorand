@@ -64,7 +64,8 @@
             <TableColumn fx:id="priceColumn" text="Prezzo" prefWidth="100"/>
             <TableColumn fx:id="colorColumn" text="Colore" prefWidth="120"/>
             <TableColumn fx:id="varietyColumn" text="Varietà" prefWidth="180"/>
-            <TableColumn fx:id="reasonColumn" text="Motivazione" prefWidth="420"/>
+            <TableColumn fx:id="budgetColumn" text="Budget" prefWidth="120"/>
+            <TableColumn fx:id="reasonColumn" text="Motivazione" prefWidth="480"/>
         </columns>
     </TableView>
 
