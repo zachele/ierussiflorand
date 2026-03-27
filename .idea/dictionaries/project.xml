@@ -15,6 +15,7 @@
       <w>Crea</w>
       <w>Credenziali</w>
       <w>Elimina</w>
+      <w>Eliminazione</w>
       <w>Giorni</w>
       <w>Impossibile</w>
       <w>Indirizzo</w>
@@ -32,8 +33,10 @@
       <w>Posizione</w>
       <w>Prodotti</w>
       <w>Prodotto</w>
+      <w>Questa</w>
       <w>Registrati</w>
       <w>Registrazione</w>
+      <w>Rimuovere</w>
       <w>Rimuovi</w>
       <w>Ruolo</w>
       <w>Statistiche</w>
@@ -52,8 +55,12 @@
       <w>alla</w>
       <w>allo</w>
       <w>annuali</w>
+      <w>annullata</w>
+      <w>annullato</w>
       <w>applicazione</w>
+      <w>articoli</w>
       <w>articolo</w>
+      <w>associati</w>
       <w>attenzione</w>
       <w>azienda</w>
       <w>caricamento</w>
@@ -63,6 +70,7 @@
       <w>consegnati</w>
       <w>consegnato</w>
       <w>contratto</w>
+      <w>corrente</w>
       <w>correttamente</w>
       <w>creato</w>
       <w>creazione</w>
@@ -78,6 +86,7 @@
       <w>disponibile</w>
       <w>eliminare</w>
       <w>eliminato</w>
+      <w>eliminazione</w>
       <w>esistente</w>
       <w>essere</w>
       <w>estetica</w>
@@ -87,10 +96,12 @@
       <w>gestione</w>
       <w>indirizzo</w>
       <w>l'aggiornamento</w>
+      <w>l'articolo</w>
       <w>l'azienda</w>
       <w>l'eliminazione</w>
       <w>l'id</w>
       <w>l'obiettivo</w>
+      <w>l'operatore</w>
       <w>lavorative</w>
       <w>lavorativi</w>
       <w>mancante</w>
@@ -105,6 +116,7 @@
       <w>offrire</w>
       <w>operatore</w>
       <w>operatori</w>
+      <w>operazione</w>
       <w>ordine</w>
       <w>ordini</w>
       <w>ottenere</w>
@@ -122,7 +134,9 @@
       <w>ricavi</w>
       <w>richiesta</w>
       <w>riconosciuto</w>
+      <w>rimossi</w>
       <w>rimosso</w>
+      <w>rimozione</w>
       <w>salvataggio</w>
       <w>schermata</w>
       <w>sede</w>
@@ -133,9 +147,11 @@
       <w>stato</w>
       <w>storico</w>
       <w>superiore</w>
+      <w>svuotamento</w>
       <w>svuotato</w>
       <w>tramite</w>
       <w>trova</w>
+      <w>tutto</w>
       <w>un'attività</w>
       <w>valida</w>
       <w>valide</w>
@@ -144,6 +160,8 @@
       <w>vendita</w>
       <w>vendite</w>
       <w>venduto</w>
+      <w>verranno</w>
+      <w>verrà</w>
       <w>zona</w>
     </words>
   </dictionary>

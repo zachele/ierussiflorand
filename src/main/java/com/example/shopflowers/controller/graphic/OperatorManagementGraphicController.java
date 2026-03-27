@@ -18,6 +18,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+
+
 public class OperatorManagementGraphicController {
 
     @FXML
@@ -163,6 +168,17 @@ public class OperatorManagementGraphicController {
     private void handleDeleteOperator() {
         if (selectedOperator == null) {
             messageLabel.setText("Seleziona prima un operatore.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma eliminazione");
+        alert.setHeaderText("Eliminare l'operatore selezionato?");
+        alert.setContentText("Verranno rimossi account e dati associati.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            messageLabel.setText("Eliminazione annullata.");
             return;
         }
 

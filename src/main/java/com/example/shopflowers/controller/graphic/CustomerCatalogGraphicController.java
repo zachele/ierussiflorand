@@ -16,6 +16,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.shopflowers.util.SceneNavigator;
 
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+
 public class CustomerCatalogGraphicController {
 
     @FXML
@@ -79,12 +84,10 @@ public class CustomerCatalogGraphicController {
         cartQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         cartTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
 
-        productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            selectedProduct = newSelection;
-        });
-        cartTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            selectedCartItem = newSelection;
-        });
+        productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+            selectedProduct = newSelection);
+        cartTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+            selectedCartItem = newSelection);
 
         loadProducts();
         refreshCart();
@@ -168,6 +171,17 @@ public class CustomerCatalogGraphicController {
             return;
         }
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma rimozione");
+        alert.setHeaderText("Rimuovere l'articolo selezionato dal carrello?");
+        alert.setContentText("L'articolo verrà eliminato dal carrello corrente.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            messageLabel.setText("Rimozione annullata.");
+            return;
+        }
+
         customerCartController.removeFromCart(selectedCartItem.getProduct().getId());
         selectedCartItem = null;
         refreshCart();
@@ -181,11 +195,23 @@ public class CustomerCatalogGraphicController {
             return;
         }
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma svuotamento");
+        alert.setHeaderText("Svuotare tutto il carrello?");
+        alert.setContentText("Tutti gli articoli verranno rimossi dal carrello.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            messageLabel.setText("Svuotamento annullato.");
+            return;
+        }
+
         customerCartController.clearCart();
         selectedCartItem = null;
         refreshCart();
         messageLabel.setText("Carrello svuotato.");
     }
+
     @FXML
     private void handleLogout() {
         try {

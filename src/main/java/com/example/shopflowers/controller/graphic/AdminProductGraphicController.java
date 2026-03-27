@@ -14,6 +14,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.shopflowers.util.SceneNavigator;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+
 public class AdminProductGraphicController {
 
     @FXML
@@ -133,20 +137,28 @@ public class AdminProductGraphicController {
     @FXML
     private void handleDeleteProduct() {
         if (selectedProduct == null) {
-            messageLabel.setText("Seleziona prima un prodotto da eliminare.");
+            messageLabel.setText("Seleziona prima un prodotto.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma eliminazione");
+        alert.setHeaderText("Eliminare il prodotto selezionato?");
+        alert.setContentText("Questa operazione non può essere annullata.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            messageLabel.setText("Eliminazione annullata.");
             return;
         }
 
         try {
             manageProductsController.deleteProductById(selectedProduct.getId());
-
-            messageLabel.setText("Prodotto eliminato correttamente.");
-            clearFields();
             loadProducts();
-            selectedProduct = null;
-
+            clearFields();
+            messageLabel.setText("Prodotto eliminato con successo.");
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'eliminazione del prodotto: " + e.getMessage());
+            messageLabel.setText("Errore durante l'eliminazione del prodotto.");
         }
     }
 
