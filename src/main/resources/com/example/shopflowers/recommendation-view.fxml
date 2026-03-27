@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.shopflowers.controller.graphic.RecommendationGraphicController"
+      spacing="15"
+      prefWidth="1500"
+      prefHeight="800"
+      style="-fx-padding: 20;">
+
+    <MenuBar>
+        <Menu text="Navigazione">
+            <MenuItem text="Torna al catalogo" onAction="#handleBackToCatalog"/>
+            <MenuItem text="Logout" onAction="#handleLogout"/>
+        </Menu>
+    </MenuBar>
+
+    <Label text="Assistente Guidato alla Scelta"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="12" vgap="12">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <Label text="Occasione:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="occasionComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Stile:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="styleComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Colore preferito:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="colorComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Budget massimo (€):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="budgetField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <Button text="Trova proposte" onAction="#handleFindRecommendations"/>
+            <Button text="Aggiungi selezionato al carrello" onAction="#handleAddRecommendedToCart"/>
+        </HBox>
+    </GridPane>
+
+    <Label text="Proposte consigliate"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="recommendationTable" prefHeight="320">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Prodotto" prefWidth="180"/>
+            <TableColumn fx:id="priceColumn" text="Prezzo" prefWidth="100"/>
+            <TableColumn fx:id="colorColumn" text="Colore" prefWidth="120"/>
+            <TableColumn fx:id="varietyColumn" text="Varietà" prefWidth="180"/>
+            <TableColumn fx:id="reasonColumn" text="Motivazione" prefWidth="420"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="messageLabel" text="" />
+</VBox>

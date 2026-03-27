@@ -1,0 +1,152 @@
+package com.example.shopflowers.controller.graphic;
+
+import com.example.shopflowers.controller.application.CustomerCartController;
+import com.example.shopflowers.controller.application.RecommendationController;
+import com.example.shopflowers.model.entity.CartItem;
+import com.example.shopflowers.model.entity.RecommendationRequest;
+import com.example.shopflowers.model.entity.RecommendationResult;
+import com.example.shopflowers.util.SceneNavigator;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+public class RecommendationGraphicController {
+
+    @FXML
+    private ComboBox<String> occasionComboBox;
+
+    @FXML
+    private ComboBox<String> styleComboBox;
+
+    @FXML
+    private ComboBox<String> colorComboBox;
+
+    @FXML
+    private TextField budgetField;
+
+    @FXML
+    private TableView<RecommendationResult> recommendationTable;
+
+    @FXML
+    private TableColumn<RecommendationResult, String> nameColumn;
+
+    @FXML
+    private TableColumn<RecommendationResult, Double> priceColumn;
+
+    @FXML
+    private TableColumn<RecommendationResult, String> colorColumn;
+
+    @FXML
+    private TableColumn<RecommendationResult, String> varietyColumn;
+
+    @FXML
+    private TableColumn<RecommendationResult, String> reasonColumn;
+
+    @FXML
+    private Label messageLabel;
+
+    private final RecommendationController recommendationController = new RecommendationController();
+    private final CustomerCartController customerCartController = CustomerCatalogGraphicController.getSharedCartController();
+
+    private RecommendationResult selectedRecommendation;
+
+    @FXML
+    public void initialize() {
+        occasionComboBox.setItems(FXCollections.observableArrayList(
+                "COMPLEANNO", "ANNIVERSARIO", "LAUREA", "RINGRAZIAMENTO", "CONDOGLIANZE", "ROMANTICO"
+        ));
+
+        styleComboBox.setItems(FXCollections.observableArrayList(
+                "ROMANTICO", "ELEGANTE", "ALLEGRO", "SEMPLICE", "RAFFINATO"
+        ));
+
+        colorComboBox.setItems(FXCollections.observableArrayList(
+                "ROSSO", "BIANCO", "ROSA", "GIALLO", "MISTO", "NESSUNA"
+        ));
+
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("productPrice"));
+        colorColumn.setCellValueFactory(new PropertyValueFactory<>("productColor"));
+        varietyColumn.setCellValueFactory(new PropertyValueFactory<>("productVariety"));
+        reasonColumn.setCellValueFactory(new PropertyValueFactory<>("reason"));
+
+        recommendationTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
+                selectedRecommendation = newValue);
+    }
+
+    @FXML
+    private void handleFindRecommendations() {
+        String occasion = occasionComboBox.getValue();
+        String style = styleComboBox.getValue();
+        String color = colorComboBox.getValue();
+        String budgetText = budgetField.getText();
+
+        if (occasion == null || style == null || color == null || budgetText == null || budgetText.isBlank()) {
+            messageLabel.setText("Compila tutti i campi dell'assistente.");
+            return;
+        }
+
+        double budget;
+        try {
+            budget = Double.parseDouble(budgetText);
+        } catch (NumberFormatException e) {
+            messageLabel.setText("Inserisci un budget valido.");
+            return;
+        }
+
+        try {
+            RecommendationRequest request = new RecommendationRequest(occasion, style, budget, color);
+            List<RecommendationResult> results = recommendationController.getRecommendations(request);
+
+            recommendationTable.setItems(FXCollections.observableArrayList(results));
+
+            if (results.isEmpty()) {
+                messageLabel.setText("Nessun risultato trovato con questi criteri.");
+            } else {
+                messageLabel.setText("Proposte caricate con successo.");
+            }
+
+        } catch (SQLException e) {
+            messageLabel.setText("Errore nel caricamento delle proposte.");
+        }
+    }
+
+    @FXML
+    private void handleAddRecommendedToCart() {
+        if (selectedRecommendation == null) {
+            messageLabel.setText("Seleziona prima una proposta.");
+            return;
+        }
+
+        customerCartController.addToCart(selectedRecommendation.getProduct(), 1);
+        messageLabel.setText("Prodotto consigliato aggiunto al carrello.");
+    }
+
+    @FXML
+    private void handleBackToCatalog() {
+        try {
+            SceneNavigator.goTo(
+                    (Stage) messageLabel.getScene().getWindow(),
+                    "/com/example/shopflowers/catalog-view.fxml",
+                    "Shop Flowers - Catalogo Cliente"
+            );
+        } catch (IOException e) {
+            messageLabel.setText("Errore nel ritorno al catalogo.");
+        }
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
+        } catch (IOException e) {
+            messageLabel.setText("Errore durante il logout.");
+        }
+    }
+}

@@ -68,7 +68,9 @@ public class CustomerCatalogGraphicController {
     private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
 
     private static final CustomerCartController customerCartController = new CustomerCartController();
-
+    public static CustomerCartController getSharedCartController() {
+        return customerCartController;
+    }
     private FlowerProduct selectedProduct;
 
     @FXML
@@ -244,6 +246,18 @@ public class CustomerCatalogGraphicController {
 
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura della pagina azienda.");
+        }
+    }
+    @FXML
+    private void handleRecommendationAssistant() {
+        try {
+            SceneNavigator.goTo(
+                    (Stage) productTable.getScene().getWindow(),
+                    "/com/example/shopflowers/recommendation-view.fxml",
+                    "Shop Flowers - Assistente Bouquet"
+            );
+        } catch (IOException e) {
+            messageLabel.setText("Errore nell'apertura dell'assistente bouquet.");
         }
     }
     private CartItem selectedCartItem;
