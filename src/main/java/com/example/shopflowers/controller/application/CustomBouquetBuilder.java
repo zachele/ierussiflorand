@@ -34,6 +34,10 @@ public class CustomBouquetBuilder {
         items.add(item);
     }
 
+    public void removeItem(CustomBouquetItem item) {
+        items.remove(item);
+    }
+
     public void clearItems() {
         items.clear();
     }

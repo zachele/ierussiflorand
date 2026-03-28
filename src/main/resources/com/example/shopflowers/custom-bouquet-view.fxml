@@ -55,6 +55,8 @@
 
         <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1">
             <Button text="Aggiungi fiore al bouquet" onAction="#handleAddFlower"/>
+            <Button text="Rimuovi fiore selezionato" onAction="#handleRemoveFlower"/>
+            <Button text="Reset bouquet" onAction="#handleResetBouquet"/>
             <Button text="Conferma bouquet" onAction="#handleConfirmCustomBouquet"/>
         </HBox>
     </GridPane>

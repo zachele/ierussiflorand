@@ -8,12 +8,16 @@ import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class CustomBouquetGraphicController {
 
@@ -72,13 +76,16 @@ public class CustomBouquetGraphicController {
     private Label messageLabel;
 
     private final CustomBouquetController customBouquetController = new CustomBouquetController();
-    private final CustomerCartController customerCartController = CustomerCatalogGraphicController.getSharedCartController();
+    private CustomerCartController customerCartController;
 
     private FlowerProduct selectedFlower;
+    private CustomBouquetItem selectedBouquetItem;
 
     @FXML
     public void initialize() {
         try {
+            customerCartController = CustomerCatalogGraphicController.getSharedCartController();
+
             sizeComboBox.setItems(FXCollections.observableArrayList("PICCOLO", "MEDIO", "GRANDE"));
             packagingComboBox.setItems(FXCollections.observableArrayList("STANDARD", "PREMIUM"));
 
@@ -95,6 +102,9 @@ public class CustomBouquetGraphicController {
 
             flowerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
                     selectedFlower = newSelection);
+
+            bouquetTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+                    selectedBouquetItem = newSelection);
 
             loadFlowers();
             refreshBouquetTable();
@@ -134,6 +144,53 @@ public class CustomBouquetGraphicController {
     }
 
     @FXML
+    private void handleRemoveFlower() {
+        if (selectedBouquetItem == null) {
+            messageLabel.setText("Seleziona prima un fiore dalla composizione.");
+            return;
+        }
+
+        boolean removed = customBouquetController.removeFlowerFromBouquet(selectedBouquetItem);
+        if (!removed) {
+            messageLabel.setText("Errore durante la rimozione del fiore.");
+            return;
+        }
+
+        selectedBouquetItem = null;
+        refreshBouquetTable();
+        messageLabel.setText("Fiore rimosso dal bouquet.");
+    }
+
+    @FXML
+    private void handleResetBouquet() {
+        if (customBouquetController.getCurrentItems().isEmpty()) {
+            messageLabel.setText("Il bouquet è già vuoto.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma reset");
+        alert.setHeaderText("Vuoi azzerare il bouquet personalizzato?");
+        alert.setContentText("Tutti gli elementi inseriti verranno rimossi.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            messageLabel.setText("Reset annullato.");
+            return;
+        }
+
+        customBouquetController.resetBouquet();
+        selectedBouquetItem = null;
+        sizeComboBox.setValue(null);
+        packagingComboBox.setValue(null);
+        cardCheckBox.setSelected(false);
+        vaseCheckBox.setSelected(false);
+        quantityField.clear();
+        refreshBouquetTable();
+        messageLabel.setText("Bouquet azzerato.");
+    }
+
+    @FXML
     private void handleConfirmCustomBouquet() {
         if (sizeComboBox.getValue() == null || packagingComboBox.getValue() == null) {
             messageLabel.setText("Seleziona dimensione e confezione.");
@@ -160,6 +217,7 @@ public class CustomBouquetGraphicController {
 
         customerCartController.addToCart(virtualProduct, 1);
         customBouquetController.resetBouquet();
+        selectedBouquetItem = null;
         refreshBouquetTable();
         sizeComboBox.setValue(null);
         packagingComboBox.setValue(null);
@@ -208,7 +266,6 @@ public class CustomBouquetGraphicController {
             messageLabel.setText("Errore nel caricamento dei fiori.");
         }
     }
-
 
     private void refreshBouquetTable() {
         bouquetTable.setItems(FXCollections.observableArrayList(customBouquetController.getCurrentItems()));

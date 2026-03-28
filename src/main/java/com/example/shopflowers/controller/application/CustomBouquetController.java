@@ -38,6 +38,15 @@ public class CustomBouquetController {
         return true;
     }
 
+    public boolean removeFlowerFromBouquet(CustomBouquetItem item) {
+        if (item == null) {
+            return false;
+        }
+
+        builder.removeItem(item);
+        return true;
+    }
+
     public List<CustomBouquetItem> getCurrentItems() {
         return builder.getItems();
     }
