@@ -19,6 +19,10 @@ public class RecommendationEngine {
                 continue;
             }
 
+            if (mustRespectExactColor(request.getPreferredColor())
+                    && !matchesExactColor(product, request.getPreferredColor())) {
+                continue;
+            }
             int score = 0;
             List<String> reasons = new ArrayList<>();
             boolean withinBudget = product.getPrice() <= request.getMaxBudget();
@@ -128,7 +132,17 @@ public class RecommendationEngine {
         }
         return false;
     }
+    private boolean mustRespectExactColor(String preferredColor) {
+        return preferredColor != null
+                && !preferredColor.isBlank()
+                && !preferredColor.equalsIgnoreCase("NESSUNA")
+                && !preferredColor.equalsIgnoreCase("MISTO");
+    }
 
+    private boolean matchesExactColor(FlowerProduct product, String preferredColor) {
+        return product.getColor() != null
+                && product.getColor().toLowerCase().contains(preferredColor.toLowerCase());
+    }
     private String safe(String value) {
         return value == null ? "" : value.toLowerCase();
     }

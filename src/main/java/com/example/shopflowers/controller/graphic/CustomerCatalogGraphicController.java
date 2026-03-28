@@ -260,5 +260,18 @@ public class CustomerCatalogGraphicController {
             messageLabel.setText("Errore nell'apertura dell'assistente bouquet.");
         }
     }
+    @FXML
+    private void handleCustomBouquet() {
+        try {
+            SceneNavigator.goTo(
+                    (Stage) productTable.getScene().getWindow(),
+                    "/com/example/shopflowers/custom-bouquet-view.fxml",
+                    "Shop Flowers - Bouquet Personalizzato"
+            );
+        } catch (Exception e) {
+            messageLabel.setText("Errore nell'apertura del bouquet personalizzato.");
+        }
+    }
+
     private CartItem selectedCartItem;
 }

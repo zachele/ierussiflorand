@@ -1,14 +1,17 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>Adatto</w>
       <w>Aggiorna</w>
       <w>Aggiungi</w>
       <w>Articolo</w>
+      <w>Assistente</w>
       <w>Azienda</w>
       <w>Cliente</w>
       <w>Clienti</w>
       <w>Cognome</w>
       <w>Colore</w>
+      <w>Compatibile</w>
       <w>Configurazione</w>
       <w>Consegna</w>
       <w>Contatti</w>
@@ -20,9 +23,12 @@
       <w>Impossibile</w>
       <w>Indirizzo</w>
       <w>Informazioni</w>
+      <w>Leggermente</w>
       <w>Lunedì</w>
       <w>Metodo</w>
+      <w>Misto</w>
       <w>Modalità</w>
+      <w>Mostrate</w>
       <w>Motivazione</w>
       <w>Navigazione</w>
       <w>Nessuno</w>
@@ -50,11 +56,14 @@
       <w>Varietà</w>
       <w>Vendite</w>
       <w>acquisti</w>
+      <w>aggiornata</w>
       <w>aggiornato</w>
       <w>aggiunto</w>
       <w>all'area</w>
+      <w>all'occasione</w>
       <w>alla</w>
       <w>allo</w>
+      <w>anniversario</w>
       <w>annuali</w>
       <w>annullata</w>
       <w>annullato</w>
@@ -63,20 +72,32 @@
       <w>articolo</w>
       <w>associati</w>
       <w>attenzione</w>
+      <w>attuale</w>
       <w>azienda</w>
+      <w>bianco</w>
       <w>caricamento</w>
       <w>cliente</w>
+      <w>coerente</w>
+      <w>compatibili</w>
+      <w>compleanno</w>
       <w>completata</w>
       <w>completati</w>
+      <w>condoglianze</w>
+      <w>confezione</w>
       <w>consegnati</w>
       <w>consegnato</w>
+      <w>consigliato</w>
       <w>contratto</w>
       <w>corrente</w>
+      <w>corretta</w>
       <w>correttamente</w>
       <w>creato</w>
       <w>creazione</w>
+      <w>criteri</w>
       <w>cura</w>
       <w>dedicata</w>
+      <w>delicato</w>
+      <w>dell'assistente</w>
       <w>dell'operatore</w>
       <w>dell'utente</w>
       <w>della</w>
@@ -84,34 +105,46 @@
       <w>dello</w>
       <w>dettagli</w>
       <w>deve</w>
+      <w>dimensione</w>
       <w>disponibile</w>
+      <w>elegante</w>
       <w>eliminare</w>
       <w>eliminato</w>
       <w>eliminazione</w>
+      <w>entro</w>
       <w>esistente</w>
       <w>essere</w>
       <w>estetica</w>
       <w>eventi</w>
       <w>facilmente</w>
+      <w>fiore</w>
       <w>fiori</w>
       <w>gestione</w>
+      <w>giglio</w>
       <w>indirizzo</w>
       <w>l'aggiornamento</w>
       <w>l'articolo</w>
       <w>l'azienda</w>
       <w>l'eliminazione</w>
       <w>l'id</w>
+      <w>l'inizializzazione</w>
       <w>l'obiettivo</w>
       <w>l'operatore</w>
+      <w>laurea</w>
       <w>lavorative</w>
       <w>lavorativi</w>
       <w>mancante</w>
+      <w>margherita</w>
       <w>mezzi</w>
       <w>miei</w>
+      <w>migliori</w>
+      <w>misto</w>
       <w>modifica</w>
       <w>modificare</w>
+      <w>mostrate</w>
       <w>nata</w>
       <w>nell'apertura</w>
+      <w>nessuna</w>
       <w>nuovo</w>
       <w>occasioni</w>
       <w>offrire</w>
@@ -122,13 +155,19 @@
       <w>ordini</w>
       <w>ottenere</w>
       <w>pagamento</w>
+      <w>personalizzata</w>
+      <w>preferenza</w>
       <w>preparazione</w>
       <w>prodotto</w>
       <w>propone</w>
+      <w>proposta</w>
+      <w>proposte</w>
       <w>pubblici</w>
       <w>qualità</w>
       <w>quantità</w>
+      <w>questi</w>
       <w>quotidiani</w>
+      <w>raffinato</w>
       <w>raggiungibile</w>
       <w>registrati</w>
       <w>registrazione</w>
@@ -138,12 +177,17 @@
       <w>rimossi</w>
       <w>rimosso</w>
       <w>rimozione</w>
+      <w>ringraziamento</w>
+      <w>romantico</w>
+      <w>rossa</w>
       <w>rosso</w>
       <w>salvataggio</w>
       <w>schermata</w>
       <w>sede</w>
       <w>selezionato</w>
       <w>siamo</w>
+      <w>sobrio</w>
+      <w>sopra</w>
       <w>speciali</w>
       <w>statistiche</w>
       <w>stato</w>
@@ -164,6 +208,7 @@
       <w>venduto</w>
       <w>verranno</w>
       <w>verrà</w>
+      <w>vicine</w>
       <w>zona</w>
     </words>
   </dictionary>

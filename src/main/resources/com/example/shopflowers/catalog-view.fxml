@@ -22,6 +22,7 @@
     <MenuBar>
         <Menu text="Impostazioni">
             <MenuItem text="Assistente bouquet" onAction="#handleRecommendationAssistant"/>
+            <MenuItem text="Bouquet personalizzato" onAction="#handleCustomBouquet"/>
             <MenuItem text="I miei ordini" onAction="#handleMyOrders"/>
             <MenuItem text="Info azienda" onAction="#handleCompanyInfo"/>
             <MenuItem text="Logout" onAction="#handleLogout"/>

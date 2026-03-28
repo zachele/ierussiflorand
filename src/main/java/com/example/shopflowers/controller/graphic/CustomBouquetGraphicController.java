@@ -1,0 +1,217 @@
+package com.example.shopflowers.controller.graphic;
+
+import com.example.shopflowers.controller.application.CustomBouquetController;
+import com.example.shopflowers.controller.application.CustomerCartController;
+import com.example.shopflowers.model.entity.CustomBouquet;
+import com.example.shopflowers.model.entity.CustomBouquetItem;
+import com.example.shopflowers.model.entity.FlowerProduct;
+import com.example.shopflowers.util.SceneNavigator;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.List;
+
+public class CustomBouquetGraphicController {
+
+    @FXML
+    private ComboBox<String> sizeComboBox;
+
+    @FXML
+    private ComboBox<String> packagingComboBox;
+
+    @FXML
+    private CheckBox cardCheckBox;
+
+    @FXML
+    private CheckBox vaseCheckBox;
+
+    @FXML
+    private TableView<FlowerProduct> flowerTable;
+
+    @FXML
+    private TableColumn<FlowerProduct, String> flowerNameColumn;
+
+    @FXML
+    private TableColumn<FlowerProduct, Double> flowerPriceColumn;
+
+    @FXML
+    private TableColumn<FlowerProduct, String> flowerColorColumn;
+
+    @FXML
+    private TableColumn<FlowerProduct, String> flowerVarietyColumn;
+
+    @FXML
+    private TableColumn<FlowerProduct, Integer> flowerStockColumn;
+
+    @FXML
+    private TextField quantityField;
+
+    @FXML
+    private TableView<CustomBouquetItem> bouquetTable;
+
+    @FXML
+    private TableColumn<CustomBouquetItem, String> bouquetNameColumn;
+
+    @FXML
+    private TableColumn<CustomBouquetItem, Integer> bouquetQuantityColumn;
+
+    @FXML
+    private TableColumn<CustomBouquetItem, Double> bouquetUnitPriceColumn;
+
+    @FXML
+    private TableColumn<CustomBouquetItem, Double> bouquetSubtotalColumn;
+
+    @FXML
+    private Label totalLabel;
+
+    @FXML
+    private Label messageLabel;
+
+    private final CustomBouquetController customBouquetController = new CustomBouquetController();
+    private final CustomerCartController customerCartController = CustomerCatalogGraphicController.getSharedCartController();
+
+    private FlowerProduct selectedFlower;
+
+    @FXML
+    public void initialize() {
+        try {
+            sizeComboBox.setItems(FXCollections.observableArrayList("PICCOLO", "MEDIO", "GRANDE"));
+            packagingComboBox.setItems(FXCollections.observableArrayList("STANDARD", "PREMIUM"));
+
+            flowerNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            flowerPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+            flowerColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
+            flowerVarietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
+            flowerStockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+
+            bouquetNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+            bouquetQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+            bouquetUnitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+            bouquetSubtotalColumn.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+
+            flowerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+                    selectedFlower = newSelection);
+
+            loadFlowers();
+            refreshBouquetTable();
+        } catch (Exception e) {
+            if (messageLabel != null) {
+                messageLabel.setText("Errore durante l'inizializzazione della schermata bouquet.");
+            }
+        }
+    }
+
+    @FXML
+    private void handleAddFlower() {
+        if (selectedFlower == null) {
+            messageLabel.setText("Seleziona prima un fiore.");
+            return;
+        }
+
+        int quantity;
+        try {
+            quantity = Integer.parseInt(quantityField.getText());
+        } catch (NumberFormatException e) {
+            messageLabel.setText("Inserisci una quantità valida.");
+            return;
+        }
+
+        applyBouquetConfiguration();
+
+        boolean added = customBouquetController.addFlowerToBouquet(selectedFlower, quantity);
+        if (!added) {
+            messageLabel.setText("Quantità non valida o stock insufficiente.");
+            return;
+        }
+
+        refreshBouquetTable();
+        quantityField.clear();
+        messageLabel.setText("Fiore aggiunto al bouquet.");
+    }
+
+    @FXML
+    private void handleConfirmCustomBouquet() {
+        if (sizeComboBox.getValue() == null || packagingComboBox.getValue() == null) {
+            messageLabel.setText("Seleziona dimensione e confezione.");
+            return;
+        }
+
+        if (customBouquetController.getCurrentItems().isEmpty()) {
+            messageLabel.setText("Aggiungi almeno un fiore al bouquet.");
+            return;
+        }
+
+        applyBouquetConfiguration();
+
+        CustomBouquet bouquet = customBouquetController.buildBouquet();
+
+        FlowerProduct virtualProduct = new FlowerProduct(
+                -1,
+                bouquet.getDescription(),
+                bouquet.getTotalPrice(),
+                "Misto",
+                "Composizione personalizzata",
+                1
+        );
+
+        customerCartController.addToCart(virtualProduct, 1);
+        customBouquetController.resetBouquet();
+        refreshBouquetTable();
+        sizeComboBox.setValue(null);
+        packagingComboBox.setValue(null);
+        cardCheckBox.setSelected(false);
+        vaseCheckBox.setSelected(false);
+        totalLabel.setText(String.format("Totale bouquet: € %.2f", 0.0));
+        messageLabel.setText("Bouquet personalizzato aggiunto al carrello.");
+    }
+
+    @FXML
+    private void handleBackToCatalog() {
+        try {
+            SceneNavigator.goTo(
+                    (Stage) messageLabel.getScene().getWindow(),
+                    "/com/example/shopflowers/catalog-view.fxml",
+                    "Shop Flowers - Catalogo Cliente"
+            );
+        } catch (IOException e) {
+            messageLabel.setText("Errore nel ritorno al catalogo.");
+        }
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
+        } catch (IOException e) {
+            messageLabel.setText("Errore durante il logout.");
+        }
+    }
+
+    private void applyBouquetConfiguration() {
+        customBouquetController.configureBouquet(
+                sizeComboBox.getValue(),
+                packagingComboBox.getValue(),
+                cardCheckBox.isSelected(),
+                vaseCheckBox.isSelected()
+        );
+    }
+
+    private void loadFlowers() {
+        try {
+            List<FlowerProduct> flowers = customBouquetController.getAvailableFlowers();
+            flowerTable.setItems(FXCollections.observableArrayList(flowers));
+        } catch (Exception e) {
+            messageLabel.setText("Errore nel caricamento dei fiori.");
+        }
+    }
+
+
+    private void refreshBouquetTable() {
+        bouquetTable.setItems(FXCollections.observableArrayList(customBouquetController.getCurrentItems()));
+        totalLabel.setText(String.format("Totale bouquet: € %.2f", customBouquetController.getCurrentTotal()));
+    }
+}
