@@ -53,31 +53,6 @@ public class FlowerProductDAO {
         return products;
     }
 
-    public FlowerProduct findById(int id) throws SQLException {
-        String query = "SELECT id, name, price, color, variety, stock_quantity FROM flower_product WHERE id = ?";
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setInt(1, id);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return new FlowerProduct(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name"),
-                            resultSet.getDouble("price"),
-                            resultSet.getString("color"),
-                            resultSet.getString("variety"),
-                            resultSet.getInt("stock_quantity")
-                    );
-                }
-            }
-        }
-
-        return null;
-    }
-
     public void update(FlowerProduct product) throws SQLException {
         String query = "UPDATE flower_product SET name = ?, price = ?, color = ?, variety = ?, stock_quantity = ? WHERE id = ?";
 
@@ -105,15 +80,39 @@ public class FlowerProductDAO {
             preparedStatement.executeUpdate();
         }
     }
-    public void updateStock(int productId, int newStockQuantity) throws SQLException {
+    public FlowerProduct findById(int id) throws SQLException {
+        String query = "SELECT id, name, price, color, variety, stock_quantity FROM flower_product WHERE id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new FlowerProduct(
+                            resultSet.getInt("id"),
+                            resultSet.getString("name"),
+                            resultSet.getDouble("price"),
+                            resultSet.getString("color"),
+                            resultSet.getString("variety"),
+                            resultSet.getInt("stock_quantity")
+                    );
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public void updateStock(int productId, int newStock) throws SQLException {
         String query = "UPDATE flower_product SET stock_quantity = ? WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, newStockQuantity);
+            preparedStatement.setInt(1, newStock);
             preparedStatement.setInt(2, productId);
-
             preparedStatement.executeUpdate();
         }
     }

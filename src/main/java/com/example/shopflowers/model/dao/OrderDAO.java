@@ -161,4 +161,21 @@ public class OrderDAO {
                 resultSet.getDouble("unit_price")
         );
     }
+    public void saveCustomBouquetItems(int orderId, com.example.shopflowers.model.entity.CustomBouquet bouquet) throws SQLException {
+        String query = "INSERT INTO order_item (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            for (com.example.shopflowers.model.entity.CustomBouquetItem item : bouquet.getItems()) {
+                preparedStatement.setInt(1, orderId);
+                preparedStatement.setInt(2, item.getFlowerProduct().getId());
+                preparedStatement.setInt(3, item.getQuantity());
+                preparedStatement.setDouble(4, item.getFlowerProduct().getPrice());
+                preparedStatement.addBatch();
+            }
+
+            preparedStatement.executeBatch();
+        }
+    }
 }

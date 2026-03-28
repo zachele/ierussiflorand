@@ -175,7 +175,8 @@ public class CheckoutGraphicController {
 
             sharedCartController.clearCart();
             checkoutTable.getItems().clear();
-            totalLabel.setText("Totale ordine: € 0.0");
+            bouquetInfoLabel.setText("Nessun bouquet personalizzato selezionato.");
+            totalLabel.setText(String.format("Totale ordine: € %.2f", 0.0));
             addressField.clear();
             pickupDatePicker.setValue(null);
             pickupTimeComboBox.setValue(null);
