@@ -54,6 +54,10 @@ public class CheckoutController {
     }
 
     public boolean confirmOrder(Order order) throws SQLException {
+        if ((order.getItems() == null || order.getItems().isEmpty()) && !CustomBouquetSession.hasBouquet()) {
+            return false;
+        }
+
         Map<Integer, Integer> requiredQuantities = new HashMap<>();
 
         for (CartItem item : order.getItems()) {
@@ -83,7 +87,7 @@ public class CheckoutController {
 
         int orderId = orderDAO.saveOrder(order);
 
-        if (!order.getItems().isEmpty()) {
+        if (order.getItems() != null && !order.getItems().isEmpty()) {
             orderDAO.saveOrderItems(orderId, order);
         }
 

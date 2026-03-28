@@ -72,6 +72,7 @@
 
     <HBox spacing="12">
         <Button text="Conferma ordine" onAction="#handleConfirmOrder"/>
+        <Button text="Rimuovi bouquet" onAction="#handleRemoveBouquet"/>
         <Button text="Torna al catalogo" onAction="#handleBackToCatalog"/>
         <Button text="Logout" onAction="#handleLogout"/>
     </HBox>

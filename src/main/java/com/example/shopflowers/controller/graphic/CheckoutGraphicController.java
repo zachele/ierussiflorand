@@ -17,6 +17,9 @@ import com.example.shopflowers.util.SceneNavigator;
 
 import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.util.CustomBouquetSession;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
 
 public class CheckoutGraphicController {
 
@@ -112,6 +115,7 @@ public class CheckoutGraphicController {
                 );
                 total += bouquet.getTotalPrice();
             } else {
+                CustomBouquetSession.clear();
                 bouquetInfoLabel.setText("Nessun bouquet personalizzato selezionato.");
             }
 
@@ -121,8 +125,8 @@ public class CheckoutGraphicController {
 
     @FXML
     private void handleConfirmOrder() {
-        if (sharedCartController == null || sharedCartController.isCartEmpty()) {
-            messageLabel.setText("Il carrello è vuoto.");
+        if ((sharedCartController == null || sharedCartController.isCartEmpty()) && !CustomBouquetSession.hasBouquet()) {
+            messageLabel.setText("Il carrello e il bouquet personalizzato sono vuoti.");
             return;
         }
 
@@ -158,7 +162,7 @@ public class CheckoutGraphicController {
         try {
             Order order = checkoutController.createOrder(
                     Session.getLoggedUsername(),
-                    sharedCartController.getCartItems(),
+                    sharedCartController != null ? sharedCartController.getCartItems() : java.util.Collections.emptyList(),
                     deliveryMode,
                     address,
                     pickupDate,
@@ -169,12 +173,16 @@ public class CheckoutGraphicController {
             boolean confirmed = checkoutController.confirmOrder(order);
 
             if (!confirmed) {
-                messageLabel.setText("Ordine non confermato: stock insufficiente.");
+                messageLabel.setText("Ordine non confermato: stock insufficiente o ordine vuoto.");
                 return;
             }
 
-            sharedCartController.clearCart();
+            if (sharedCartController != null) {
+                sharedCartController.clearCart();
+            }
+
             checkoutTable.getItems().clear();
+            CustomBouquetSession.clear();
             bouquetInfoLabel.setText("Nessun bouquet personalizzato selezionato.");
             totalLabel.setText(String.format("Totale ordine: € %.2f", 0.0));
             addressField.clear();
@@ -210,5 +218,30 @@ public class CheckoutGraphicController {
             messageLabel.setText("Errore durante il logout.");
         }
     }
+    @FXML
+    private void handleRemoveBouquet() {
+        if (!CustomBouquetSession.hasBouquet()) {
+            messageLabel.setText("Non è presente alcun bouquet da rimuovere.");
+            return;
+        }
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma rimozione");
+        alert.setHeaderText("Rimuovere il bouquet personalizzato dal checkout?");
+        alert.setContentText("Il bouquet verrà eliminato dal pagamento corrente.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            messageLabel.setText("Rimozione bouquet annullata.");
+            return;
+        }
+
+        CustomBouquetSession.clear();
+        bouquetInfoLabel.setText("Nessun bouquet personalizzato selezionato.");
+
+        double total = sharedCartController != null ? sharedCartController.getCartTotal() : 0.0;
+        totalLabel.setText(String.format("Totale ordine: € %.2f", total));
+
+        messageLabel.setText("Bouquet rimosso dal checkout.");
+    }
 }
