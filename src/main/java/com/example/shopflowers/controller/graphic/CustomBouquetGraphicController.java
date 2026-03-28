@@ -15,7 +15,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +74,9 @@ public class CustomBouquetGraphicController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private TextField budgetField;
+
     private final CustomBouquetController customBouquetController = new CustomBouquetController();
     private CustomerCartController customerCartController;
 
@@ -110,7 +112,7 @@ public class CustomBouquetGraphicController {
             refreshBouquetTable();
         } catch (Exception e) {
             if (messageLabel != null) {
-                messageLabel.setText("Errore durante l'inizializzazione della schermata bouquet.");
+                messageLabel.setText("");
             }
         }
     }
@@ -130,6 +132,15 @@ public class CustomBouquetGraphicController {
             return;
         }
 
+        if (budgetField.getText() != null && !budgetField.getText().isBlank()) {
+            try {
+                Double.parseDouble(budgetField.getText());
+            } catch (NumberFormatException e) {
+                messageLabel.setText("Inserisci un budget valido.");
+                return;
+            }
+        }
+
         applyBouquetConfiguration();
 
         boolean added = customBouquetController.addFlowerToBouquet(selectedFlower, quantity);
@@ -140,7 +151,15 @@ public class CustomBouquetGraphicController {
 
         refreshBouquetTable();
         quantityField.clear();
-        messageLabel.setText("Fiore aggiunto al bouquet.");
+
+        if (customBouquetController.isWithinBudget()) {
+            messageLabel.setText("Fiore aggiunto al bouquet.");
+        } else {
+            messageLabel.setText(String.format(
+                    "Budget superato di € %.2f. Modifica la composizione prima di confermare.",
+                    customBouquetController.getExceededAmount()
+            ));
+        }
     }
 
     @FXML
@@ -186,6 +205,7 @@ public class CustomBouquetGraphicController {
         cardCheckBox.setSelected(false);
         vaseCheckBox.setSelected(false);
         quantityField.clear();
+        budgetField.clear();
         refreshBouquetTable();
         messageLabel.setText("Bouquet azzerato.");
     }
@@ -202,20 +222,31 @@ public class CustomBouquetGraphicController {
             return;
         }
 
+        if (budgetField.getText() != null && !budgetField.getText().isBlank()) {
+            try {
+                Double.parseDouble(budgetField.getText());
+            } catch (NumberFormatException e) {
+                messageLabel.setText("Inserisci un budget valido.");
+                return;
+            }
+        }
+
         applyBouquetConfiguration();
+
+        if (!customBouquetController.isWithinBudget()) {
+            messageLabel.setText(String.format(
+                    "Non puoi confermare: il bouquet supera il budget di € %.2f.",
+                    customBouquetController.getExceededAmount()
+            ));
+            return;
+        }
 
         CustomBouquet bouquet = customBouquetController.buildBouquet();
 
-        FlowerProduct virtualProduct = new FlowerProduct(
-                -1,
-                bouquet.getDescription(),
-                bouquet.getTotalPrice(),
-                "Misto",
-                "Composizione personalizzata",
-                1
-        );
+        for (CustomBouquetItem item : bouquet.getItems()) {
+            customerCartController.addToCart(item.getFlowerProduct(), item.getQuantity());
+        }
 
-        customerCartController.addToCart(virtualProduct, 1);
         customBouquetController.resetBouquet();
         selectedBouquetItem = null;
         refreshBouquetTable();
@@ -223,8 +254,9 @@ public class CustomBouquetGraphicController {
         packagingComboBox.setValue(null);
         cardCheckBox.setSelected(false);
         vaseCheckBox.setSelected(false);
+        budgetField.clear();
         totalLabel.setText(String.format("Totale bouquet: € %.2f", 0.0));
-        messageLabel.setText("Bouquet personalizzato aggiunto al carrello.");
+        messageLabel.setText("Bouquet entro budget aggiunto al carrello.");
     }
 
     @FXML
@@ -250,14 +282,25 @@ public class CustomBouquetGraphicController {
     }
 
     private void applyBouquetConfiguration() {
+        Double budget = null;
+
+        if (budgetField.getText() != null && !budgetField.getText().isBlank()) {
+            try {
+                budget = Double.parseDouble(budgetField.getText());
+            } catch (NumberFormatException e) {
+                messageLabel.setText("Inserisci un budget valido.");
+                return;
+            }
+        }
+
         customBouquetController.configureBouquet(
                 sizeComboBox.getValue(),
                 packagingComboBox.getValue(),
                 cardCheckBox.isSelected(),
-                vaseCheckBox.isSelected()
+                vaseCheckBox.isSelected(),
+                budget
         );
     }
-
     private void loadFlowers() {
         try {
             List<FlowerProduct> flowers = customBouquetController.getAvailableFlowers();

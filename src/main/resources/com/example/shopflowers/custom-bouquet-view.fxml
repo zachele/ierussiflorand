@@ -24,7 +24,7 @@
       style="-fx-padding: 20;">
 
     <MenuBar>
-        <Menu text="Navigazione">
+        <Menu text="Impostazioni">
             <MenuItem text="Torna al catalogo" onAction="#handleBackToCatalog"/>
             <MenuItem text="Logout" onAction="#handleLogout"/>
         </Menu>
@@ -32,7 +32,10 @@
 
     <Label text="Bouquet Personalizzato"
            style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-
+    <VBox spacing="4">
+        <Label text="Prezzi extra bouquet:" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+        <Label text="Dimensione media: +5€ | Dimensione grande: +10€ | Confezione premium: +7€ | Biglietto: +3€ | Vaso: +8€" />
+    </VBox>
     <GridPane hgap="12" vgap="12">
         <padding>
             <Insets top="10" right="10" bottom="10" left="10"/>
@@ -50,10 +53,13 @@
             <CheckBox fx:id="vaseCheckBox" text="Vaso"/>
         </HBox>
 
-        <Label text="Quantità fiore:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <TextField fx:id="quantityField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Budget massimo (€):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="budgetField" prefWidth="160" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-        <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1">
+        <Label text="Quantità fiore:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="quantityField" prefWidth="160" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
             <Button text="Aggiungi fiore al bouquet" onAction="#handleAddFlower"/>
             <Button text="Rimuovi fiore selezionato" onAction="#handleRemoveFlower"/>
             <Button text="Reset bouquet" onAction="#handleResetBouquet"/>

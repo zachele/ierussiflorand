@@ -22,11 +22,12 @@ public class CustomBouquetController {
         return flowerProductDAO.findAll();
     }
 
-    public void configureBouquet(String size, String packaging, boolean cardIncluded, boolean vaseIncluded) {
+    public void configureBouquet(String size, String packaging, boolean cardIncluded, boolean vaseIncluded, Double maxBudget) {
         builder.setSize(size);
         builder.setPackaging(packaging);
         builder.setCardIncluded(cardIncluded);
         builder.setVaseIncluded(vaseIncluded);
+        builder.setMaxBudget(maxBudget);
     }
 
     public boolean addFlowerToBouquet(FlowerProduct product, int quantity) {
@@ -55,6 +56,18 @@ public class CustomBouquetController {
         return builder.calculateTotalPrice();
     }
 
+    public boolean isWithinBudget() {
+        return builder.isWithinBudget();
+    }
+
+    public double getExceededAmount() {
+        return builder.getExceededAmount();
+    }
+
+    public Double getCurrentBudget() {
+        return builder.getMaxBudget();
+    }
+
     public CustomBouquet buildBouquet() {
         return builder.build();
     }
@@ -65,5 +78,6 @@ public class CustomBouquetController {
         builder.setPackaging(null);
         builder.setCardIncluded(false);
         builder.setVaseIncluded(false);
+        builder.setMaxBudget(null);
     }
 }

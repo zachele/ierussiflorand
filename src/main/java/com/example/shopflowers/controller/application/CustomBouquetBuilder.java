@@ -12,6 +12,7 @@ public class CustomBouquetBuilder {
     private String packaging;
     private boolean cardIncluded;
     private boolean vaseIncluded;
+    private Double maxBudget;
     private final List<CustomBouquetItem> items = new ArrayList<>();
 
     public void setSize(String size) {
@@ -30,7 +31,26 @@ public class CustomBouquetBuilder {
         this.vaseIncluded = vaseIncluded;
     }
 
+    public void setMaxBudget(Double maxBudget) {
+        this.maxBudget = maxBudget;
+    }
+
+    public Double getMaxBudget() {
+        return maxBudget;
+    }
+
     public void addItem(CustomBouquetItem item) {
+        for (int i = 0; i < items.size(); i++) {
+            CustomBouquetItem existingItem = items.get(i);
+
+            if (existingItem.getFlowerProduct().getId() == item.getFlowerProduct().getId()) {
+                int newQuantity = existingItem.getQuantity() + item.getQuantity();
+
+                items.set(i, new CustomBouquetItem(existingItem.getFlowerProduct(), newQuantity));
+                return;
+            }
+        }
+
         items.add(item);
     }
 
@@ -73,6 +93,17 @@ public class CustomBouquetBuilder {
         }
 
         return total;
+    }
+
+    public boolean isWithinBudget() {
+        return maxBudget == null || calculateTotalPrice() <= maxBudget;
+    }
+
+    public double getExceededAmount() {
+        if (maxBudget == null) {
+            return 0.0;
+        }
+        return Math.max(0.0, calculateTotalPrice() - maxBudget);
     }
 
     public CustomBouquet build() {
