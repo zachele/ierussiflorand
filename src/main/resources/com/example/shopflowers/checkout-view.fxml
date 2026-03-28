@@ -40,6 +40,11 @@
         </columns>
     </TableView>
 
+    <Label fx:id="bouquetInfoLabel"
+           text="Nessun bouquet personalizzato selezionato."
+           wrapText="true"
+           style="-fx-font-size: 14px;" />
+
     <Label fx:id="totalLabel"
            text="Totale ordine: € 0.0"
            style="-fx-font-size: 16px; -fx-font-weight: bold;" />

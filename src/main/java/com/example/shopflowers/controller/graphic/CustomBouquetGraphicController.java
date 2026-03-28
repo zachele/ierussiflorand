@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.shopflowers.util.CustomBouquetSession;
+
 public class CustomBouquetGraphicController {
 
     @FXML
@@ -242,10 +244,7 @@ public class CustomBouquetGraphicController {
         }
 
         CustomBouquet bouquet = customBouquetController.buildBouquet();
-
-        for (CustomBouquetItem item : bouquet.getItems()) {
-            customerCartController.addToCart(item.getFlowerProduct(), item.getQuantity());
-        }
+        CustomBouquetSession.setCurrentBouquet(bouquet);
 
         customBouquetController.resetBouquet();
         selectedBouquetItem = null;
@@ -256,7 +255,7 @@ public class CustomBouquetGraphicController {
         vaseCheckBox.setSelected(false);
         budgetField.clear();
         totalLabel.setText(String.format("Totale bouquet: € %.2f", 0.0));
-        messageLabel.setText("Bouquet entro budget aggiunto al carrello.");
+        messageLabel.setText("Bouquet personalizzato salvato. Procedi al checkout per completare l'ordine.");
     }
 
     @FXML

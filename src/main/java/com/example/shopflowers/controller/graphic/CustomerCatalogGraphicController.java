@@ -21,6 +21,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
+import com.example.shopflowers.util.CustomBouquetSession;
+
+
 public class CustomerCatalogGraphicController {
 
     @FXML
@@ -148,8 +151,8 @@ public class CustomerCatalogGraphicController {
     }
     @FXML
     private void handleGoToCheckout() {
-        if (customerCartController.isCartEmpty()) {
-            messageLabel.setText("Il carrello è vuoto.");
+        if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
+            messageLabel.setText("Il carrello e il bouquet personalizzato sono vuoti.");
             return;
         }
 

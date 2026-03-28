@@ -15,6 +15,9 @@ import java.io.IOException;
 import com.example.shopflowers.util.Session;
 import com.example.shopflowers.util.SceneNavigator;
 
+import com.example.shopflowers.model.entity.CustomBouquet;
+import com.example.shopflowers.util.CustomBouquetSession;
+
 public class CheckoutGraphicController {
 
     @FXML
@@ -50,7 +53,8 @@ public class CheckoutGraphicController {
     @FXML
     private ComboBox<String> pickupTimeComboBox;
 
-
+    @FXML
+    private Label bouquetInfoLabel;
 
     private static CustomerCartController sharedCartController;
 
@@ -96,7 +100,22 @@ public class CheckoutGraphicController {
 
         if (sharedCartController != null) {
             checkoutTable.setItems(FXCollections.observableArrayList(sharedCartController.getCartItems()));
-            totalLabel.setText(String.format("Totale ordine: € %.2f", 0.0));
+
+            double total = sharedCartController.getCartTotal();
+
+            if (CustomBouquetSession.hasBouquet()) {
+                CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
+                bouquetInfoLabel.setText(
+                        String.format("Bouquet personalizzato: %s | Totale bouquet: € %.2f",
+                                bouquet.getDescription(),
+                                bouquet.getTotalPrice())
+                );
+                total += bouquet.getTotalPrice();
+            } else {
+                bouquetInfoLabel.setText("Nessun bouquet personalizzato selezionato.");
+            }
+
+            totalLabel.setText(String.format("Totale ordine: € %.2f", total));
         }
     }
 
@@ -190,4 +209,5 @@ public class CheckoutGraphicController {
             messageLabel.setText("Errore durante il logout.");
         }
     }
+
 }
