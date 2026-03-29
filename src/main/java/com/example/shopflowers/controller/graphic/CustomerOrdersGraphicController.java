@@ -1,21 +1,24 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.CustomerOrdersController;
+import com.example.shopflowers.model.dao.CustomBouquetOrderDAO;
+import com.example.shopflowers.model.entity.CustomBouquetOrderSummary;
 import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
+import com.example.shopflowers.util.SceneNavigator;
 import com.example.shopflowers.util.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
-import com.example.shopflowers.util.SceneNavigator;
 
 public class CustomerOrdersGraphicController {
 
@@ -38,6 +41,9 @@ public class CustomerOrdersGraphicController {
     private TableColumn<OrderSummary, String> dateColumn;
 
     @FXML
+    private TableColumn<OrderSummary, String> statusColumn;
+
+    @FXML
     private TableView<OrderItemSummary> orderItemsTable;
 
     @FXML
@@ -50,12 +56,14 @@ public class CustomerOrdersGraphicController {
     private TableColumn<OrderItemSummary, Double> unitPriceColumn;
 
     @FXML
-    private Label messageLabel;
+    private Label bouquetDetailsLabel;
 
     @FXML
-    private TableColumn<OrderSummary, String> statusColumn;
+    private Label messageLabel;
 
     private final CustomerOrdersController customerOrdersController = new CustomerOrdersController();
+    private final CustomBouquetOrderDAO customBouquetOrderDAO = new CustomBouquetOrderDAO();
+    private OrderSummary selectedOrder;
 
     @FXML
     public void initialize() {
@@ -64,16 +72,21 @@ public class CustomerOrdersGraphicController {
         paymentColumn.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         productColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            selectedOrder = newSelection;
+
             if (newSelection != null) {
                 loadOrderItems(newSelection.getId());
+                loadBouquetDetails(newSelection.getId());
+            } else {
+                orderItemsTable.getItems().clear();
+                bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
             }
         });
 
@@ -84,7 +97,11 @@ public class CustomerOrdersGraphicController {
         try {
             List<OrderSummary> orders = customerOrdersController.getOrdersByUsername(Session.getLoggedUsername());
             ObservableList<OrderSummary> observableOrders = FXCollections.observableArrayList(orders);
+
             orderTable.setItems(observableOrders);
+            orderItemsTable.getItems().clear();
+            bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
+            selectedOrder = null;
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento ordini.");
         }
@@ -99,6 +116,32 @@ public class CustomerOrdersGraphicController {
             messageLabel.setText("Errore nel caricamento dettagli ordine.");
         }
     }
+
+    private void loadBouquetDetails(int orderId) {
+        try {
+            CustomBouquetOrderSummary bouquet = customBouquetOrderDAO.findByOrderId(orderId);
+
+            if (bouquet == null) {
+                bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
+                return;
+            }
+
+            String details = String.format(
+                    "Bouquet personalizzato | Dimensione: %s | Confezione: %s | Biglietto: %s | Vaso: %s | Totale: € %.2f",
+                    bouquet.getSize(),
+                    bouquet.getPackaging(),
+                    bouquet.isCardIncluded() ? "Sì" : "No",
+                    bouquet.isVaseIncluded() ? "Sì" : "No",
+                    bouquet.getTotalPrice()
+            );
+
+            bouquetDetailsLabel.setText(details);
+
+        } catch (SQLException e) {
+            bouquetDetailsLabel.setText("Errore nel caricamento dettagli bouquet.");
+        }
+    }
+
     @FXML
     private void handleBackToCatalog() {
         try {
@@ -107,11 +150,11 @@ public class CustomerOrdersGraphicController {
                     "/com/example/shopflowers/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
-
         } catch (IOException e) {
             messageLabel.setText("Errore nel ritorno al catalogo.");
         }
     }
+
     @FXML
     private void handleLogout() {
         try {
