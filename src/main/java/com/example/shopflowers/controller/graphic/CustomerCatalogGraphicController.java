@@ -4,25 +4,28 @@ import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
+import com.example.shopflowers.util.CustomBouquetSession;
+import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.sql.SQLException;
-import java.util.List;
-import javafx.stage.Stage;
-import java.io.IOException;
-import com.example.shopflowers.util.SceneNavigator;
-
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
-
-import com.example.shopflowers.util.CustomBouquetSession;
-
 
 public class CustomerCatalogGraphicController {
 
@@ -68,13 +71,27 @@ public class CustomerCatalogGraphicController {
     @FXML
     private Label totalLabel;
 
-    private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
+    @FXML
+    private TextField searchField;
 
+    @FXML
+    private ComboBox<String> colorFilterComboBox;
+
+    @FXML
+    private CheckBox availableOnlyCheckBox;
+
+    private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
     private static final CustomerCartController customerCartController = new CustomerCartController();
+
+    private ObservableList<FlowerProduct> masterProductList = FXCollections.observableArrayList();
+    private FilteredList<FlowerProduct> filteredProducts;
+
+    private FlowerProduct selectedProduct;
+    private CartItem selectedCartItem;
+
     public static CustomerCartController getSharedCartController() {
         return customerCartController;
     }
-    private FlowerProduct selectedProduct;
 
     @FXML
     public void initialize() {
@@ -89,10 +106,20 @@ public class CustomerCatalogGraphicController {
         cartQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         cartTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
 
+        colorFilterComboBox.setItems(FXCollections.observableArrayList(
+                "Tutti", "Rosso", "Bianco", "Rosa", "Giallo", "Misto"
+        ));
+        colorFilterComboBox.setValue("Tutti");
+
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+        colorFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+        availableOnlyCheckBox.selectedProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+
         productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-            selectedProduct = newSelection);
+                selectedProduct = newSelection);
+
         cartTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-            selectedCartItem = newSelection);
+                selectedCartItem = newSelection);
 
         loadProducts();
         refreshCart();
@@ -132,23 +159,63 @@ public class CustomerCatalogGraphicController {
     private void loadProducts() {
         try {
             List<FlowerProduct> products = browseCatalogController.getAllProducts();
-            ObservableList<FlowerProduct> observableProducts = FXCollections.observableArrayList(products);
-            productTable.setItems(observableProducts);
+            masterProductList = FXCollections.observableArrayList(products);
+            filteredProducts = new FilteredList<>(masterProductList, product -> true);
+
+            SortedList<FlowerProduct> sortedProducts = new SortedList<>(filteredProducts);
+            sortedProducts.comparatorProperty().bind(productTable.comparatorProperty());
+
+            productTable.setItems(sortedProducts);
+            applyFilters();
+
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento prodotti.");
         }
+    }
+
+    private void applyFilters() {
+        if (filteredProducts == null) {
+            return;
+        }
+
+        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+        String selectedColor = colorFilterComboBox.getValue();
+        boolean availableOnly = availableOnlyCheckBox.isSelected();
+
+        filteredProducts.setPredicate(product -> {
+            if (product == null) {
+                return false;
+            }
+
+            boolean matchesSearch = searchText.isBlank()
+                    || safe(product.getName()).contains(searchText)
+                    || safe(product.getColor()).contains(searchText)
+                    || safe(product.getVariety()).contains(searchText);
+
+            boolean matchesColor = selectedColor == null
+                    || selectedColor.equalsIgnoreCase("Tutti")
+                    || safe(product.getColor()).contains(selectedColor.toLowerCase());
+
+            boolean matchesAvailability = !availableOnly || product.getStockQuantity() > 0;
+
+            return matchesSearch && matchesColor && matchesAvailability;
+        });
+    }
+
+    private String safe(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     private void refreshCart() {
         ObservableList<CartItem> observableCart =
                 FXCollections.observableArrayList(customerCartController.getCartItems());
 
-        cartTable.setItems(null);
         cartTable.setItems(observableCart);
         cartTable.refresh();
 
-        totalLabel.setText("Totale carrello: € " + customerCartController.getCartTotal());
+        totalLabel.setText(String.format("Totale carrello: € %.2f", customerCartController.getCartTotal()));
     }
+
     @FXML
     private void handleGoToCheckout() {
         if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
@@ -169,6 +236,7 @@ public class CustomerCatalogGraphicController {
             messageLabel.setText("Errore nell'apertura del checkout.");
         }
     }
+
     @FXML
     private void handleRemoveFromCart() {
         if (selectedCartItem == null) {
@@ -218,14 +286,6 @@ public class CustomerCatalogGraphicController {
     }
 
     @FXML
-    private void handleLogout() {
-        try {
-            SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
-        } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
-        }
-    }
-    @FXML
     private void handleMyOrders() {
         try {
             SceneNavigator.goTo(
@@ -233,11 +293,11 @@ public class CustomerCatalogGraphicController {
                     "/com/example/shopflowers/customer-orders-view.fxml",
                     "Shop Flowers - I miei ordini"
             );
-
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura dello storico ordini.");
         }
     }
+
     @FXML
     private void handleCompanyInfo() {
         try {
@@ -246,11 +306,11 @@ public class CustomerCatalogGraphicController {
                     "/com/example/shopflowers/company-info-view.fxml",
                     "Shop Flowers - Informazioni Azienda"
             );
-
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura della pagina azienda.");
         }
     }
+
     @FXML
     private void handleRecommendationAssistant() {
         try {
@@ -263,6 +323,7 @@ public class CustomerCatalogGraphicController {
             messageLabel.setText("Errore nell'apertura dell'assistente bouquet.");
         }
     }
+
     @FXML
     private void handleCustomBouquet() {
         try {
@@ -276,5 +337,12 @@ public class CustomerCatalogGraphicController {
         }
     }
 
-    private CartItem selectedCartItem;
+    @FXML
+    private void handleLogout() {
+        try {
+            SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
+        } catch (IOException e) {
+            messageLabel.setText("Errore durante il logout.");
+        }
+    }
 }
