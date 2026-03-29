@@ -9,7 +9,10 @@ import com.example.shopflowers.util.SceneNavigator;
 import com.example.shopflowers.util.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -56,6 +59,9 @@ public class CustomerOrdersGraphicController {
     private TableColumn<OrderItemSummary, Double> unitPriceColumn;
 
     @FXML
+    private ComboBox<String> statusFilterComboBox;
+
+    @FXML
     private Label bouquetDetailsLabel;
 
     @FXML
@@ -63,6 +69,10 @@ public class CustomerOrdersGraphicController {
 
     private final CustomerOrdersController customerOrdersController = new CustomerOrdersController();
     private final CustomBouquetOrderDAO customBouquetOrderDAO = new CustomBouquetOrderDAO();
+
+    private ObservableList<OrderSummary> masterOrderList = FXCollections.observableArrayList();
+    private FilteredList<OrderSummary> filteredOrders;
+
     private OrderSummary selectedOrder;
 
     @FXML
@@ -77,6 +87,15 @@ public class CustomerOrdersGraphicController {
         productColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+
+        statusFilterComboBox.setItems(FXCollections.observableArrayList(
+                "Tutti",
+                "IN_PREPARAZIONE",
+                "PRONTO",
+                "CONSEGNATO"
+        ));
+        statusFilterComboBox.setValue("Tutti");
+        statusFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
 
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedOrder = newSelection;
@@ -96,15 +115,44 @@ public class CustomerOrdersGraphicController {
     private void loadOrders() {
         try {
             List<OrderSummary> orders = customerOrdersController.getOrdersByUsername(Session.getLoggedUsername());
-            ObservableList<OrderSummary> observableOrders = FXCollections.observableArrayList(orders);
+            masterOrderList = FXCollections.observableArrayList(orders);
+            filteredOrders = new FilteredList<>(masterOrderList, order -> true);
 
-            orderTable.setItems(observableOrders);
+            SortedList<OrderSummary> sortedOrders = new SortedList<>(filteredOrders);
+            sortedOrders.comparatorProperty().bind(orderTable.comparatorProperty());
+
+            orderTable.setItems(sortedOrders);
+            applyFilters();
+
             orderItemsTable.getItems().clear();
             bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
             selectedOrder = null;
+
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento ordini.");
         }
+    }
+
+    private void applyFilters() {
+        if (filteredOrders == null) {
+            return;
+        }
+
+        String selectedStatus = statusFilterComboBox.getValue();
+
+        filteredOrders.setPredicate(order -> {
+            if (order == null) {
+                return false;
+            }
+
+            return selectedStatus == null
+                    || selectedStatus.equalsIgnoreCase("Tutti")
+                    || safe(order.getStatus()).equals(selectedStatus.toLowerCase());
+        });
+    }
+
+    private String safe(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     private void loadOrderItems(int orderId) {

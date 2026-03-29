@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -25,6 +26,10 @@
     <Label text="Ordini effettuati"
            style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
+    <HBox spacing="12">
+        <ComboBox fx:id="statusFilterComboBox" prefWidth="180" />
+    </HBox>
+
     <TableView fx:id="orderTable" prefHeight="250">
         <columns>
             <TableColumn fx:id="orderIdColumn" text="ID Ordine" prefWidth="100" />
@@ -48,7 +53,7 @@
     </TableView>
 
     <Label fx:id="bouquetDetailsLabel"
-           text="Nessun bouquet personalizzato associato."
+           text="Questo ordine non contiene un bouquet personalizzato."
            wrapText="true"
            style="-fx-font-size: 14px;" />
 
