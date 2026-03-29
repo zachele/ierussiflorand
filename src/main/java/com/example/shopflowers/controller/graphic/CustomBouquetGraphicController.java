@@ -171,6 +171,17 @@ public class CustomBouquetGraphicController {
             return;
         }
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma rimozione");
+        alert.setHeaderText("Rimuovere il fiore selezionato dal bouquet?");
+        alert.setContentText("L'elemento verrà eliminato dalla composizione corrente.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            messageLabel.setText("Rimozione annullata.");
+            return;
+        }
+
         boolean removed = customBouquetController.removeFlowerFromBouquet(selectedBouquetItem);
         if (!removed) {
             messageLabel.setText("Errore durante la rimozione del fiore.");

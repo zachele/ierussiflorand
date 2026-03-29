@@ -227,8 +227,8 @@ public class CheckoutGraphicController {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma rimozione");
-        alert.setHeaderText("Rimuovere il bouquet personalizzato dal checkout?");
-        alert.setContentText("Il bouquet verrà eliminato dal pagamento corrente.");
+        alert.setHeaderText("Rimuovere il bouquet dal pagamento corrente?");
+        alert.setContentText("Il bouquet personalizzato verrà eliminato dal checkout.");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) {
@@ -237,11 +237,11 @@ public class CheckoutGraphicController {
         }
 
         CustomBouquetSession.clear();
-        bouquetInfoLabel.setText("Nessun bouquet personalizzato selezionato.");
+        bouquetInfoLabel.setText("Nessun bouquet personalizzato nel pagamento corrente.");
 
         double total = sharedCartController != null ? sharedCartController.getCartTotal() : 0.0;
         totalLabel.setText(String.format("Totale ordine: € %.2f", total));
 
-        messageLabel.setText("Bouquet rimosso dal checkout.");
+        messageLabel.setText("Bouquet rimosso dal pagamento corrente.");
     }
 }
