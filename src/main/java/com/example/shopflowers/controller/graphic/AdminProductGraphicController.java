@@ -3,19 +3,26 @@ package com.example.shopflowers.controller.graphic;
 import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.ManageProductsController;
 import com.example.shopflowers.model.entity.FlowerProduct;
+import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import java.sql.SQLException;
-import java.util.List;
-import javafx.stage.Stage;
-import java.io.IOException;
-import com.example.shopflowers.util.SceneNavigator;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class AdminProductGraphicController {
@@ -57,10 +64,22 @@ public class AdminProductGraphicController {
     private TextField stockField;
 
     @FXML
+    private TextField searchField;
+
+    @FXML
+    private ComboBox<String> colorFilterComboBox;
+
+    @FXML
+    private CheckBox availableOnlyCheckBox;
+
+    @FXML
     private Label messageLabel;
 
     private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
     private final ManageProductsController manageProductsController = new ManageProductsController();
+
+    private ObservableList<FlowerProduct> masterProductList = FXCollections.observableArrayList();
+    private FilteredList<FlowerProduct> filteredProducts;
 
     private FlowerProduct selectedProduct;
 
@@ -73,10 +92,19 @@ public class AdminProductGraphicController {
         varietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
         stockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
 
+        colorFilterComboBox.setItems(FXCollections.observableArrayList(
+                "Tutti", "Rosso", "Bianco", "Rosa", "Giallo", "Misto"
+        ));
+        colorFilterComboBox.setValue("Tutti");
+
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+        colorFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+        availableOnlyCheckBox.selectedProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+
         productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            selectedProduct = newSelection;
             if (newSelection != null) {
-                selectedProduct = newSelection;
-                populateFields(selectedProduct);
+                populateFields(newSelection);
             }
         });
 
@@ -154,8 +182,9 @@ public class AdminProductGraphicController {
 
         try {
             manageProductsController.deleteProductById(selectedProduct.getId());
-            loadProducts();
             clearFields();
+            loadProducts();
+            selectedProduct = null;
             messageLabel.setText("Prodotto eliminato con successo.");
         } catch (SQLException e) {
             messageLabel.setText("Errore durante l'eliminazione del prodotto.");
@@ -165,14 +194,52 @@ public class AdminProductGraphicController {
     private void loadProducts() {
         try {
             List<FlowerProduct> products = browseCatalogController.getAllProducts();
+            masterProductList = FXCollections.observableArrayList(products);
+            filteredProducts = new FilteredList<>(masterProductList, product -> true);
 
-            ObservableList<FlowerProduct> observableProducts = FXCollections.observableArrayList(products);
-            productTable.setItems(observableProducts);
+            SortedList<FlowerProduct> sortedProducts = new SortedList<>(filteredProducts);
+            sortedProducts.comparatorProperty().bind(productTable.comparatorProperty());
+
+            productTable.setItems(sortedProducts);
+            applyFilters();
             productTable.refresh();
 
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento prodotti: " + e.getMessage());
         }
+    }
+
+    private void applyFilters() {
+        if (filteredProducts == null) {
+            return;
+        }
+
+        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+        String selectedColor = colorFilterComboBox.getValue();
+        boolean availableOnly = availableOnlyCheckBox.isSelected();
+
+        filteredProducts.setPredicate(product -> {
+            if (product == null) {
+                return false;
+            }
+
+            boolean matchesSearch = searchText.isBlank()
+                    || safe(product.getName()).contains(searchText)
+                    || safe(product.getColor()).contains(searchText)
+                    || safe(product.getVariety()).contains(searchText);
+
+            boolean matchesColor = selectedColor == null
+                    || selectedColor.equalsIgnoreCase("Tutti")
+                    || safe(product.getColor()).contains(selectedColor.toLowerCase());
+
+            boolean matchesAvailability = !availableOnly || product.getStockQuantity() > 0;
+
+            return matchesSearch && matchesColor && matchesAvailability;
+        });
+    }
+
+    private String safe(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     private void populateFields(FlowerProduct product) {
@@ -200,6 +267,7 @@ public class AdminProductGraphicController {
             messageLabel.setText("Errore durante il logout.");
         }
     }
+
     @FXML
     private void handleGoToOperatorManagement() {
         try {
@@ -212,6 +280,7 @@ public class AdminProductGraphicController {
             messageLabel.setText("Errore nell'apertura della gestione operatori.");
         }
     }
+
     @FXML
     private void handleGoToStatistics() {
         try {

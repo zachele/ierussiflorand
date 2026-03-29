@@ -5,7 +5,11 @@ import com.example.shopflowers.model.entity.OperatorFullData;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
@@ -17,11 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import java.util.Optional;
-
 
 public class OperatorManagementGraphicController {
 
@@ -45,6 +45,9 @@ public class OperatorManagementGraphicController {
 
     @FXML
     private TextField annualHoursField;
+
+    @FXML
+    private TextField searchField;
 
     @FXML
     private TableView<OperatorFullData> operatorTable;
@@ -74,6 +77,10 @@ public class OperatorManagementGraphicController {
     private Label messageLabel;
 
     private final ManageOperatorController manageOperatorController = new ManageOperatorController();
+
+    private ObservableList<OperatorFullData> masterOperatorList = FXCollections.observableArrayList();
+    private FilteredList<OperatorFullData> filteredOperators;
+
     private OperatorFullData selectedOperator;
 
     @FXML
@@ -86,8 +93,11 @@ public class OperatorManagementGraphicController {
         contractYearColumn.setCellValueFactory(new PropertyValueFactory<>("contractYear"));
         annualHoursColumn.setCellValueFactory(new PropertyValueFactory<>("annualHours"));
 
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+
         operatorTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedOperator = newSelection;
+
             if (newSelection != null) {
                 nameField.setText(newSelection.getName());
                 surnameField.setText(newSelection.getSurname());
@@ -220,11 +230,42 @@ public class OperatorManagementGraphicController {
     private void loadOperators() {
         try {
             List<OperatorFullData> operators = manageOperatorController.getAllOperators();
-            ObservableList<OperatorFullData> observableOperators = FXCollections.observableArrayList(operators);
-            operatorTable.setItems(observableOperators);
+            masterOperatorList = FXCollections.observableArrayList(operators);
+            filteredOperators = new FilteredList<>(masterOperatorList, operator -> true);
+
+            SortedList<OperatorFullData> sortedOperators = new SortedList<>(filteredOperators);
+            sortedOperators.comparatorProperty().bind(operatorTable.comparatorProperty());
+
+            operatorTable.setItems(sortedOperators);
+            applyFilters();
+            operatorTable.refresh();
+
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento operatori.");
         }
+    }
+
+    private void applyFilters() {
+        if (filteredOperators == null) {
+            return;
+        }
+
+        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+
+        filteredOperators.setPredicate(operator -> {
+            if (operator == null) {
+                return false;
+            }
+
+            return searchText.isBlank()
+                    || safe(operator.getName()).contains(searchText)
+                    || safe(operator.getSurname()).contains(searchText)
+                    || safe(operator.getUsername()).contains(searchText);
+        });
+    }
+
+    private String safe(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     private void clearFields() {
@@ -235,5 +276,7 @@ public class OperatorManagementGraphicController {
         salaryField.clear();
         contractYearField.clear();
         annualHoursField.clear();
+        searchField.clear();
+        operatorTable.getSelectionModel().clearSelection();
     }
 }

@@ -9,6 +9,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -61,6 +63,12 @@
     </GridPane>
 
     <Label fx:id="messageLabel" text="" />
+
+    <HBox spacing="12">
+        <TextField fx:id="searchField" promptText="Cerca per nome, colore o varietà" prefWidth="260"/>
+        <ComboBox fx:id="colorFilterComboBox" prefWidth="160"/>
+        <CheckBox fx:id="availableOnlyCheckBox" text="Solo disponibili"/>
+    </HBox>
 
     <TableView fx:id="productTable" prefHeight="350">
         <columns>
