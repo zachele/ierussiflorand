@@ -27,4 +27,7 @@ public class StatisticsController {
 
         return statistics;
     }
+    public Map<String, Integer> getSoldProductsDistribution() throws SQLException {
+        return statisticsDAO.getSoldProductsDistribution();
+    }
 }

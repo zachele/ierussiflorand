@@ -113,4 +113,30 @@ public class StatisticsDAO {
         }
         return "Nessuno";
     }
+    public java.util.Map<String, Integer> getSoldProductsDistribution() throws SQLException {
+        String query = """
+            SELECT fp.name, SUM(oi.quantity) AS total_sold
+            FROM order_item oi
+            JOIN flower_product fp ON oi.product_id = fp.id
+            GROUP BY fp.name
+            HAVING SUM(oi.quantity) > 0
+            ORDER BY total_sold DESC
+            """;
+
+        java.util.Map<String, Integer> distribution = new java.util.LinkedHashMap<>();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                distribution.put(
+                        rs.getString("name"),
+                        rs.getInt("total_sold")
+                );
+            }
+        }
+
+        return distribution;
+    }
 }

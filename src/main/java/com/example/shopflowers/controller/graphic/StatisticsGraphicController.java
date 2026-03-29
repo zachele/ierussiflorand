@@ -3,6 +3,7 @@ package com.example.shopflowers.controller.graphic;
 import com.example.shopflowers.controller.application.StatisticsController;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
@@ -36,6 +37,9 @@ public class StatisticsGraphicController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private PieChart statisticsPieChart;
+
     private final StatisticsController statisticsController = new StatisticsController();
 
     @FXML
@@ -51,8 +55,29 @@ public class StatisticsGraphicController {
             totalOperatorsLabel.setText(statistics.get("Operatori registrati"));
             mostSoldProductLabel.setText(statistics.get("Prodotto più venduto"));
 
+            loadSoldProductsPieChart();
+
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento statistiche.");
+        }
+    }
+
+    private void loadSoldProductsPieChart() throws SQLException {
+        Map<String, Integer> soldProducts = statisticsController.getSoldProductsDistribution();
+
+        statisticsPieChart.getData().clear();
+
+        if (soldProducts.isEmpty()) {
+            statisticsPieChart.setTitle("Nessun prodotto venduto");
+            return;
+        }
+
+        statisticsPieChart.setTitle("Distribuzione prodotti venduti");
+
+        for (Map.Entry<String, Integer> entry : soldProducts.entrySet()) {
+            statisticsPieChart.getData().add(
+                    new PieChart.Data(entry.getKey(), entry.getValue())
+            );
         }
     }
 
