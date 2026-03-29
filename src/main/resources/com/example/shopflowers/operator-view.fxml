@@ -61,6 +61,11 @@
         </columns>
     </TableView>
 
+    <Label fx:id="bouquetDetailsLabel"
+           text="Nessun bouquet personalizzato associato."
+           wrapText="true"
+           style="-fx-font-size: 14px;" />
+
     <Label fx:id="messageLabel" text="" />
 
 </VBox>

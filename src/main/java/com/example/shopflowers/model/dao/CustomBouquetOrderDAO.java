@@ -1,10 +1,12 @@
 package com.example.shopflowers.model.dao;
 
 import com.example.shopflowers.model.entity.CustomBouquetOrderData;
+import com.example.shopflowers.model.entity.CustomBouquetOrderSummary;
 import com.example.shopflowers.util.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomBouquetOrderDAO {
@@ -24,5 +26,33 @@ public class CustomBouquetOrderDAO {
 
             preparedStatement.executeUpdate();
         }
+    }
+
+    public CustomBouquetOrderSummary findByOrderId(int orderId) throws SQLException {
+        String query = """
+                SELECT size, packaging, card_included, vase_included, total_price
+                FROM custom_bouquet_order
+                WHERE order_id = ?
+                """;
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, orderId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new CustomBouquetOrderSummary(
+                            resultSet.getString("size"),
+                            resultSet.getString("packaging"),
+                            resultSet.getBoolean("card_included"),
+                            resultSet.getBoolean("vase_included"),
+                            resultSet.getDouble("total_price")
+                    );
+                }
+            }
+        }
+
+        return null;
     }
 }
