@@ -9,6 +9,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 
 <VBox xmlns="http://javafx.com/javafx/21"
@@ -30,6 +32,11 @@
 
     <Label text="Ordini effettuati"
            style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <HBox spacing="12">
+        <TextField fx:id="searchField" promptText="Cerca per cliente, consegna o pagamento" prefWidth="260"/>
+        <ComboBox fx:id="statusFilterComboBox" prefWidth="180"/>
+    </HBox>
 
     <TableView fx:id="orderTable" prefHeight="250">
         <columns>

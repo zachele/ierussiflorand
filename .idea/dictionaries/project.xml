@@ -8,6 +8,7 @@
       <w>Assistente</w>
       <w>Azienda</w>
       <w>Biglietto</w>
+      <w>Cerca</w>
       <w>Cliente</w>
       <w>Clienti</w>
       <w>Cognome</w>
@@ -84,6 +85,7 @@
       <w>caricamento</w>
       <w>cliente</w>
       <w>coerente</w>
+      <w>cognome</w>
       <w>compatibili</w>
       <w>compleanno</w>
       <w>completata</w>
@@ -154,6 +156,7 @@
       <w>nata</w>
       <w>nell'apertura</w>
       <w>nessuna</w>
+      <w>nome</w>
       <w>nuovo</w>
       <w>occasioni</w>
       <w>offrire</w>

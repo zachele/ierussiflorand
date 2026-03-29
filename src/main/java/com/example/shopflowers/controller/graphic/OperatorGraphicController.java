@@ -8,11 +8,14 @@ import com.example.shopflowers.model.entity.OrderSummary;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -59,6 +62,12 @@ public class OperatorGraphicController {
     private ComboBox<String> statusComboBox;
 
     @FXML
+    private ComboBox<String> statusFilterComboBox;
+
+    @FXML
+    private TextField searchField;
+
+    @FXML
     private Label bouquetDetailsLabel;
 
     @FXML
@@ -66,6 +75,9 @@ public class OperatorGraphicController {
 
     private final OperatorOrdersController operatorOrdersController = new OperatorOrdersController();
     private final CustomBouquetOrderDAO customBouquetOrderDAO = new CustomBouquetOrderDAO();
+
+    private ObservableList<OrderSummary> masterOrderList = FXCollections.observableArrayList();
+    private FilteredList<OrderSummary> filteredOrders;
 
     private OrderSummary selectedOrder;
     private boolean showingCompletedOrders = false;
@@ -89,6 +101,17 @@ public class OperatorGraphicController {
                 "CONSEGNATO"
         ));
 
+        statusFilterComboBox.setItems(FXCollections.observableArrayList(
+                "Tutti",
+                "IN_PREPARAZIONE",
+                "PRONTO",
+                "CONSEGNATO"
+        ));
+        statusFilterComboBox.setValue("Tutti");
+
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+        statusFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedOrder = newSelection;
             if (newSelection != null) {
@@ -96,7 +119,7 @@ public class OperatorGraphicController {
                 loadBouquetDetails(newSelection.getId());
             } else {
                 orderItemsTable.getItems().clear();
-                bouquetDetailsLabel.setText("Nessun bouquet personalizzato associato.");
+                bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
             }
         });
 
@@ -109,14 +132,52 @@ public class OperatorGraphicController {
                     ? operatorOrdersController.getCompletedOrders()
                     : operatorOrdersController.getActiveOrders();
 
-            ObservableList<OrderSummary> observableOrders = FXCollections.observableArrayList(orders);
-            orderTable.setItems(observableOrders);
+            masterOrderList = FXCollections.observableArrayList(orders);
+            filteredOrders = new FilteredList<>(masterOrderList, order -> true);
+
+            SortedList<OrderSummary> sortedOrders = new SortedList<>(filteredOrders);
+            sortedOrders.comparatorProperty().bind(orderTable.comparatorProperty());
+
+            orderTable.setItems(sortedOrders);
+            applyFilters();
+
             orderItemsTable.getItems().clear();
-            bouquetDetailsLabel.setText("Nessun bouquet personalizzato associato.");
+            bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
             selectedOrder = null;
+
         } catch (SQLException e) {
             messageLabel.setText("Errore nel caricamento ordini.");
         }
+    }
+
+    private void applyFilters() {
+        if (filteredOrders == null) {
+            return;
+        }
+
+        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+        String selectedStatus = statusFilterComboBox.getValue();
+
+        filteredOrders.setPredicate(order -> {
+            if (order == null) {
+                return false;
+            }
+
+            boolean matchesSearch = searchText.isBlank()
+                    || safe(order.getUsername()).contains(searchText)
+                    || safe(order.getDeliveryMode()).contains(searchText)
+                    || safe(order.getPaymentMethod()).contains(searchText);
+
+            boolean matchesStatus = selectedStatus == null
+                    || selectedStatus.equalsIgnoreCase("Tutti")
+                    || safe(order.getStatus()).equals(selectedStatus.toLowerCase());
+
+            return matchesSearch && matchesStatus;
+        });
+    }
+
+    private String safe(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     private void loadOrderItems(int orderId) {
@@ -134,7 +195,7 @@ public class OperatorGraphicController {
             CustomBouquetOrderSummary bouquet = customBouquetOrderDAO.findByOrderId(orderId);
 
             if (bouquet == null) {
-                bouquetDetailsLabel.setText("Nessun bouquet personalizzato associato.");
+                bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
                 return;
             }
 
