@@ -35,6 +35,15 @@ public class CustomerOrdersGraphicController {
     private TableColumn<OrderSummary, String> deliveryColumn;
 
     @FXML
+    private TableColumn<OrderSummary, String> addressColumn;
+
+    @FXML
+    private TableColumn<OrderSummary, String> pickupDateColumn;
+
+    @FXML
+    private TableColumn<OrderSummary, String> pickupTimeColumn;
+
+    @FXML
     private TableColumn<OrderSummary, String> paymentColumn;
 
     @FXML
@@ -79,6 +88,9 @@ public class CustomerOrdersGraphicController {
     public void initialize() {
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         deliveryColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryMode"));
+        addressColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryAddress"));
+        pickupDateColumn.setCellValueFactory(new PropertyValueFactory<>("pickupDate"));
+        pickupTimeColumn.setCellValueFactory(new PropertyValueFactory<>("pickupTime"));
         paymentColumn.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));

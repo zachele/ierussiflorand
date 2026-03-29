@@ -30,14 +30,17 @@
         <ComboBox fx:id="statusFilterComboBox" prefWidth="180" />
     </HBox>
 
-    <TableView fx:id="orderTable" prefHeight="250">
+    <TableView fx:id="orderTable" prefHeight="260">
         <columns>
-            <TableColumn fx:id="orderIdColumn" text="ID Ordine" prefWidth="100" />
-            <TableColumn fx:id="deliveryColumn" text="Consegna" prefWidth="140" />
-            <TableColumn fx:id="paymentColumn" text="Pagamento" prefWidth="160" />
-            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="120" />
-            <TableColumn fx:id="dateColumn" text="Data" prefWidth="240" />
-            <TableColumn fx:id="statusColumn" text="Stato" prefWidth="140" />
+            <TableColumn fx:id="orderIdColumn" text="ID Ordine" prefWidth="90" />
+            <TableColumn fx:id="deliveryColumn" text="Modalità" prefWidth="120" />
+            <TableColumn fx:id="addressColumn" text="Indirizzo" prefWidth="220" />
+            <TableColumn fx:id="pickupDateColumn" text="Data ritiro" prefWidth="120" />
+            <TableColumn fx:id="pickupTimeColumn" text="Ora ritiro" prefWidth="110" />
+            <TableColumn fx:id="paymentColumn" text="Pagamento" prefWidth="140" />
+            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="110" />
+            <TableColumn fx:id="dateColumn" text="Data ordine" prefWidth="220" />
+            <TableColumn fx:id="statusColumn" text="Stato" prefWidth="130" />
         </columns>
     </TableView>
 
