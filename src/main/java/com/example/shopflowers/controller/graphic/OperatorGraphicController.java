@@ -32,6 +32,12 @@ public class OperatorGraphicController {
     private TableColumn<OrderSummary, Integer> orderIdColumn;
 
     @FXML
+    private TableColumn<OrderSummary, String> nameColumn;
+
+    @FXML
+    private TableColumn<OrderSummary, String> surnameColumn;
+
+    @FXML
     private TableColumn<OrderSummary, String> usernameColumn;
 
     @FXML
@@ -85,6 +91,8 @@ public class OperatorGraphicController {
     @FXML
     public void initialize() {
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         deliveryColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryMode"));
         paymentColumn.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
@@ -164,6 +172,8 @@ public class OperatorGraphicController {
             }
 
             boolean matchesSearch = searchText.isBlank()
+                    || safe(order.getName()).contains(searchText)
+                    || safe(order.getSurname()).contains(searchText)
                     || safe(order.getUsername()).contains(searchText)
                     || safe(order.getDeliveryMode()).contains(searchText)
                     || safe(order.getPaymentMethod()).contains(searchText);

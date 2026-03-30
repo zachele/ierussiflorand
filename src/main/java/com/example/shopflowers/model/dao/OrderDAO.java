@@ -63,22 +63,89 @@ public class OrderDAO {
     }
 
     public List<OrderSummary> findAllOrders() throws SQLException {
-        String query = "SELECT id, username, delivery_mode, delivery_address, pickup_date, pickup_time, payment_method, status, total, order_date FROM orders ORDER BY order_date DESC";
+        String query = """
+            SELECT o.id,
+                   o.username,
+                   u.name,
+                   u.surname,
+                   o.delivery_mode,
+                   o.delivery_address,
+                   o.pickup_date,
+                   o.pickup_time,
+                   o.payment_method,
+                   o.status,
+                   o.total,
+                   o.order_date
+            FROM orders o
+            JOIN users u ON o.username = u.username
+            ORDER BY o.order_date DESC
+            """;
         return findOrdersByQuery(query);
     }
 
     public List<OrderSummary> findOrdersByUsername(String username) throws SQLException {
-        String query = "SELECT id, username, delivery_mode, delivery_address, pickup_date, pickup_time, payment_method, status, total, order_date FROM orders WHERE username = ? ORDER BY order_date DESC";
+        String query = """
+            SELECT o.id,
+                   o.username,
+                   u.name,
+                   u.surname,
+                   o.delivery_mode,
+                   o.delivery_address,
+                   o.pickup_date,
+                   o.pickup_time,
+                   o.payment_method,
+                   o.status,
+                   o.total,
+                   o.order_date
+            FROM orders o
+            JOIN users u ON o.username = u.username
+            WHERE o.username = ?
+            ORDER BY o.order_date DESC
+            """;
         return findOrdersByQuery(query, username);
     }
 
     public List<OrderSummary> findActiveOrders() throws SQLException {
-        String query = "SELECT id, username, delivery_mode, delivery_address, pickup_date, pickup_time, payment_method, status, total, order_date FROM orders WHERE status <> 'CONSEGNATO' ORDER BY order_date DESC";
+        String query = """
+            SELECT o.id,
+                   o.username,
+                   u.name,
+                   u.surname,
+                   o.delivery_mode,
+                   o.delivery_address,
+                   o.pickup_date,
+                   o.pickup_time,
+                   o.payment_method,
+                   o.status,
+                   o.total,
+                   o.order_date
+            FROM orders o
+            JOIN users u ON o.username = u.username
+            WHERE o.status <> 'CONSEGNATO'
+            ORDER BY o.order_date DESC
+            """;
         return findOrdersByQuery(query);
     }
 
     public List<OrderSummary> findCompletedOrders() throws SQLException {
-        String query = "SELECT id, username, delivery_mode, delivery_address, pickup_date, pickup_time, payment_method, status, total, order_date FROM orders WHERE status = 'CONSEGNATO' ORDER BY order_date DESC";
+        String query = """
+            SELECT o.id,
+                   o.username,
+                   u.name,
+                   u.surname,
+                   o.delivery_mode,
+                   o.delivery_address,
+                   o.pickup_date,
+                   o.pickup_time,
+                   o.payment_method,
+                   o.status,
+                   o.total,
+                   o.order_date
+            FROM orders o
+            JOIN users u ON o.username = u.username
+            WHERE o.status = 'CONSEGNATO'
+            ORDER BY o.order_date DESC
+            """;
         return findOrdersByQuery(query);
     }
 
@@ -143,6 +210,8 @@ public class OrderDAO {
         return new OrderSummary(
                 resultSet.getInt("id"),
                 resultSet.getString("username"),
+                resultSet.getString("name"),
+                resultSet.getString("surname"),
                 resultSet.getString("delivery_mode"),
                 resultSet.getString("delivery_address"),
                 resultSet.getString("pickup_date"),
