@@ -47,7 +47,7 @@ public class LoginGraphicController {
             User user = loginController.login(username, password);
 
             if (user == null) {
-                messageLabel.setText("Credenziali non valide.");
+                messageLabel.setText("Login non riuscito. Controlla username e password.");
                 return;
             }
 
@@ -60,13 +60,13 @@ public class LoginGraphicController {
                     checkOrderStatusNotifications(user.getUsername());
                 }
                 case "OPERATOR" -> openView("/com/example/shopflowers/operator-view.fxml", "Shop Flowers - Operatore");
-                default -> messageLabel.setText("Ruolo non riconosciuto.");
+                default -> messageLabel.setText("Accesso non riuscito. Ruolo utente non riconosciuto.");
             }
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante il login.");
+            messageLabel.setText("Si è verificato un errore durante il login.");
         } catch (IOException e) {
-            messageLabel.setText("Errore nel caricamento della schermata.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura della schermata.");
         }
     }
 
@@ -121,7 +121,7 @@ public class LoginGraphicController {
                     "Shop Flowers - Registrazione"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura della registrazione.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura della schermata di registrazione.");
         }
     }
 
@@ -134,7 +134,7 @@ public class LoginGraphicController {
                     "Shop Flowers - Cambio Password"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura del cambio password.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura della schermata di cambio password.");
         }
     }
     @FXML

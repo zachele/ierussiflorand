@@ -21,7 +21,7 @@ public class CompanyInfoGraphicController {
             );
 
         } catch (IOException e) {
-            messageLabel.setText("Errore nel ritorno al catalogo.");
+            messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
         }
     }
 }

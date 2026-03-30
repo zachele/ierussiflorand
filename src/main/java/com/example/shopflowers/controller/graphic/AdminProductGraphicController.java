@@ -123,12 +123,12 @@ public class AdminProductGraphicController {
             FlowerProduct product = new FlowerProduct(name, price, color, variety, stock);
             manageProductsController.addProduct(product);
 
-            messageLabel.setText("Prodotto aggiunto correttamente.");
+            messageLabel.setText("Prodotto aggiunto con successo.");
             clearFields();
             loadProducts();
 
         } catch (NumberFormatException e) {
-            messageLabel.setText("Prezzo o stock non validi.");
+            messageLabel.setText("Dati non validi. Controlla prezzo e quantità disponibile.");
         } catch (SQLException e) {
             messageLabel.setText("Errore durante il salvataggio nel database: " + e.getMessage());
         }
@@ -137,7 +137,7 @@ public class AdminProductGraphicController {
     @FXML
     private void handleUpdateProduct() {
         if (selectedProduct == null) {
-            messageLabel.setText("Seleziona prima un prodotto da modificare.");
+            messageLabel.setText("Seleziona prima un prodotto dalla tabella.");
             return;
         }
 
@@ -150,22 +150,22 @@ public class AdminProductGraphicController {
 
             manageProductsController.updateProduct(selectedProduct);
 
-            messageLabel.setText("Prodotto aggiornato correttamente.");
+            messageLabel.setText("Prodotto aggiornato con successo.");
             clearFields();
             loadProducts();
             selectedProduct = null;
 
         } catch (NumberFormatException e) {
-            messageLabel.setText("Prezzo o stock non validi.");
+            messageLabel.setText("Dati non validi. Controlla prezzo e quantità disponibile.");
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'aggiornamento del prodotto: " + e.getMessage());
+            messageLabel.setText("Si è verificato un errore durante l'aggiornamento del prodotto: " + e.getMessage());
         }
     }
 
     @FXML
     private void handleDeleteProduct() {
         if (selectedProduct == null) {
-            messageLabel.setText("Seleziona prima un prodotto.");
+            messageLabel.setText("Seleziona prima un prodotto dal catalogo.");
             return;
         }
 
@@ -176,7 +176,7 @@ public class AdminProductGraphicController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) {
-            messageLabel.setText("Eliminazione annullata.");
+            messageLabel.setText("Operazione annullata.");
             return;
         }
 
@@ -187,7 +187,7 @@ public class AdminProductGraphicController {
             selectedProduct = null;
             messageLabel.setText("Prodotto eliminato con successo.");
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'eliminazione del prodotto.");
+            messageLabel.setText("Si è verificato un errore durante l'eliminazione del prodotto.");
         }
     }
 
@@ -205,7 +205,7 @@ public class AdminProductGraphicController {
             productTable.refresh();
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento prodotti: " + e.getMessage());
+            messageLabel.setText("Si è verificato un errore durante il caricamento dei prodotti: " + e.getMessage());
         }
     }
 
@@ -264,7 +264,7 @@ public class AdminProductGraphicController {
         try {
             SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 
@@ -277,7 +277,7 @@ public class AdminProductGraphicController {
                     "Shop Flowers - Gestione Operatori"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura della gestione operatori.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura della gestione operatori.");
         }
     }
 
@@ -290,7 +290,7 @@ public class AdminProductGraphicController {
                     "Shop Flowers - Statistiche Vendite"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura delle statistiche.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura delle statistiche.");
         }
     }
 }

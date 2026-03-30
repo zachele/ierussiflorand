@@ -216,7 +216,7 @@ public class CustomerOrdersGraphicController {
             selectedOrder = null;
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento ordini.");
+            messageLabel.setText("Si è verificato un errore durante il caricamento degli ordini.");
         }
     }
 
@@ -251,7 +251,7 @@ public class CustomerOrdersGraphicController {
             ObservableList<OrderItemSummary> observableItems = FXCollections.observableArrayList(items);
             orderItemsTable.setItems(observableItems);
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento dettagli ordine.");
+            messageLabel.setText("Si è verificato un errore durante il caricamento dei dettagli dell'ordine.");
         }
     }
 
@@ -276,7 +276,7 @@ public class CustomerOrdersGraphicController {
             bouquetDetailsLabel.setText(details);
 
         } catch (SQLException e) {
-            bouquetDetailsLabel.setText("Errore nel caricamento dettagli bouquet.");
+            bouquetDetailsLabel.setText("Si è verificato un errore durante il caricamento dei dettagli del bouquet.");
         }
     }
 
@@ -289,7 +289,7 @@ public class CustomerOrdersGraphicController {
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nel ritorno al catalogo.");
+            messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
         }
     }
 
@@ -298,7 +298,7 @@ public class CustomerOrdersGraphicController {
         try {
             SceneNavigator.logoutToLogin((Stage) orderTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 }

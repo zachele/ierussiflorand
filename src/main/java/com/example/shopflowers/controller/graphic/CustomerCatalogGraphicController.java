@@ -135,7 +135,7 @@ public class CustomerCatalogGraphicController {
             CustomBouquetSession.clear();
             selectedCartItem = null;
             refreshCart();
-            messageLabel.setText("Il carrello è stato svuotato per inattività.");
+            messageLabel.setText("Sessione carrello scaduta: il carrello è stato svuotato per inattività.");
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Carrello svuotato");
@@ -153,7 +153,7 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleAddToCart() {
         if (selectedProduct == null) {
-            messageLabel.setText("Seleziona prima un prodotto.");
+            messageLabel.setText("Seleziona prima un prodotto dal catalogo.");
             return;
         }
 
@@ -161,24 +161,24 @@ public class CustomerCatalogGraphicController {
             int quantity = Integer.parseInt(quantityField.getText());
 
             if (quantity <= 0) {
-                messageLabel.setText("La quantità deve essere maggiore di zero.");
+                messageLabel.setText("Quantità non valida. Inserisci un valore maggiore di zero.");
                 return;
             }
 
             boolean added = customerCartController.addToCart(selectedProduct, quantity);
 
             if (!added) {
-                messageLabel.setText("Quantità richiesta superiore allo stock disponibile.");
+                messageLabel.setText("Operazione non riuscita. Quantità richiesta non disponibile.");
                 return;
             }
 
             CartTimerManager.startOrResetTimer();
-            messageLabel.setText("Prodotto aggiunto al carrello.");
+            messageLabel.setText("Articolo aggiunto al carrello con successo.");
             quantityField.clear();
             refreshCart();
 
         } catch (NumberFormatException e) {
-            messageLabel.setText("Inserisci una quantità valida.");
+            messageLabel.setText("Quantità non valida. Inserisci un numero corretto.");
         }
     }
 
@@ -251,7 +251,7 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleGoToCheckout() {
         if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
-            messageLabel.setText("Il carrello e il bouquet personalizzato sono vuoti.");
+            messageLabel.setText("Checkout non disponibile. Il carrello e il bouquet personalizzato sono vuoti.");
             return;
         }
 
@@ -266,14 +266,14 @@ public class CustomerCatalogGraphicController {
             );
 
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura del checkout.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura del checkout.");
         }
     }
 
     @FXML
     private void handleRemoveFromCart() {
         if (selectedCartItem == null) {
-            messageLabel.setText("Seleziona prima un articolo del carrello.");
+            messageLabel.setText("Seleziona prima un articolo dal carrello.");
             return;
         }
 
@@ -284,7 +284,7 @@ public class CustomerCatalogGraphicController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) {
-            messageLabel.setText("Rimozione annullata.");
+            messageLabel.setText("Operazione annullata.");
             return;
         }
 
@@ -292,7 +292,7 @@ public class CustomerCatalogGraphicController {
         selectedCartItem = null;
         CartTimerManager.startOrResetTimer();
         refreshCart();
-        messageLabel.setText("Articolo rimosso dal carrello.");
+        messageLabel.setText("Articolo rimosso dal carrello con successo.");
     }
 
     @FXML
@@ -309,7 +309,7 @@ public class CustomerCatalogGraphicController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) {
-            messageLabel.setText("Svuotamento annullato.");
+            messageLabel.setText("Operazione annullata.");
             return;
         }
 
@@ -317,7 +317,7 @@ public class CustomerCatalogGraphicController {
         selectedCartItem = null;
         CartTimerManager.startOrResetTimer();
         refreshCart();
-        messageLabel.setText("Carrello svuotato.");
+        messageLabel.setText("Carrello svuotato con successo.");
     }
 
     @FXML
@@ -329,7 +329,7 @@ public class CustomerCatalogGraphicController {
                     "Shop Flowers - I miei ordini"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura dello storico ordini.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura dello storico ordini.");
         }
     }
 
@@ -342,7 +342,7 @@ public class CustomerCatalogGraphicController {
                     "Shop Flowers - Informazioni Azienda"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura della pagina azienda.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura della pagina aziendale.");
         }
     }
 
@@ -355,7 +355,7 @@ public class CustomerCatalogGraphicController {
                     "Shop Flowers - Assistente Bouquet"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nell'apertura dell'assistente bouquet.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura dell'assistente bouquet.");
         }
     }
 
@@ -368,7 +368,7 @@ public class CustomerCatalogGraphicController {
                     "Shop Flowers - Bouquet Personalizzato"
             );
         } catch (Exception e) {
-            messageLabel.setText("Errore nell'apertura del bouquet personalizzato.");
+            messageLabel.setText("Si è verificato un errore durante l'apertura della schermata bouquet personalizzato.");
         }
     }
 
@@ -378,7 +378,7 @@ public class CustomerCatalogGraphicController {
             CartTimerManager.stopTimer();
             SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 }

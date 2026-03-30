@@ -154,7 +154,7 @@ public class OperatorGraphicController {
             selectedOrder = null;
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento ordini.");
+            messageLabel.setText("Si è verificato un errore durante il caricamento degli ordini.");
         }
     }
 
@@ -196,7 +196,7 @@ public class OperatorGraphicController {
             ObservableList<OrderItemSummary> observableItems = FXCollections.observableArrayList(items);
             orderItemsTable.setItems(observableItems);
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento dettagli ordine.");
+            messageLabel.setText("Si è verificato un errore durante il caricamento dei dettagli dell'ordine.");
         }
     }
 
@@ -221,29 +221,29 @@ public class OperatorGraphicController {
             bouquetDetailsLabel.setText(details);
 
         } catch (SQLException e) {
-            bouquetDetailsLabel.setText("Errore nel caricamento dettagli bouquet.");
+            bouquetDetailsLabel.setText("Si è verificato un errore durante il caricamento dei dettagli del bouquet.");
         }
     }
 
     @FXML
     private void handleUpdateStatus() {
         if (selectedOrder == null) {
-            messageLabel.setText("Seleziona prima un ordine.");
+            messageLabel.setText("Seleziona prima un ordine dalla tabella.");
             return;
         }
 
         String newStatus = statusComboBox.getValue();
         if (newStatus == null || newStatus.isBlank()) {
-            messageLabel.setText("Seleziona uno stato valido.");
+            messageLabel.setText("Seleziona uno stato ordine valido.");
             return;
         }
 
         try {
             operatorOrdersController.updateOrderStatus(selectedOrder.getId(), newStatus);
-            messageLabel.setText("Stato ordine aggiornato.");
+            messageLabel.setText("Lo stato dell’ordine è stato aggiornato con successo.");
             loadOrders();
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'aggiornamento dello stato.");
+            messageLabel.setText("Si è verificato un errore durante l'aggiornamento dello stato dell'ordine.");
         }
     }
 
@@ -266,7 +266,7 @@ public class OperatorGraphicController {
         try {
             SceneNavigator.logoutToLogin((Stage) orderTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 }

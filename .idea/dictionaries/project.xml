@@ -17,6 +17,7 @@
       <w>Configurazione</w>
       <w>Consegna</w>
       <w>Contatti</w>
+      <w>Controlla</w>
       <w>Crea</w>
       <w>Credenziali</w>
       <w>Elimina</w>
@@ -51,6 +52,7 @@
       <w>Rimuovere</w>
       <w>Rimuovi</w>
       <w>Ruolo</w>
+      <w>Sessione</w>
       <w>Statistiche</w>
       <w>Stato</w>
       <w>Stipendio</w>
@@ -80,6 +82,7 @@
       <w>associati</w>
       <w>attenzione</w>
       <w>attuale</w>
+      <w>automaticamente</w>
       <w>azienda</w>
       <w>bianco</w>
       <w>caricamento</w>
@@ -122,6 +125,7 @@
       <w>eliminato</w>
       <w>eliminazione</w>
       <w>entro</w>
+      <w>errore</w>
       <w>esistente</w>
       <w>essere</w>
       <w>estetica</w>
@@ -134,6 +138,7 @@
       <w>inattività</w>
       <w>indirizzo</w>
       <w>l'aggiornamento</w>
+      <w>l'apertura</w>
       <w>l'articolo</w>
       <w>l'azienda</w>
       <w>l'eliminazione</w>
@@ -192,10 +197,13 @@
       <w>rimosso</w>
       <w>rimozione</w>
       <w>ringraziamento</w>
+      <w>riuscita</w>
+      <w>riuscito</w>
       <w>romantico</w>
       <w>rossa</w>
       <w>rosso</w>
       <w>salvataggio</w>
+      <w>scaduta</w>
       <w>schermata</w>
       <w>sede</w>
       <w>selezionato</w>
@@ -222,6 +230,7 @@
       <w>vendita</w>
       <w>vendite</w>
       <w>venduto</w>
+      <w>verificato</w>
       <w>verranno</w>
       <w>verrà</w>
       <w>vicine</w>

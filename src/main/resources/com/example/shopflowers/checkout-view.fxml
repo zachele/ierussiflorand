@@ -41,7 +41,7 @@
     </TableView>
 
     <Label fx:id="bouquetInfoLabel"
-           text="Nessun bouquet personalizzato selezionato."
+           text="Nessun bouquet personalizzato nel pagamento corrente."
            wrapText="true"
            style="-fx-font-size: 14px;" />
 

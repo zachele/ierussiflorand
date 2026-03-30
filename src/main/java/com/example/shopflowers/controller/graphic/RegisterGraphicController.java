@@ -44,11 +44,11 @@ public class RegisterGraphicController {
                 messageLabel.setText("Registrazione completata con successo.");
                 goToLogin();
             } else {
-                messageLabel.setText("Registrazione non valida o username già esistente.");
+                messageLabel.setText("Registrazione non riuscita. Username già esistente.");
             }
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante la registrazione.");
+            messageLabel.setText("Si è verificato un errore durante la registrazione.");
         } catch (IOException e) {
             messageLabel.setText("Errore nel ritorno alla login.");
         }

@@ -58,7 +58,7 @@ public class StatisticsGraphicController {
             loadSoldProductsPieChart();
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento statistiche.");
+            messageLabel.setText("Si è verificato un errore durante il caricamento delle statistiche.");
         }
     }
 
@@ -90,7 +90,7 @@ public class StatisticsGraphicController {
                     "Shop Flowers - Gestione Prodotti"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nel ritorno all'area admin.");
+            messageLabel.setText("Si è verificato un errore durante il ritorno all'area amministratore.");
         }
     }
 
@@ -99,7 +99,7 @@ public class StatisticsGraphicController {
         try {
             SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 }

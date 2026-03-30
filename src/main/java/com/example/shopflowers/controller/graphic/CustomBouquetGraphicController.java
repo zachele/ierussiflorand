@@ -122,7 +122,7 @@ public class CustomBouquetGraphicController {
     @FXML
     private void handleAddFlower() {
         if (selectedFlower == null) {
-            messageLabel.setText("Seleziona prima un fiore.");
+            messageLabel.setText("Seleziona prima un fiore dalla lista.");
             return;
         }
 
@@ -130,7 +130,7 @@ public class CustomBouquetGraphicController {
         try {
             quantity = Integer.parseInt(quantityField.getText());
         } catch (NumberFormatException e) {
-            messageLabel.setText("Inserisci una quantità valida.");
+            messageLabel.setText("Quantità non valida. Inserisci un numero corretto.");
             return;
         }
 
@@ -147,7 +147,7 @@ public class CustomBouquetGraphicController {
 
         boolean added = customBouquetController.addFlowerToBouquet(selectedFlower, quantity);
         if (!added) {
-            messageLabel.setText("Quantità non valida o stock insufficiente.");
+            messageLabel.setText("Operazione non riuscita. Quantità non valida o disponibilità insufficiente.");
             return;
         }
 
@@ -155,7 +155,7 @@ public class CustomBouquetGraphicController {
         quantityField.clear();
 
         if (customBouquetController.isWithinBudget()) {
-            messageLabel.setText("Fiore aggiunto al bouquet.");
+            messageLabel.setText("Fiore aggiunto alla composizione.");
         } else {
             messageLabel.setText(String.format(
                     "Budget superato di € %.2f. Modifica la composizione prima di confermare.",
@@ -178,7 +178,7 @@ public class CustomBouquetGraphicController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) {
-            messageLabel.setText("Rimozione annullata.");
+            messageLabel.setText("Operazione annullata.");
             return;
         }
 
@@ -190,7 +190,7 @@ public class CustomBouquetGraphicController {
 
         selectedBouquetItem = null;
         refreshBouquetTable();
-        messageLabel.setText("Fiore rimosso dal bouquet.");
+        messageLabel.setText("Fiore rimosso dalla composizione con successo.");
     }
 
     @FXML
@@ -220,18 +220,18 @@ public class CustomBouquetGraphicController {
         quantityField.clear();
         budgetField.clear();
         refreshBouquetTable();
-        messageLabel.setText("Bouquet azzerato.");
+        messageLabel.setText("Composizione azzerata con successo.");
     }
 
     @FXML
     private void handleConfirmCustomBouquet() {
         if (sizeComboBox.getValue() == null || packagingComboBox.getValue() == null) {
-            messageLabel.setText("Seleziona dimensione e confezione.");
+            messageLabel.setText("Completa la configurazione del bouquet selezionando dimensione e confezione.");
             return;
         }
 
         if (customBouquetController.getCurrentItems().isEmpty()) {
-            messageLabel.setText("Aggiungi almeno un fiore al bouquet.");
+            messageLabel.setText("Aggiungi almeno un fiore prima di confermare il bouquet.");
             return;
         }
 
@@ -278,7 +278,7 @@ public class CustomBouquetGraphicController {
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nel ritorno al catalogo.");
+            messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
         }
     }
 
@@ -287,7 +287,7 @@ public class CustomBouquetGraphicController {
         try {
             SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 
@@ -316,7 +316,7 @@ public class CustomBouquetGraphicController {
             List<FlowerProduct> flowers = customBouquetController.getAvailableFlowers();
             flowerTable.setItems(FXCollections.observableArrayList(flowers));
         } catch (Exception e) {
-            messageLabel.setText("Errore nel caricamento dei fiori.");
+            messageLabel.setText("Si è verificato un errore durante il caricamento dei fiori disponibili.");
         }
     }
 

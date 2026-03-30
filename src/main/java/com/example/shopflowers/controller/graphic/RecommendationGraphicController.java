@@ -147,7 +147,7 @@ public class RecommendationGraphicController {
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nel ritorno al catalogo.");
+            messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
         }
     }
 
@@ -156,7 +156,7 @@ public class RecommendationGraphicController {
         try {
             SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 }

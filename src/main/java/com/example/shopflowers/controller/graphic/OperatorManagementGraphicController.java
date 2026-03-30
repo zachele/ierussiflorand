@@ -129,7 +129,7 @@ public class OperatorManagementGraphicController {
             );
 
             if (!created) {
-                messageLabel.setText("Dati non validi o username già esistente.");
+                messageLabel.setText("Registrazione non riuscita. Username già esistente.");
                 return;
             }
 
@@ -147,7 +147,7 @@ public class OperatorManagementGraphicController {
     @FXML
     private void handleUpdateOperator() {
         if (selectedOperator == null) {
-            messageLabel.setText("Seleziona prima un operatore.");
+            messageLabel.setText("Seleziona prima un operatore dalla tabella.");
             return;
         }
 
@@ -162,7 +162,7 @@ public class OperatorManagementGraphicController {
             );
 
             if (!updated) {
-                messageLabel.setText("Dati non validi per l'aggiornamento.");
+                messageLabel.setText("Operazione non riuscita. Controlla i dati inseriti per l'aggiornamento.");
                 return;
             }
 
@@ -170,14 +170,14 @@ public class OperatorManagementGraphicController {
             messageLabel.setText("Operatore aggiornato con successo.");
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'aggiornamento dell'operatore.");
+            messageLabel.setText("Si è verificato un errore durante l'aggiornamento dell'operatore.");
         }
     }
 
     @FXML
     private void handleDeleteOperator() {
         if (selectedOperator == null) {
-            messageLabel.setText("Seleziona prima un operatore.");
+            messageLabel.setText("Seleziona prima un operatore dalla tabella.");
             return;
         }
 
@@ -188,7 +188,7 @@ public class OperatorManagementGraphicController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) {
-            messageLabel.setText("Eliminazione annullata.");
+            messageLabel.setText("Operazione annullata.");
             return;
         }
 
@@ -201,7 +201,7 @@ public class OperatorManagementGraphicController {
             loadOperators();
             messageLabel.setText("Operatore eliminato con successo.");
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante l'eliminazione dell'operatore.");
+            messageLabel.setText("Si è verificato un errore durante l'eliminazione dell'operatore.");
         }
     }
 
@@ -214,7 +214,7 @@ public class OperatorManagementGraphicController {
                     "Shop Flowers - Gestione Prodotti"
             );
         } catch (IOException e) {
-            messageLabel.setText("Errore nel ritorno all'area admin.");
+            messageLabel.setText("Si è verificato un errore durante il ritorno all'area amministratore.");
         }
     }
 
@@ -223,7 +223,7 @@ public class OperatorManagementGraphicController {
         try {
             SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Errore durante il logout.");
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
 
@@ -241,7 +241,7 @@ public class OperatorManagementGraphicController {
             operatorTable.refresh();
 
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento operatori.");
+            messageLabel.setText("Si è verificato un errore durante il caricamento degli operatori.");
         }
     }
 
