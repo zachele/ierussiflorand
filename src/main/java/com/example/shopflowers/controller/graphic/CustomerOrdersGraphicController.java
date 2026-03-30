@@ -14,6 +14,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -100,6 +101,8 @@ public class CustomerOrdersGraphicController {
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
 
+        setupReadableCells();
+
         statusFilterComboBox.setItems(FXCollections.observableArrayList(
                 "Tutti",
                 "IN_PREPARAZIONE",
@@ -122,6 +125,76 @@ public class CustomerOrdersGraphicController {
         });
 
         loadOrders();
+    }
+
+    private void setupReadableCells() {
+        addressColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setText(null);
+                    return;
+                }
+
+                OrderSummary order = getTableView().getItems().get(getIndex());
+                if (!"CONSEGNA".equalsIgnoreCase(safe(order.getDeliveryMode()))) {
+                    setText("-");
+                    return;
+                }
+
+                setText(item == null || item.isBlank() ? "-" : item);
+            }
+        });
+
+        pickupDateColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setText(null);
+                    return;
+                }
+
+                OrderSummary order = getTableView().getItems().get(getIndex());
+                if (!"RITIRO".equalsIgnoreCase(safe(order.getDeliveryMode()))) {
+                    setText("-");
+                    return;
+                }
+
+                setText(item == null || item.isBlank() ? "-" : item);
+            }
+        });
+
+        pickupTimeColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setText(null);
+                    return;
+                }
+
+                OrderSummary order = getTableView().getItems().get(getIndex());
+                if (!"RITIRO".equalsIgnoreCase(safe(order.getDeliveryMode()))) {
+                    setText("-");
+                    return;
+                }
+
+                setText(item == null || item.isBlank() ? "-" : item);
+            }
+        });
+
+        totalColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("€ %.2f", item));
+            }
+        });
     }
 
     private void loadOrders() {
@@ -164,7 +237,7 @@ public class CustomerOrdersGraphicController {
     }
 
     private String safe(String value) {
-        return value == null ? "" : value.toLowerCase();
+        return value == null ? "" : value;
     }
 
     private void loadOrderItems(int orderId) {
