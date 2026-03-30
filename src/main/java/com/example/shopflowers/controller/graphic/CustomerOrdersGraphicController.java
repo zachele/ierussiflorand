@@ -199,7 +199,9 @@ public class CustomerOrdersGraphicController {
 
     private void loadOrders() {
         try {
-            List<OrderSummary> orders = customerOrdersController.getOrdersByUsername(Session.getLoggedUsername());
+            List<OrderSummary> orders =
+                    customerOrdersController.getOrdersByUsername(Session.getLoggedUsername());
+
             masterOrderList = FXCollections.observableArrayList(orders);
             filteredOrders = new FilteredList<>(masterOrderList, order -> true);
 
@@ -230,9 +232,12 @@ public class CustomerOrdersGraphicController {
                 return false;
             }
 
-            return selectedStatus == null
-                    || selectedStatus.equalsIgnoreCase("Tutti")
-                    || safe(order.getStatus()).equals(selectedStatus.toLowerCase());
+            if (selectedStatus == null || selectedStatus.equalsIgnoreCase("Tutti")) {
+                return true;
+            }
+
+            return order.getStatus() != null &&
+                    order.getStatus().equalsIgnoreCase(selectedStatus);
         });
     }
 
