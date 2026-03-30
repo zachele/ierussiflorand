@@ -149,6 +149,39 @@ public class OrderDAO {
         return findOrdersByQuery(query);
     }
 
+    public List<OrderSummary> findOrdersWithStatusUpdate(String username) throws SQLException {
+        String query = """
+            SELECT o.id,
+                   o.username,
+                   u.name,
+                   u.surname,
+                   o.delivery_mode,
+                   o.delivery_address,
+                   o.pickup_date,
+                   o.pickup_time,
+                   o.payment_method,
+                   o.status,
+                   o.total,
+                   o.order_date
+            FROM orders o
+            JOIN users u ON o.username = u.username
+            WHERE o.username = ? AND o.status_notified = FALSE
+            ORDER BY o.order_date DESC
+            """;
+        return findOrdersByQuery(query, username);
+    }
+
+    public void markOrdersAsNotified(String username) throws SQLException {
+        String query = "UPDATE orders SET status_notified = TRUE WHERE username = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, username);
+            preparedStatement.executeUpdate();
+        }
+    }
+
     public List<OrderItemSummary> findItemsByOrderId(int orderId) throws SQLException {
         String query = """
                 SELECT fp.name AS product_name, oi.quantity, oi.unit_price
@@ -175,7 +208,7 @@ public class OrderDAO {
     }
 
     public void updateOrderStatus(int orderId, String newStatus) throws SQLException {
-        String query = "UPDATE orders SET status = ? WHERE id = ?";
+        String query = "UPDATE orders SET status = ?, status_notified = FALSE WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -230,6 +263,7 @@ public class OrderDAO {
                 resultSet.getDouble("unit_price")
         );
     }
+
     public void saveCustomBouquetItems(int orderId, com.example.shopflowers.model.entity.CustomBouquet bouquet) throws SQLException {
         String query = "INSERT INTO order_item (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
 

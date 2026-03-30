@@ -1,21 +1,24 @@
 package com.example.shopflowers.controller.graphic;
 
-import com.example.shopflowers.controller.application.LoginController;
-import com.example.shopflowers.model.entity.User;
-
 import com.example.shopflowers.ShopFlowersApplication;
+import com.example.shopflowers.controller.application.CustomerOrdersController;
+import com.example.shopflowers.controller.application.LoginController;
+import com.example.shopflowers.model.entity.OrderSummary;
+import com.example.shopflowers.model.entity.User;
+import com.example.shopflowers.util.SceneNavigator;
+import com.example.shopflowers.util.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.sql.SQLException;
-
-import com.example.shopflowers.util.Session;
-import com.example.shopflowers.util.SceneNavigator;
+import java.util.List;
 
 public class LoginGraphicController {
 
@@ -42,10 +45,15 @@ public class LoginGraphicController {
                 messageLabel.setText("Credenziali non valide.");
                 return;
             }
+
             Session.setSession(user.getUsername(), user.getRole());
+
             switch (user.getRole()) {
                 case "ADMIN" -> openView("/com/example/shopflowers/admin-product-view.fxml", "Shop Flowers - Admin");
-                case "CUSTOMER" -> openView("/com/example/shopflowers/catalog-view.fxml", "Shop Flowers - Catalogo");
+                case "CUSTOMER" -> {
+                    openView("/com/example/shopflowers/catalog-view.fxml", "Shop Flowers - Catalogo");
+                    checkOrderStatusNotifications(user.getUsername());
+                }
                 case "OPERATOR" -> openView("/com/example/shopflowers/operator-view.fxml", "Shop Flowers - Operatore");
                 default -> messageLabel.setText("Ruolo non riconosciuto.");
             }
@@ -54,6 +62,38 @@ public class LoginGraphicController {
             messageLabel.setText("Errore durante il login.");
         } catch (IOException e) {
             messageLabel.setText("Errore nel caricamento della schermata.");
+        }
+    }
+
+    private void checkOrderStatusNotifications(String username) {
+        try {
+            CustomerOrdersController customerOrdersController = new CustomerOrdersController();
+            List<OrderSummary> updatedOrders = customerOrdersController.getOrdersWithStatusUpdate(username);
+
+            if (updatedOrders.isEmpty()) {
+                return;
+            }
+
+            StringBuilder message = new StringBuilder("Stato ordini aggiornato:\n\n");
+
+            for (OrderSummary order : updatedOrders) {
+                message.append("Ordine n. ")
+                        .append(order.getId())
+                        .append(" → ")
+                        .append(order.getStatus())
+                        .append("\n");
+            }
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Aggiornamento ordini");
+            alert.setHeaderText("Hai aggiornamenti sui tuoi ordini");
+            alert.setContentText(message.toString());
+            alert.showAndWait();
+
+            customerOrdersController.markOrdersAsNotified(username);
+
+        } catch (SQLException e) {
+            System.out.println("Errore nel caricamento notifiche ordini.");
         }
     }
 
@@ -66,6 +106,7 @@ public class LoginGraphicController {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void handleGoToRegister() {
         try {
@@ -78,6 +119,7 @@ public class LoginGraphicController {
             messageLabel.setText("Errore nell'apertura della registrazione.");
         }
     }
+
     @FXML
     private void handleGoToChangePassword() {
         try {

@@ -22,4 +22,12 @@ public class CustomerOrdersController {
     public List<OrderItemSummary> getItemsByOrderId(int orderId) throws SQLException {
         return orderDAO.findItemsByOrderId(orderId);
     }
+
+    public List<OrderSummary> getOrdersWithStatusUpdate(String username) throws SQLException {
+        return orderDAO.findOrdersWithStatusUpdate(username);
+    }
+
+    public void markOrdersAsNotified(String username) throws SQLException {
+        orderDAO.markOrdersAsNotified(username);
+    }
 }
