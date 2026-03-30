@@ -4,8 +4,10 @@ import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
+import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -72,6 +74,9 @@ public class CustomerCatalogGraphicController {
     private Label totalLabel;
 
     @FXML
+    private Label cartTimerLabel;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -121,6 +126,26 @@ public class CustomerCatalogGraphicController {
         cartTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
                 selectedCartItem = newSelection);
 
+        CartTimerManager.setOnTickAction(seconds -> Platform.runLater(() ->
+                cartTimerLabel.setText(formatRemainingTime(seconds))
+        ));
+
+        CartTimerManager.setOnTimeoutAction(() -> Platform.runLater(() -> {
+            customerCartController.clearCart();
+            CustomBouquetSession.clear();
+            selectedCartItem = null;
+            refreshCart();
+            messageLabel.setText("Il carrello è stato svuotato per inattività.");
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Carrello svuotato");
+            alert.setHeaderText("Timeout del carrello");
+            alert.setContentText("Il carrello è stato svuotato automaticamente per inattività.");
+            alert.showAndWait();
+        }));
+
+        cartTimerLabel.setText(formatRemainingTime(600));
+
         loadProducts();
         refreshCart();
     }
@@ -147,6 +172,7 @@ public class CustomerCatalogGraphicController {
                 return;
             }
 
+            CartTimerManager.startOrResetTimer();
             messageLabel.setText("Prodotto aggiunto al carrello.");
             quantityField.clear();
             refreshCart();
@@ -216,6 +242,12 @@ public class CustomerCatalogGraphicController {
         totalLabel.setText(String.format("Totale carrello: € %.2f", customerCartController.getCartTotal()));
     }
 
+    private String formatRemainingTime(int totalSeconds) {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("Timer carrello: %02d:%02d", minutes, seconds);
+    }
+
     @FXML
     private void handleGoToCheckout() {
         if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
@@ -224,6 +256,7 @@ public class CustomerCatalogGraphicController {
         }
 
         try {
+            CartTimerManager.startOrResetTimer();
             CheckoutGraphicController.setCartController(customerCartController);
 
             SceneNavigator.goTo(
@@ -257,6 +290,7 @@ public class CustomerCatalogGraphicController {
 
         customerCartController.removeFromCart(selectedCartItem.getProduct().getId());
         selectedCartItem = null;
+        CartTimerManager.startOrResetTimer();
         refreshCart();
         messageLabel.setText("Articolo rimosso dal carrello.");
     }
@@ -281,6 +315,7 @@ public class CustomerCatalogGraphicController {
 
         customerCartController.clearCart();
         selectedCartItem = null;
+        CartTimerManager.startOrResetTimer();
         refreshCart();
         messageLabel.setText("Carrello svuotato.");
     }
@@ -340,6 +375,7 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleLogout() {
         try {
+            CartTimerManager.stopTimer();
             SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Errore durante il logout.");

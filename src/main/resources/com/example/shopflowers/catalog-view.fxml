@@ -59,8 +59,13 @@
 
     <Label fx:id="messageLabel" text="" />
 
-    <Label text="Carrello"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <HBox spacing="1200">
+        <Label text="Carrello"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <Label fx:id="cartTimerLabel"
+               text="Timer carrello: 10:00"
+               style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+    </HBox>
 
     <TableView fx:id="cartTable" prefHeight="200">
         <columns>
