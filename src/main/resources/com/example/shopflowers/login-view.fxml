@@ -6,6 +6,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Hyperlink?>
@@ -31,7 +32,19 @@
         <TextField fx:id="usernameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
         <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <PasswordField fx:id="passwordField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <HBox spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <StackPane HBox.hgrow="ALWAYS">
+                <PasswordField fx:id="passwordField" promptText="Password"/>
+                <TextField fx:id="visiblePasswordField"
+                           promptText="Password"
+                           visible="false"
+                           managed="false"/>
+            </StackPane>
+
+            <Button text="👁"
+                    onAction="#handleTogglePassword"
+                    focusTraversable="false"/>
+        </HBox>
 
         <HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="1">
             <Button text="Login" onAction="#handleLogin"/>

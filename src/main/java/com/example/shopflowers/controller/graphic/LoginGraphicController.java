@@ -31,12 +31,17 @@ public class LoginGraphicController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private TextField visiblePasswordField;
+
     private final LoginController loginController = new LoginController();
 
     @FXML
     private void handleLogin() {
         String username = usernameField.getText();
-        String password = passwordField.getText();
+        String password = passwordField.isVisible()
+                ? passwordField.getText()
+                : visiblePasswordField.getText();
 
         try {
             User user = loginController.login(username, password);
@@ -130,6 +135,24 @@ public class LoginGraphicController {
             );
         } catch (IOException e) {
             messageLabel.setText("Errore nell'apertura del cambio password.");
+        }
+    }
+    @FXML
+    private void handleTogglePassword() {
+        if (passwordField.isVisible()) {
+            visiblePasswordField.setText(passwordField.getText());
+            visiblePasswordField.setVisible(true);
+            visiblePasswordField.setManaged(true);
+
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+        } else {
+            passwordField.setText(visiblePasswordField.getText());
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+
+            visiblePasswordField.setVisible(false);
+            visiblePasswordField.setManaged(false);
         }
     }
 }
