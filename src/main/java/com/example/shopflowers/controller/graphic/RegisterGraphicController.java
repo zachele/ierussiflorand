@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.RegisterController;
+import com.example.shopflowers.util.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -41,10 +42,16 @@ public class RegisterGraphicController {
             boolean success = registerController.registerCustomer(name, surname, username, password);
 
             if (success) {
-                messageLabel.setText("Registrazione completata con successo.");
+                AlertUtils.showInfo(
+                        "Registrazione",
+                        "Registrazione completata con successo."
+                );
                 goToLogin();
             } else {
-                messageLabel.setText("Registrazione non riuscita. Username già esistente.");
+                AlertUtils.showWarning(
+                        "Registrazione non riuscita",
+                        "Username già esistente."
+                );
             }
 
         } catch (SQLException e) {

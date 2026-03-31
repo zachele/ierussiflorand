@@ -14,12 +14,14 @@
       <w>Cognome</w>
       <w>Colore</w>
       <w>Compatibile</w>
+      <w>Completa</w>
       <w>Configurazione</w>
       <w>Consegna</w>
       <w>Contatti</w>
       <w>Controlla</w>
       <w>Crea</w>
       <w>Credenziali</w>
+      <w>Distribuzione</w>
       <w>Elimina</w>
       <w>Eliminazione</w>
       <w>Giorni</w>
@@ -43,6 +45,7 @@
       <w>Pagamento</w>
       <w>Posizione</w>
       <w>Prezzi</w>
+      <w>Procedi</w>
       <w>Prodotti</w>
       <w>Prodotto</w>
       <w>Questa</w>
@@ -63,6 +66,7 @@
       <w>Totale</w>
       <w>Varietà</w>
       <w>Vendite</w>
+      <w>Vuoi</w>
       <w>acquisti</w>
       <w>aggiornamenti</w>
       <w>aggiornata</w>
@@ -72,6 +76,7 @@
       <w>all'occasione</w>
       <w>alla</w>
       <w>allo</w>
+      <w>amministratore</w>
       <w>anniversario</w>
       <w>annuali</w>
       <w>annullata</w>
@@ -84,6 +89,9 @@
       <w>attuale</w>
       <w>automaticamente</w>
       <w>azienda</w>
+      <w>aziendale</w>
+      <w>azzerare</w>
+      <w>azzerata</w>
       <w>bianco</w>
       <w>caricamento</w>
       <w>cliente</w>
@@ -91,10 +99,14 @@
       <w>cognome</w>
       <w>compatibili</w>
       <w>compleanno</w>
+      <w>completare</w>
       <w>completata</w>
       <w>completati</w>
+      <w>composizione</w>
       <w>condoglianze</w>
+      <w>confermare</w>
       <w>confezione</w>
+      <w>configurazione</w>
       <w>consegnati</w>
       <w>consegnato</w>
       <w>consigliato</w>
@@ -107,7 +119,9 @@
       <w>creazione</w>
       <w>criteri</w>
       <w>cura</w>
+      <w>dalla</w>
       <w>dedicata</w>
+      <w>degli</w>
       <w>delicato</w>
       <w>dell'assistente</w>
       <w>dell'operatore</w>
@@ -115,12 +129,15 @@
       <w>della</w>
       <w>delle</w>
       <w>dello</w>
+      <w>dell’ordine</w>
       <w>dettagli</w>
       <w>deve</w>
       <w>dimensione</w>
       <w>disponibile</w>
       <w>disponibili</w>
+      <w>disponibilità</w>
       <w>elegante</w>
+      <w>elementi</w>
       <w>eliminare</w>
       <w>eliminato</w>
       <w>eliminazione</w>
@@ -137,18 +154,22 @@
       <w>giglio</w>
       <w>inattività</w>
       <w>indirizzo</w>
+      <w>inseriti</w>
       <w>l'aggiornamento</w>
       <w>l'apertura</w>
       <w>l'articolo</w>
       <w>l'azienda</w>
+      <w>l'elemento</w>
       <w>l'eliminazione</w>
       <w>l'id</w>
       <w>l'inizializzazione</w>
       <w>l'obiettivo</w>
       <w>l'operatore</w>
+      <w>l'ordine</w>
       <w>laurea</w>
       <w>lavorative</w>
       <w>lavorativi</w>
+      <w>lista</w>
       <w>mancante</w>
       <w>margherita</w>
       <w>massimo</w>
@@ -161,6 +182,7 @@
       <w>mostrate</w>
       <w>nata</w>
       <w>nell'apertura</w>
+      <w>nella</w>
       <w>nessuna</w>
       <w>nome</w>
       <w>notifiche</w>
@@ -177,11 +199,14 @@
       <w>personalizzata</w>
       <w>preferenza</w>
       <w>preparazione</w>
+      <w>presente</w>
+      <w>prezzo</w>
       <w>prodotto</w>
       <w>propone</w>
       <w>proposta</w>
       <w>proposte</w>
       <w>pubblici</w>
+      <w>puoi</w>
       <w>qualità</w>
       <w>quantità</w>
       <w>questi</w>
@@ -203,9 +228,11 @@
       <w>rossa</w>
       <w>rosso</w>
       <w>salvataggio</w>
+      <w>salvato</w>
       <w>scaduta</w>
       <w>schermata</w>
       <w>sede</w>
+      <w>selezionando</w>
       <w>selezionato</w>
       <w>siamo</w>
       <w>sobrio</w>
@@ -215,6 +242,7 @@
       <w>statistiche</w>
       <w>stato</w>
       <w>storico</w>
+      <w>supera</w>
       <w>superiore</w>
       <w>svuotamento</w>
       <w>svuotato</w>
@@ -227,8 +255,10 @@
       <w>valide</w>
       <w>validi</w>
       <w>valido</w>
+      <w>valore</w>
       <w>vendita</w>
       <w>vendite</w>
+      <w>venduti</w>
       <w>venduto</w>
       <w>verificato</w>
       <w>verranno</w>

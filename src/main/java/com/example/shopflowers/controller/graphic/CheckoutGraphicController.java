@@ -4,6 +4,7 @@ import com.example.shopflowers.controller.application.CheckoutController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.Order;
+import com.example.shopflowers.util.AlertUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -126,7 +127,10 @@ public class CheckoutGraphicController {
     @FXML
     private void handleConfirmOrder() {
         if ((sharedCartController == null || sharedCartController.isCartEmpty()) && !CustomBouquetSession.hasBouquet()) {
-            messageLabel.setText("Checkout non disponibile. Il carrello e il bouquet personalizzato sono vuoti.");
+            AlertUtils.showWarning(
+                    "Ordine non confermato",
+                    "Uno o più prodotti non sono disponibili nella quantità richiesta."
+            );
             return;
         }
 
@@ -189,7 +193,10 @@ public class CheckoutGraphicController {
             pickupDatePicker.setValue(null);
             pickupTimeComboBox.setValue(null);
             paymentField.clear();
-            messageLabel.setText("Ordine confermato con successo.");
+            AlertUtils.showInfo(
+                    "Ordine confermato",
+                    "Ordine confermato con successo."
+            );
 
         } catch (Exception e) {
             messageLabel.setText("Ordine non confermato: uno o più prodotti non sono più disponibili nella quantità richiesta.");

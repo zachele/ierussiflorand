@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.ChangePasswordController;
+import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -45,10 +46,15 @@ public class ChangePasswordGraphicController {
                 return;
             }
 
-            messageLabel.setText("Password aggiornata con successo.");
-
+            AlertUtils.showInfo(
+                    "Password",
+                    "Password aggiornata con successo."
+            );
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante il cambio password.");
+            AlertUtils.showWarning(
+                    "Cambio password",
+                    "La password attuale non è corretta."
+            );
         }
     }
 

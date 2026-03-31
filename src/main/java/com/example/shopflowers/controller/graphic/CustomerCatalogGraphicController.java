@@ -4,6 +4,7 @@ import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
+import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
@@ -251,7 +252,10 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleGoToCheckout() {
         if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
-            messageLabel.setText("Checkout non disponibile. Il carrello e il bouquet personalizzato sono vuoti.");
+            AlertUtils.showWarning(
+                    "Pagamento",
+                    "Completa tutti i dati richiesti prima di confermare l'ordine."
+            );
             return;
         }
 
