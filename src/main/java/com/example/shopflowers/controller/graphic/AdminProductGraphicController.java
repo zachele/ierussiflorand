@@ -3,6 +3,9 @@ package com.example.shopflowers.controller.graphic;
 import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.ManageProductsController;
 import com.example.shopflowers.model.entity.FlowerProduct;
+import com.example.shopflowers.util.ProductFilterUIUtils;
+import com.example.shopflowers.util.ProductFilterUtils;
+import com.example.shopflowers.util.ProductTableUtils;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +20,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -78,28 +80,27 @@ public class AdminProductGraphicController {
     private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
     private final ManageProductsController manageProductsController = new ManageProductsController();
 
-    private ObservableList<FlowerProduct> masterProductList = FXCollections.observableArrayList();
     private FilteredList<FlowerProduct> filteredProducts;
-
     private FlowerProduct selectedProduct;
 
     @FXML
     public void initialize() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        colorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
-        varietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
-        stockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+        ProductTableUtils.configureProductTable(
+                idColumn,
+                nameColumn,
+                priceColumn,
+                colorColumn,
+                varietyColumn,
+                stockColumn
+        );
 
-        colorFilterComboBox.setItems(FXCollections.observableArrayList(
-                "Tutti", "Rosso", "Bianco", "Rosa", "Giallo", "Misto"
-        ));
-        colorFilterComboBox.setValue("Tutti");
-
-        searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
-        colorFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
-        availableOnlyCheckBox.selectedProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+        ProductFilterUIUtils.configureColorFilter(colorFilterComboBox);
+        ProductFilterUIUtils.bindFilterListeners(
+                searchField,
+                colorFilterComboBox,
+                availableOnlyCheckBox,
+                this::applyFilters
+        );
 
         productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedProduct = newSelection;
@@ -130,7 +131,7 @@ public class AdminProductGraphicController {
         } catch (NumberFormatException e) {
             messageLabel.setText("Dati non validi. Controlla prezzo e quantità disponibile.");
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante il salvataggio nel database: " + e.getMessage());
+            messageLabel.setText("Si è verificato un errore durante il salvataggio del prodotto.");
         }
     }
 
@@ -158,14 +159,14 @@ public class AdminProductGraphicController {
         } catch (NumberFormatException e) {
             messageLabel.setText("Dati non validi. Controlla prezzo e quantità disponibile.");
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante l'aggiornamento del prodotto: " + e.getMessage());
+            messageLabel.setText("Si è verificato un errore durante l'aggiornamento del prodotto.");
         }
     }
 
     @FXML
     private void handleDeleteProduct() {
         if (selectedProduct == null) {
-            messageLabel.setText("Seleziona prima un prodotto dal catalogo.");
+            messageLabel.setText("Seleziona prima un prodotto dalla tabella.");
             return;
         }
 
@@ -194,7 +195,7 @@ public class AdminProductGraphicController {
     private void loadProducts() {
         try {
             List<FlowerProduct> products = browseCatalogController.getAllProducts();
-            masterProductList = FXCollections.observableArrayList(products);
+            ObservableList<FlowerProduct> masterProductList = FXCollections.observableArrayList(products);
             filteredProducts = new FilteredList<>(masterProductList, product -> true);
 
             SortedList<FlowerProduct> sortedProducts = new SortedList<>(filteredProducts);
@@ -205,7 +206,7 @@ public class AdminProductGraphicController {
             productTable.refresh();
 
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante il caricamento dei prodotti: " + e.getMessage());
+            messageLabel.setText("Si è verificato un errore durante il caricamento dei prodotti.");
         }
     }
 
@@ -214,32 +215,18 @@ public class AdminProductGraphicController {
             return;
         }
 
-        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+        String searchText = searchField.getText();
         String selectedColor = colorFilterComboBox.getValue();
         boolean availableOnly = availableOnlyCheckBox.isSelected();
 
-        filteredProducts.setPredicate(product -> {
-            if (product == null) {
-                return false;
-            }
-
-            boolean matchesSearch = searchText.isBlank()
-                    || safe(product.getName()).contains(searchText)
-                    || safe(product.getColor()).contains(searchText)
-                    || safe(product.getVariety()).contains(searchText);
-
-            boolean matchesColor = selectedColor == null
-                    || selectedColor.equalsIgnoreCase("Tutti")
-                    || safe(product.getColor()).contains(selectedColor.toLowerCase());
-
-            boolean matchesAvailability = !availableOnly || product.getStockQuantity() > 0;
-
-            return matchesSearch && matchesColor && matchesAvailability;
-        });
-    }
-
-    private String safe(String value) {
-        return value == null ? "" : value.toLowerCase();
+        filteredProducts.setPredicate(product ->
+                ProductFilterUtils.matchesProductFilters(
+                        product,
+                        searchText,
+                        selectedColor,
+                        availableOnly
+                )
+        );
     }
 
     private void populateFields(FlowerProduct product) {

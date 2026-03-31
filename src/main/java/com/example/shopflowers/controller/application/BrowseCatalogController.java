@@ -17,8 +17,4 @@ public class BrowseCatalogController {
     public List<FlowerProduct> getAllProducts() throws SQLException {
         return flowerProductDAO.findAll();
     }
-
-    public FlowerProduct getProductById(int id) throws SQLException {
-        return flowerProductDAO.findById(id);
-    }
 }

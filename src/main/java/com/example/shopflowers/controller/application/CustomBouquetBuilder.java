@@ -73,16 +73,14 @@ public class CustomBouquetBuilder {
             total += item.getSubtotal();
         }
 
-        total += switch (size) {
-            case "MEDIO" -> 5.0;
-            case "GRANDE" -> 10.0;
-            default -> 0.0;
-        };
-
-        total += switch (packaging) {
-            case "PREMIUM" -> 7.0;
-            default -> 0.0;
-        };
+        if ("MEDIO".equalsIgnoreCase(size)) {
+            total += 5.0;
+        } else if ("GRANDE".equalsIgnoreCase(size)) {
+            total += 10.0;
+        }
+        if ("PREMIUM".equalsIgnoreCase(packaging)) {
+            total += 7.0;
+        }
 
         if (cardIncluded) {
             total += 3.0;

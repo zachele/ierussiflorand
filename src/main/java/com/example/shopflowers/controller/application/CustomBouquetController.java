@@ -64,10 +64,6 @@ public class CustomBouquetController {
         return builder.getExceededAmount();
     }
 
-    public Double getCurrentBudget() {
-        return builder.getMaxBudget();
-    }
-
     public CustomBouquet buildBouquet() {
         return builder.build();
     }

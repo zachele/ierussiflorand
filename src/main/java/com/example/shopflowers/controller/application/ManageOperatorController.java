@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ManageOperatorController {
 
+    private static final int MIN_CONTRACT_YEAR = 2000;
+
     private final UserDAO userDAO;
     private final OperatorDetailsDAO operatorDetailsDAO;
 
@@ -22,13 +24,7 @@ public class ManageOperatorController {
     public boolean createOperator(String name, String surname, String username, String password,
                                   String salaryText, String contractYearText, String annualHoursText) throws SQLException {
 
-        if (name == null || name.isBlank()
-                || surname == null || surname.isBlank()
-                || username == null || username.isBlank()
-                || password == null || password.isBlank()
-                || salaryText == null || salaryText.isBlank()
-                || contractYearText == null || contractYearText.isBlank()
-                || annualHoursText == null || annualHoursText.isBlank()) {
+        if (!areCreateFieldsValid(name, surname, username, password, salaryText, contractYearText, annualHoursText)) {
             return false;
         }
 
@@ -36,27 +32,21 @@ public class ManageOperatorController {
             return false;
         }
 
-        double salary;
-        int contractYear;
-        int annualHours;
-
-        try {
-            salary = Double.parseDouble(salaryText);
-            contractYear = Integer.parseInt(contractYearText);
-            annualHours = Integer.parseInt(annualHoursText);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-
-        if (salary < 0 || annualHours < 0 || contractYear < 2000) {
+        OperatorDetails operatorDetails = parseOperatorDetails(-1, salaryText, contractYearText, annualHoursText);
+        if (operatorDetails == null) {
             return false;
         }
 
         User operator = new User(name, surname, username, password, "OPERATOR");
         int userId = userDAO.saveAndReturnId(operator);
 
-        OperatorDetails operatorDetails = new OperatorDetails(userId, salary, contractYear, annualHours);
-        operatorDetailsDAO.save(operatorDetails);
+        OperatorDetails savedOperatorDetails = new OperatorDetails(
+                userId,
+                operatorDetails.getSalary(),
+                operatorDetails.getContractYear(),
+                operatorDetails.getAnnualHours()
+        );
+        operatorDetailsDAO.save(savedOperatorDetails);
 
         return true;
     }
@@ -68,41 +58,68 @@ public class ManageOperatorController {
     public boolean updateOperator(int userId, String name, String surname,
                                   String salaryText, String contractYearText, String annualHoursText) throws SQLException {
 
-        if (name == null || name.isBlank()
-                || surname == null || surname.isBlank()
-                || salaryText == null || salaryText.isBlank()
-                || contractYearText == null || contractYearText.isBlank()
-                || annualHoursText == null || annualHoursText.isBlank()) {
+        if (!areUpdateFieldsValid(name, surname, salaryText, contractYearText, annualHoursText)) {
             return false;
         }
 
-        double salary;
-        int contractYear;
-        int annualHours;
+        OperatorDetails operatorDetails = parseOperatorDetails(userId, salaryText, contractYearText, annualHoursText);
+        if (operatorDetails == null) {
+            return false;
+        }
+
+        userDAO.updateNameAndSurname(userId, name, surname);
+        operatorDetailsDAO.update(operatorDetails);
+
+        return true;
+    }
+
+    public void deleteOperator(int userId) throws SQLException {
+        operatorDetailsDAO.deleteByUserId(userId);
+        userDAO.deleteById(userId);
+    }
+
+    private boolean areCreateFieldsValid(String name, String surname, String username, String password,
+                                         String salaryText, String contractYearText, String annualHoursText) {
+        return isNotBlank(name)
+                && isNotBlank(surname)
+                && isNotBlank(username)
+                && isNotBlank(password)
+                && isNotBlank(salaryText)
+                && isNotBlank(contractYearText)
+                && isNotBlank(annualHoursText);
+    }
+
+    private boolean areUpdateFieldsValid(String name, String surname,
+                                         String salaryText, String contractYearText, String annualHoursText) {
+        return isNotBlank(name)
+                && isNotBlank(surname)
+                && isNotBlank(salaryText)
+                && isNotBlank(contractYearText)
+                && isNotBlank(annualHoursText);
+    }
+
+    private OperatorDetails parseOperatorDetails(int userId, String salaryText,
+                                                 String contractYearText, String annualHoursText) {
+        final double salary;
+        final int contractYear;
+        final int annualHours;
 
         try {
             salary = Double.parseDouble(salaryText);
             contractYear = Integer.parseInt(contractYearText);
             annualHours = Integer.parseInt(annualHoursText);
         } catch (NumberFormatException e) {
-            return false;
+            return null;
         }
 
-        if (salary < 0 || annualHours < 0 || contractYear < 2000) {
-            return false;
+        if (salary < 0 || annualHours < 0 || contractYear < MIN_CONTRACT_YEAR) {
+            return null;
         }
 
-        userDAO.updateNameAndSurname(userId, name, surname);
-
-        OperatorDetails operatorDetails = new OperatorDetails(userId, salary, contractYear, annualHours);
-        operatorDetailsDAO.update(operatorDetails);
-
-        return true;
+        return new OperatorDetails(userId, salary, contractYear, annualHours);
     }
 
-    public boolean deleteOperator(int userId) throws SQLException {
-        operatorDetailsDAO.deleteByUserId(userId);
-        userDAO.deleteById(userId);
-        return true;
+    private boolean isNotBlank(String value) {
+        return value != null && !value.isBlank();
     }
 }

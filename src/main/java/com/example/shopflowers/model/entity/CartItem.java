@@ -26,10 +26,6 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public String getProductName() {
-        return product.getName();
-    }
-
     public double getTotalPrice() {
         return product.getPrice() * quantity;
     }

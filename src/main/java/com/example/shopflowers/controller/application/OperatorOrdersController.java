@@ -15,10 +15,6 @@ public class OperatorOrdersController {
         this.orderDAO = new OrderDAO();
     }
 
-    public List<OrderSummary> getAllOrders() throws SQLException {
-        return orderDAO.findAllOrders();
-    }
-
     public List<OrderItemSummary> getItemsByOrderId(int orderId) throws SQLException {
         return orderDAO.findItemsByOrderId(orderId);
     }

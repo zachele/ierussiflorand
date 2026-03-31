@@ -7,7 +7,6 @@ import com.example.shopflowers.model.entity.RecommendationResult;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RecommendationEngine {
 
@@ -15,46 +14,9 @@ public class RecommendationEngine {
         List<RecommendationResult> allResults = new ArrayList<>();
 
         for (FlowerProduct product : products) {
-            if (product.getStockQuantity() <= 0) {
-                continue;
-            }
-
-            if (mustRespectExactColor(request.getPreferredColor())
-                    && !matchesExactColor(product, request.getPreferredColor())) {
-                continue;
-            }
-            int score = 0;
-            List<String> reasons = new ArrayList<>();
-            boolean withinBudget = product.getPrice() <= request.getMaxBudget();
-
-            if (withinBudget) {
-                score += 3;
-                reasons.add("Compatibile con il budget");
-            } else if (product.getPrice() <= request.getMaxBudget() + 10) {
-                score += 1;
-                reasons.add("Leggermente sopra il budget");
-            } else {
-                continue;
-            }
-
-            if (matchesColor(product, request.getPreferredColor())) {
-                score += 2;
-                reasons.add("Colore coerente con la preferenza");
-            }
-
-            if (matchesOccasion(product, request.getOccasion())) {
-                score += 3;
-                reasons.add("Adatto all'occasione");
-            }
-
-            if (matchesStyle(product, request.getStyle())) {
-                score += 2;
-                reasons.add("Stile coerente con la richiesta");
-            }
-
-            if (score > 0) {
-                String reason = String.join(", ", reasons);
-                allResults.add(new RecommendationResult(product, reason, score, withinBudget));
+            RecommendationResult result = evaluateProduct(product, request);
+            if (result != null) {
+                allResults.add(result);
             }
         }
 
@@ -66,19 +28,91 @@ public class RecommendationEngine {
         List<RecommendationResult> withinBudgetResults = allResults.stream()
                 .filter(RecommendationResult::isWithinBudget)
                 .limit(3)
-                .collect(Collectors.toList());
+                .toList();
 
         if (!withinBudgetResults.isEmpty()) {
             return withinBudgetResults;
         }
 
-        return allResults.stream().limit(3).collect(Collectors.toList());
+        return allResults.stream()
+                .limit(3)
+                .toList();
+    }
+
+    private RecommendationResult evaluateProduct(FlowerProduct product, RecommendationRequest request) {
+        if (!isEligibleProduct(product, request)) {
+            return null;
+        }
+
+        int score = 0;
+        List<String> reasons = new ArrayList<>();
+        boolean withinBudget = product.getPrice() <= request.getMaxBudget();
+
+        score += evaluateBudget(product, request, reasons);
+        score += evaluateColor(product, request, reasons);
+        score += evaluateOccasion(product, request, reasons);
+        score += evaluateStyle(product, request, reasons);
+
+        String reason = String.join(", ", reasons);
+        return new RecommendationResult(product, reason, score, withinBudget);
+    }
+
+    private boolean isEligibleProduct(FlowerProduct product, RecommendationRequest request) {
+        if (product.getStockQuantity() <= 0) {
+            return false;
+        }
+
+        if (mustRespectExactColor(request.getPreferredColor())
+                && !matchesExactColor(product, request.getPreferredColor())) {
+            return false;
+        }
+
+        return isWithinAcceptableBudget(product, request);
+    }
+
+    private boolean isWithinAcceptableBudget(FlowerProduct product, RecommendationRequest request) {
+        return product.getPrice() <= request.getMaxBudget() + 10;
+    }
+
+    private int evaluateBudget(FlowerProduct product, RecommendationRequest request, List<String> reasons) {
+        if (product.getPrice() <= request.getMaxBudget()) {
+            reasons.add("Compatibile con il budget");
+            return 3;
+        }
+
+        reasons.add("Leggermente sopra il budget");
+        return 1;
+    }
+
+    private int evaluateColor(FlowerProduct product, RecommendationRequest request, List<String> reasons) {
+        if (matchesColor(product, request.getPreferredColor())) {
+            reasons.add("Colore coerente con la preferenza");
+            return 2;
+        }
+        return 0;
+    }
+
+    private int evaluateOccasion(FlowerProduct product, RecommendationRequest request, List<String> reasons) {
+        if (matchesOccasion(product, request.getOccasion())) {
+            reasons.add("Adatto all'occasione");
+            return 3;
+        }
+        return 0;
+    }
+
+    private int evaluateStyle(FlowerProduct product, RecommendationRequest request, List<String> reasons) {
+        if (matchesStyle(product, request.getStyle())) {
+            reasons.add("Stile coerente con la richiesta");
+            return 2;
+        }
+        return 0;
     }
 
     private boolean matchesColor(FlowerProduct product, String preferredColor) {
         if (preferredColor == null || preferredColor.isBlank() || preferredColor.equalsIgnoreCase("NESSUNA")) {
             return true;
         }
+
         return product.getColor() != null
                 && product.getColor().toLowerCase().contains(preferredColor.toLowerCase());
     }
@@ -125,13 +159,16 @@ public class RecommendationEngine {
 
     private boolean containsOneOf(String name, String variety, String color, String... values) {
         for (String value : values) {
-            String v = value.toLowerCase();
-            if (name.contains(v) || variety.contains(v) || color.contains(v)) {
+            String normalizedValue = value.toLowerCase();
+            if (name.contains(normalizedValue)
+                    || variety.contains(normalizedValue)
+                    || color.contains(normalizedValue)) {
                 return true;
             }
         }
         return false;
     }
+
     private boolean mustRespectExactColor(String preferredColor) {
         return preferredColor != null
                 && !preferredColor.isBlank()
@@ -143,6 +180,7 @@ public class RecommendationEngine {
         return product.getColor() != null
                 && product.getColor().toLowerCase().contains(preferredColor.toLowerCase());
     }
+
     private String safe(String value) {
         return value == null ? "" : value.toLowerCase();
     }
