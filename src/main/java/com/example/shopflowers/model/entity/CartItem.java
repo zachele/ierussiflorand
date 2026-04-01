@@ -29,4 +29,8 @@ public class CartItem {
     public double getTotalPrice() {
         return product.getPrice() * quantity;
     }
+
+    public String getProductName() {
+        return product != null ? product.getName() : "";
+    }
 }

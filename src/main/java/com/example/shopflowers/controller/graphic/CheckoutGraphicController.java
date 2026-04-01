@@ -2,27 +2,34 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.CheckoutController;
 import com.example.shopflowers.controller.application.CustomerCartController;
+import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.entity.CartItem;
+import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.model.entity.Order;
 import com.example.shopflowers.util.AlertUtils;
+import com.example.shopflowers.util.CustomBouquetSession;
+import com.example.shopflowers.util.SceneNavigator;
+import com.example.shopflowers.util.Session;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
-import com.example.shopflowers.util.Session;
-import com.example.shopflowers.util.SceneNavigator;
-
-import com.example.shopflowers.model.entity.CustomBouquet;
-import com.example.shopflowers.util.CustomBouquetSession;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import java.util.Collections;
 import java.util.Optional;
 
 public class CheckoutGraphicController {
+
+    private static final String NO_BOUQUET_MESSAGE = "Nessun bouquet personalizzato nel pagamento corrente.";
 
     @FXML
     private TableView<CartItem> checkoutTable;
@@ -70,108 +77,26 @@ public class CheckoutGraphicController {
 
     @FXML
     public void initialize() {
-        productColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        totalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
-
-        deliveryModeComboBox.setItems(FXCollections.observableArrayList("CONSEGNA", "RITIRO"));
-
-        pickupTimeComboBox.setItems(FXCollections.observableArrayList(
-                "09:00", "09:30", "10:00", "10:30",
-                "11:00", "11:30", "12:00", "12:30",
-                "16:00", "16:30", "17:00", "17:30",
-                "18:00", "18:30", "19:00"
-        ));
-
-        addressField.setDisable(true);
-        pickupDatePicker.setDisable(true);
-        pickupTimeComboBox.setDisable(true);
-
-        deliveryModeComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if ("CONSEGNA".equals(newValue)) {
-                addressField.setDisable(false);
-                pickupDatePicker.setDisable(true);
-                pickupTimeComboBox.setDisable(true);
-                pickupDatePicker.setValue(null);
-                pickupTimeComboBox.setValue(null);
-            } else if ("RITIRO".equals(newValue)) {
-                addressField.setDisable(true);
-                addressField.clear();
-                pickupDatePicker.setDisable(false);
-                pickupTimeComboBox.setDisable(false);
-            }
-        });
-
-        if (sharedCartController != null) {
-            checkoutTable.setItems(FXCollections.observableArrayList(sharedCartController.getCartItems()));
-
-            double total = sharedCartController.getCartTotal();
-
-            if (CustomBouquetSession.hasBouquet()) {
-                CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
-                bouquetInfoLabel.setText(
-                        String.format("Bouquet personalizzato: %s | Totale bouquet: € %.2f",
-                                bouquet.getDescription(),
-                                bouquet.getTotalPrice())
-                );
-                total += bouquet.getTotalPrice();
-            } else {
-                CustomBouquetSession.clear();
-                bouquetInfoLabel.setText("Nessun bouquet personalizzato nel pagamento corrente.");
-            }
-
-            totalLabel.setText(String.format("Totale ordine: € %.2f", total));
-        }
+        configureCheckoutTable();
+        configureDeliveryOptions();
+        loadCheckoutData();
     }
 
     @FXML
     private void handleConfirmOrder() {
-        if ((sharedCartController == null || sharedCartController.isCartEmpty()) && !CustomBouquetSession.hasBouquet()) {
-            AlertUtils.showWarning(
-                    "Ordine non confermato",
-                    "Uno o più prodotti non sono disponibili nella quantità richiesta."
-            );
+        if (!isCheckoutAvailable()) {
             return;
         }
 
-        String deliveryMode = deliveryModeComboBox.getValue();
-        String paymentMethod = paymentField.getText();
-        String address = addressField.getText();
-        String pickupDate = null;
-        String pickupTime = null;
-
-        if (deliveryMode == null || paymentMethod == null || paymentMethod.isBlank()) {
-            messageLabel.setText("Compila tutti i campi del checkout.");
+        CheckoutBean checkoutBean = buildCheckoutBean();
+        if (!validateCheckoutBean(checkoutBean)) {
             return;
-        }
-
-        if ("CONSEGNA".equals(deliveryMode)) {
-            if (address == null || address.isBlank()) {
-                messageLabel.setText("Inserisci l'indirizzo di consegna.");
-                return;
-            }
-        }
-
-        if ("RITIRO".equals(deliveryMode)) {
-            if (pickupDatePicker.getValue() == null || pickupTimeComboBox.getValue() == null) {
-                messageLabel.setText("Seleziona giorno e ora del ritiro.");
-                return;
-            }
-
-            pickupDate = pickupDatePicker.getValue().toString();
-            pickupTime = pickupTimeComboBox.getValue();
-            address = null;
         }
 
         try {
             Order order = checkoutController.createOrder(
-                    Session.getLoggedUsername(),
-                    sharedCartController != null ? sharedCartController.getCartItems() : java.util.Collections.emptyList(),
-                    deliveryMode,
-                    address,
-                    pickupDate,
-                    pickupTime,
-                    paymentMethod
+                    checkoutBean,
+                    sharedCartController != null ? sharedCartController.getCartItems() : Collections.emptyList()
             );
 
             boolean confirmed = checkoutController.confirmOrder(order);
@@ -181,18 +106,7 @@ public class CheckoutGraphicController {
                 return;
             }
 
-            if (sharedCartController != null) {
-                sharedCartController.clearCart();
-            }
-
-            checkoutTable.getItems().clear();
-            CustomBouquetSession.clear();
-            bouquetInfoLabel.setText("Nessun bouquet personalizzato nel pagamento corrente.");
-            totalLabel.setText(String.format("Totale ordine: € %.2f", 0.0));
-            addressField.clear();
-            pickupDatePicker.setValue(null);
-            pickupTimeComboBox.setValue(null);
-            paymentField.clear();
+            clearCheckoutAfterSuccess();
             AlertUtils.showInfo(
                     "Ordine confermato",
                     "Ordine confermato con successo."
@@ -225,6 +139,7 @@ public class CheckoutGraphicController {
             messageLabel.setText("Si è verificato un errore durante il logout.");
         }
     }
+
     @FXML
     private void handleRemoveBouquet() {
         if (!CustomBouquetSession.hasBouquet()) {
@@ -244,11 +159,150 @@ public class CheckoutGraphicController {
         }
 
         CustomBouquetSession.clear();
-        bouquetInfoLabel.setText("Nessun bouquet personalizzato nel pagamento corrente.");
+        bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
 
         double total = sharedCartController != null ? sharedCartController.getCartTotal() : 0.0;
         totalLabel.setText(String.format("Totale ordine: € %.2f", total));
 
         messageLabel.setText("Bouquet rimosso dal pagamento corrente con successo.");
+    }
+
+    private void configureCheckoutTable() {
+        productColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        totalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+    }
+
+    private void configureDeliveryOptions() {
+        deliveryModeComboBox.setItems(FXCollections.observableArrayList("CONSEGNA", "RITIRO"));
+
+        pickupTimeComboBox.setItems(FXCollections.observableArrayList(
+                "09:00", "09:30", "10:00", "10:30",
+                "11:00", "11:30", "12:00", "12:30",
+                "16:00", "16:30", "17:00", "17:30",
+                "18:00", "18:30", "19:00"
+        ));
+
+        addressField.setDisable(true);
+        pickupDatePicker.setDisable(true);
+        pickupTimeComboBox.setDisable(true);
+
+        deliveryModeComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if ("CONSEGNA".equals(newValue)) {
+                addressField.setDisable(false);
+                pickupDatePicker.setDisable(true);
+                pickupTimeComboBox.setDisable(true);
+                pickupDatePicker.setValue(null);
+                pickupTimeComboBox.setValue(null);
+            } else if ("RITIRO".equals(newValue)) {
+                addressField.setDisable(true);
+                addressField.clear();
+                pickupDatePicker.setDisable(false);
+                pickupTimeComboBox.setDisable(false);
+            }
+        });
+    }
+
+    private void loadCheckoutData() {
+        if (sharedCartController == null) {
+            return;
+        }
+
+        checkoutTable.setItems(FXCollections.observableArrayList(sharedCartController.getCartItems()));
+
+        double total = sharedCartController.getCartTotal();
+
+        if (CustomBouquetSession.hasBouquet()) {
+            CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
+            bouquetInfoLabel.setText(
+                    String.format(
+                            "Bouquet personalizzato: %s | Totale bouquet: € %.2f",
+                            bouquet.getDescription(),
+                            bouquet.getTotalPrice()
+                    )
+            );
+            total += bouquet.getTotalPrice();
+        } else {
+            CustomBouquetSession.clear();
+            bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
+        }
+
+        totalLabel.setText(String.format("Totale ordine: € %.2f", total));
+    }
+
+    private boolean isCheckoutAvailable() {
+        if ((sharedCartController == null || sharedCartController.isCartEmpty()) && !CustomBouquetSession.hasBouquet()) {
+            AlertUtils.showWarning(
+                    "Ordine non confermato",
+                    "Uno o più prodotti non sono disponibili nella quantità richiesta."
+            );
+            return false;
+        }
+        return true;
+    }
+
+    private CheckoutBean buildCheckoutBean() {
+        CheckoutBean checkoutBean = new CheckoutBean();
+        checkoutBean.setUsername(Session.getLoggedUsername());
+        checkoutBean.setDeliveryMode(deliveryModeComboBox.getValue());
+        checkoutBean.setPaymentMethod(paymentField.getText());
+        checkoutBean.setDeliveryAddress(addressField.getText());
+        checkoutBean.setPickupDate(null);
+        checkoutBean.setPickupTime(null);
+        return checkoutBean;
+    }
+
+    private boolean validateCheckoutBean(CheckoutBean checkoutBean) {
+        if (checkoutBean.getDeliveryMode() == null
+                || checkoutBean.getPaymentMethod() == null
+                || checkoutBean.getPaymentMethod().isBlank()) {
+            messageLabel.setText("Compila tutti i campi del checkout.");
+            return false;
+        }
+
+        if ("CONSEGNA".equals(checkoutBean.getDeliveryMode())) {
+            return validateDeliveryAddress(checkoutBean);
+        }
+
+        if ("RITIRO".equals(checkoutBean.getDeliveryMode())) {
+            return validatePickupData(checkoutBean);
+        }
+
+        return true;
+    }
+
+    private boolean validateDeliveryAddress(CheckoutBean checkoutBean) {
+        if (checkoutBean.getDeliveryAddress() == null || checkoutBean.getDeliveryAddress().isBlank()) {
+            messageLabel.setText("Inserisci l'indirizzo di consegna.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePickupData(CheckoutBean checkoutBean) {
+        if (pickupDatePicker.getValue() == null || pickupTimeComboBox.getValue() == null) {
+            messageLabel.setText("Seleziona giorno e ora del ritiro.");
+            return false;
+        }
+
+        checkoutBean.setPickupDate(pickupDatePicker.getValue().toString());
+        checkoutBean.setPickupTime(pickupTimeComboBox.getValue());
+        checkoutBean.setDeliveryAddress(null);
+        return true;
+    }
+
+    private void clearCheckoutAfterSuccess() {
+        if (sharedCartController != null) {
+            sharedCartController.clearCart();
+        }
+
+        checkoutTable.getItems().clear();
+        CustomBouquetSession.clear();
+        bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
+        totalLabel.setText(String.format("Totale ordine: € %.2f", 0.0));
+        addressField.clear();
+        pickupDatePicker.setValue(null);
+        pickupTimeComboBox.setValue(null);
+        paymentField.clear();
     }
 }

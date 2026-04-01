@@ -2,12 +2,16 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.controller.application.RecommendationController;
-import com.example.shopflowers.model.entity.RecommendationRequest;
+import com.example.shopflowers.model.bean.RecommendationRequestBean;
 import com.example.shopflowers.model.entity.RecommendationResult;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -104,8 +108,14 @@ public class RecommendationGraphicController {
         }
 
         try {
-            RecommendationRequest request = new RecommendationRequest(occasion, style, budget, color);
-            List<RecommendationResult> results = recommendationController.getRecommendations(request);
+            RecommendationRequestBean requestBean = buildRecommendationRequestBean(
+                    occasion,
+                    style,
+                    color,
+                    budget
+            );
+
+            List<RecommendationResult> results = recommendationController.getRecommendations(requestBean);
 
             recommendationTable.setItems(FXCollections.observableArrayList(results));
 
@@ -158,5 +168,19 @@ public class RecommendationGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
         }
+    }
+
+    private RecommendationRequestBean buildRecommendationRequestBean(
+            String occasion,
+            String style,
+            String color,
+            double budget
+    ) {
+        RecommendationRequestBean requestBean = new RecommendationRequestBean();
+        requestBean.setOccasion(occasion);
+        requestBean.setStyle(style);
+        requestBean.setPreferredColor(color);
+        requestBean.setMaxBudget(budget);
+        return requestBean;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.dao.CustomBouquetOrderDAO;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
 import com.example.shopflowers.model.dao.OrderDAO;
@@ -13,6 +14,7 @@ import com.example.shopflowers.util.CustomBouquetSession;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CheckoutController {
@@ -27,9 +29,7 @@ public class CheckoutController {
         this.customBouquetOrderDAO = new CustomBouquetOrderDAO();
     }
 
-    public Order createOrder(String username, java.util.List<CartItem> cartItems,
-                             String deliveryMode, String deliveryAddress,
-                             String pickupDate, String pickupTime, String paymentMethod) {
+    public Order createOrder(CheckoutBean checkoutBean, List<CartItem> cartItems) {
         double total = 0;
 
         for (CartItem item : cartItems) {
@@ -41,13 +41,13 @@ public class CheckoutController {
         }
 
         return new Order(
-                username,
+                checkoutBean.getUsername(),
                 cartItems,
-                deliveryMode,
-                deliveryAddress,
-                pickupDate,
-                pickupTime,
-                paymentMethod,
+                checkoutBean.getDeliveryMode(),
+                checkoutBean.getDeliveryAddress(),
+                checkoutBean.getPickupDate(),
+                checkoutBean.getPickupTime(),
+                checkoutBean.getPaymentMethod(),
                 "IN_PREPARAZIONE",
                 total
         );
@@ -62,8 +62,10 @@ public class CheckoutController {
 
         for (CartItem item : order.getItems()) {
             int productId = item.getProduct().getId();
-            requiredQuantities.put(productId,
-                    requiredQuantities.getOrDefault(productId, 0) + item.getQuantity());
+            requiredQuantities.put(
+                    productId,
+                    requiredQuantities.getOrDefault(productId, 0) + item.getQuantity()
+            );
         }
 
         CustomBouquet bouquet = null;
@@ -72,8 +74,10 @@ public class CheckoutController {
 
             for (CustomBouquetItem item : bouquet.getItems()) {
                 int productId = item.getFlowerProduct().getId();
-                requiredQuantities.put(productId,
-                        requiredQuantities.getOrDefault(productId, 0) + item.getQuantity());
+                requiredQuantities.put(
+                        productId,
+                        requiredQuantities.getOrDefault(productId, 0) + item.getQuantity()
+                );
             }
         }
 

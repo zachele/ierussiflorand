@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.bean.RecommendationRequestBean;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.model.entity.RecommendationRequest;
@@ -18,8 +19,18 @@ public class RecommendationController {
         this.recommendationEngine = new RecommendationEngine();
     }
 
-    public List<RecommendationResult> getRecommendations(RecommendationRequest request) throws SQLException {
+    public List<RecommendationResult> getRecommendations(RecommendationRequestBean requestBean) throws SQLException {
         List<FlowerProduct> products = flowerProductDAO.findAll();
+        RecommendationRequest request = toRecommendationRequest(requestBean);
         return recommendationEngine.recommend(products, request);
+    }
+
+    private RecommendationRequest toRecommendationRequest(RecommendationRequestBean requestBean) {
+        return new RecommendationRequest(
+                requestBean.getOccasion(),
+                requestBean.getStyle(),
+                requestBean.getMaxBudget(),
+                requestBean.getPreferredColor()
+        );
     }
 }
