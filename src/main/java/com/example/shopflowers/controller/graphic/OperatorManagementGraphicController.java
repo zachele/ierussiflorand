@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.ManageOperatorController;
+import com.example.shopflowers.model.bean.OperatorBean;
 import com.example.shopflowers.model.entity.OperatorFullData;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
@@ -99,14 +100,7 @@ public class OperatorManagementGraphicController {
             selectedOperator = newSelection;
 
             if (newSelection != null) {
-                nameField.setText(newSelection.getName());
-                surnameField.setText(newSelection.getSurname());
-                usernameField.setText(newSelection.getUsername());
-                passwordField.clear();
-                salaryField.setText(String.valueOf(newSelection.getSalary()));
-                contractYearField.setText(String.valueOf(newSelection.getContractYear()));
-                annualHoursField.setText(String.valueOf(newSelection.getAnnualHours()));
-
+                populateFields(newSelection);
                 usernameField.setDisable(true);
                 passwordField.setDisable(true);
             }
@@ -118,15 +112,8 @@ public class OperatorManagementGraphicController {
     @FXML
     private void handleCreateOperator() {
         try {
-            boolean created = manageOperatorController.createOperator(
-                    nameField.getText(),
-                    surnameField.getText(),
-                    usernameField.getText(),
-                    passwordField.getText(),
-                    salaryField.getText(),
-                    contractYearField.getText(),
-                    annualHoursField.getText()
-            );
+            OperatorBean operatorBean = buildCreateOperatorBean();
+            boolean created = manageOperatorController.createOperator(operatorBean);
 
             if (!created) {
                 messageLabel.setText("Registrazione non riuscita. Username già esistente.");
@@ -152,14 +139,8 @@ public class OperatorManagementGraphicController {
         }
 
         try {
-            boolean updated = manageOperatorController.updateOperator(
-                    selectedOperator.getUserId(),
-                    nameField.getText(),
-                    surnameField.getText(),
-                    salaryField.getText(),
-                    contractYearField.getText(),
-                    annualHoursField.getText()
-            );
+            OperatorBean operatorBean = buildUpdateOperatorBean();
+            boolean updated = manageOperatorController.updateOperator(operatorBean);
 
             if (!updated) {
                 messageLabel.setText("Operazione non riuscita. Controlla i dati inseriti per l'aggiornamento.");
@@ -225,6 +206,39 @@ public class OperatorManagementGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
         }
+    }
+
+    private OperatorBean buildCreateOperatorBean() {
+        OperatorBean operatorBean = new OperatorBean();
+        operatorBean.setName(nameField.getText());
+        operatorBean.setSurname(surnameField.getText());
+        operatorBean.setUsername(usernameField.getText());
+        operatorBean.setPassword(passwordField.getText());
+        operatorBean.setSalary(salaryField.getText());
+        operatorBean.setContractYear(contractYearField.getText());
+        operatorBean.setAnnualHours(annualHoursField.getText());
+        return operatorBean;
+    }
+
+    private OperatorBean buildUpdateOperatorBean() {
+        OperatorBean operatorBean = new OperatorBean();
+        operatorBean.setUserId(selectedOperator.getUserId());
+        operatorBean.setName(nameField.getText());
+        operatorBean.setSurname(surnameField.getText());
+        operatorBean.setSalary(salaryField.getText());
+        operatorBean.setContractYear(contractYearField.getText());
+        operatorBean.setAnnualHours(annualHoursField.getText());
+        return operatorBean;
+    }
+
+    private void populateFields(OperatorFullData operator) {
+        nameField.setText(operator.getName());
+        surnameField.setText(operator.getSurname());
+        usernameField.setText(operator.getUsername());
+        passwordField.clear();
+        salaryField.setText(String.valueOf(operator.getSalary()));
+        contractYearField.setText(String.valueOf(operator.getContractYear()));
+        annualHoursField.setText(String.valueOf(operator.getAnnualHours()));
     }
 
     private void loadOperators() {

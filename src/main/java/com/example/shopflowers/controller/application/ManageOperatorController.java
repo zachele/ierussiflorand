@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.bean.OperatorBean;
 import com.example.shopflowers.model.dao.OperatorDetailsDAO;
 import com.example.shopflowers.model.dao.UserDAO;
 import com.example.shopflowers.model.entity.OperatorDetails;
@@ -21,23 +22,28 @@ public class ManageOperatorController {
         this.operatorDetailsDAO = new OperatorDetailsDAO();
     }
 
-    public boolean createOperator(String name, String surname, String username, String password,
-                                  String salaryText, String contractYearText, String annualHoursText) throws SQLException {
-
-        if (!areCreateFieldsValid(name, surname, username, password, salaryText, contractYearText, annualHoursText)) {
+    public boolean createOperator(OperatorBean operatorBean) throws SQLException {
+        if (!isValidCreateBean(operatorBean)) {
             return false;
         }
 
-        if (userDAO.existsByUsername(username)) {
+        if (userDAO.existsByUsername(operatorBean.getUsername())) {
             return false;
         }
 
-        OperatorDetails operatorDetails = parseOperatorDetails(-1, salaryText, contractYearText, annualHoursText);
+        OperatorDetails operatorDetails = parseOperatorDetails(-1, operatorBean);
         if (operatorDetails == null) {
             return false;
         }
 
-        User operator = new User(name, surname, username, password, "OPERATOR");
+        User operator = new User(
+                operatorBean.getName(),
+                operatorBean.getSurname(),
+                operatorBean.getUsername(),
+                operatorBean.getPassword(),
+                "OPERATOR"
+        );
+
         int userId = userDAO.saveAndReturnId(operator);
 
         OperatorDetails savedOperatorDetails = new OperatorDetails(
@@ -55,19 +61,21 @@ public class ManageOperatorController {
         return operatorDetailsDAO.findAllOperatorFullData();
     }
 
-    public boolean updateOperator(int userId, String name, String surname,
-                                  String salaryText, String contractYearText, String annualHoursText) throws SQLException {
-
-        if (!areUpdateFieldsValid(name, surname, salaryText, contractYearText, annualHoursText)) {
+    public boolean updateOperator(OperatorBean operatorBean) throws SQLException {
+        if (!isValidUpdateBean(operatorBean)) {
             return false;
         }
 
-        OperatorDetails operatorDetails = parseOperatorDetails(userId, salaryText, contractYearText, annualHoursText);
+        OperatorDetails operatorDetails = parseOperatorDetails(operatorBean.getUserId(), operatorBean);
         if (operatorDetails == null) {
             return false;
         }
 
-        userDAO.updateNameAndSurname(userId, name, surname);
+        userDAO.updateNameAndSurname(
+                operatorBean.getUserId(),
+                operatorBean.getName(),
+                operatorBean.getSurname()
+        );
         operatorDetailsDAO.update(operatorDetails);
 
         return true;
@@ -78,36 +86,36 @@ public class ManageOperatorController {
         userDAO.deleteById(userId);
     }
 
-    private boolean areCreateFieldsValid(String name, String surname, String username, String password,
-                                         String salaryText, String contractYearText, String annualHoursText) {
-        return isNotBlank(name)
-                && isNotBlank(surname)
-                && isNotBlank(username)
-                && isNotBlank(password)
-                && isNotBlank(salaryText)
-                && isNotBlank(contractYearText)
-                && isNotBlank(annualHoursText);
+    private boolean isValidCreateBean(OperatorBean operatorBean) {
+        return operatorBean != null
+                && isNotBlank(operatorBean.getName())
+                && isNotBlank(operatorBean.getSurname())
+                && isNotBlank(operatorBean.getUsername())
+                && isNotBlank(operatorBean.getPassword())
+                && isNotBlank(operatorBean.getSalary())
+                && isNotBlank(operatorBean.getContractYear())
+                && isNotBlank(operatorBean.getAnnualHours());
     }
 
-    private boolean areUpdateFieldsValid(String name, String surname,
-                                         String salaryText, String contractYearText, String annualHoursText) {
-        return isNotBlank(name)
-                && isNotBlank(surname)
-                && isNotBlank(salaryText)
-                && isNotBlank(contractYearText)
-                && isNotBlank(annualHoursText);
+    private boolean isValidUpdateBean(OperatorBean operatorBean) {
+        return operatorBean != null
+                && operatorBean.getUserId() > 0
+                && isNotBlank(operatorBean.getName())
+                && isNotBlank(operatorBean.getSurname())
+                && isNotBlank(operatorBean.getSalary())
+                && isNotBlank(operatorBean.getContractYear())
+                && isNotBlank(operatorBean.getAnnualHours());
     }
 
-    private OperatorDetails parseOperatorDetails(int userId, String salaryText,
-                                                 String contractYearText, String annualHoursText) {
+    private OperatorDetails parseOperatorDetails(int userId, OperatorBean operatorBean) {
         final double salary;
         final int contractYear;
         final int annualHours;
 
         try {
-            salary = Double.parseDouble(salaryText);
-            contractYear = Integer.parseInt(contractYearText);
-            annualHours = Integer.parseInt(annualHoursText);
+            salary = Double.parseDouble(operatorBean.getSalary());
+            contractYear = Integer.parseInt(operatorBean.getContractYear());
+            annualHours = Integer.parseInt(operatorBean.getAnnualHours());
         } catch (NumberFormatException e) {
             return null;
         }
