@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.bean.ProductBean;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
 import com.example.shopflowers.model.entity.FlowerProduct;
 
@@ -13,15 +14,26 @@ public class ManageProductsController {
         this.flowerProductDAO = new FlowerProductDAO();
     }
 
-    public void addProduct(FlowerProduct product) throws SQLException {
-        flowerProductDAO.save(product);
+    public void addProduct(ProductBean productBean) throws SQLException {
+        flowerProductDAO.save(toFlowerProduct(productBean));
     }
 
-    public void updateProduct(FlowerProduct product) throws SQLException {
-        flowerProductDAO.update(product);
+    public void updateProduct(ProductBean productBean) throws SQLException {
+        flowerProductDAO.update(toFlowerProduct(productBean));
     }
 
     public void deleteProductById(int id) throws SQLException {
         flowerProductDAO.deleteById(id);
+    }
+
+    private FlowerProduct toFlowerProduct(ProductBean productBean) {
+        return new FlowerProduct(
+                productBean.getId(),
+                productBean.getName(),
+                productBean.getPrice(),
+                productBean.getColor(),
+                productBean.getVariety(),
+                productBean.getStockQuantity()
+        );
     }
 }
