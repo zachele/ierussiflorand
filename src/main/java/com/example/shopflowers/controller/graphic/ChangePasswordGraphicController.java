@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.ChangePasswordController;
+import com.example.shopflowers.model.bean.ChangePasswordBean;
 import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.fxml.FXML;
@@ -33,13 +34,10 @@ public class ChangePasswordGraphicController {
 
     @FXML
     private void handleChangePassword() {
+        ChangePasswordBean changePasswordBean = buildChangePasswordBean();
+
         try {
-            boolean changed = changePasswordController.changePassword(
-                    usernameField.getText(),
-                    oldPasswordField.getText(),
-                    newPasswordField.getText(),
-                    confirmPasswordField.getText()
-            );
+            boolean changed = changePasswordController.changePassword(changePasswordBean);
 
             if (!changed) {
                 messageLabel.setText("Dati non validi, password attuale errata o conferma non corretta.");
@@ -69,5 +67,14 @@ public class ChangePasswordGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Errore nel ritorno alla login.");
         }
+    }
+
+    private ChangePasswordBean buildChangePasswordBean() {
+        ChangePasswordBean changePasswordBean = new ChangePasswordBean();
+        changePasswordBean.setUsername(usernameField.getText());
+        changePasswordBean.setOldPassword(oldPasswordField.getText());
+        changePasswordBean.setNewPassword(newPasswordField.getText());
+        changePasswordBean.setConfirmPassword(confirmPasswordField.getText());
+        return changePasswordBean;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.bean.ChangePasswordBean;
 import com.example.shopflowers.model.dao.UserDAO;
 
 import java.sql.SQLException;
@@ -12,25 +13,38 @@ public class ChangePasswordController {
         this.userDAO = new UserDAO();
     }
 
-    public boolean changePassword(String username, String oldPassword, String newPassword, String confirmPassword)
-            throws SQLException {
-
-        if (username == null || username.isBlank()
-                || oldPassword == null || oldPassword.isBlank()
-                || newPassword == null || newPassword.isBlank()
-                || confirmPassword == null || confirmPassword.isBlank()) {
+    public boolean changePassword(ChangePasswordBean changePasswordBean) throws SQLException {
+        if (!isValidChangePasswordBean(changePasswordBean)) {
             return false;
         }
 
-        if (!newPassword.equals(confirmPassword)) {
+        if (!changePasswordBean.getNewPassword().equals(changePasswordBean.getConfirmPassword())) {
             return false;
         }
 
-        if (!userDAO.existsByUsernameAndPassword(username, oldPassword)) {
+        if (!userDAO.existsByUsernameAndPassword(
+                changePasswordBean.getUsername(),
+                changePasswordBean.getOldPassword()
+        )) {
             return false;
         }
 
-        userDAO.updatePassword(username, newPassword);
+        userDAO.updatePassword(
+                changePasswordBean.getUsername(),
+                changePasswordBean.getNewPassword()
+        );
         return true;
+    }
+
+    private boolean isValidChangePasswordBean(ChangePasswordBean changePasswordBean) {
+        return changePasswordBean != null
+                && isNotBlank(changePasswordBean.getUsername())
+                && isNotBlank(changePasswordBean.getOldPassword())
+                && isNotBlank(changePasswordBean.getNewPassword())
+                && isNotBlank(changePasswordBean.getConfirmPassword());
+    }
+
+    private boolean isNotBlank(String value) {
+        return value != null && !value.isBlank();
     }
 }
