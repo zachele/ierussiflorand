@@ -211,21 +211,11 @@ public class AdminProductGraphicController {
     }
 
     private void applyFilters() {
-        if (filteredProducts == null) {
-            return;
-        }
-
-        String searchText = searchField.getText();
-        String selectedColor = colorFilterComboBox.getValue();
-        boolean availableOnly = availableOnlyCheckBox.isSelected();
-
-        filteredProducts.setPredicate(product ->
-                ProductFilterUtils.matchesProductFilters(
-                        product,
-                        searchText,
-                        selectedColor,
-                        availableOnly
-                )
+        ProductFilterUtils.applyProductFilters(
+                filteredProducts,
+                searchField.getText(),
+                colorFilterComboBox.getValue(),
+                availableOnlyCheckBox.isSelected()
         );
     }
 

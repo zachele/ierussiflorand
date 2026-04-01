@@ -1,7 +1,9 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.RegisterController;
+import com.example.shopflowers.model.bean.RegisterUserBean;
 import com.example.shopflowers.util.AlertUtils;
+import com.example.shopflowers.util.SceneNavigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -10,7 +12,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import com.example.shopflowers.util.SceneNavigator;
 
 public class RegisterGraphicController {
 
@@ -33,13 +34,10 @@ public class RegisterGraphicController {
 
     @FXML
     private void handleRegister() {
-        String name = nameField.getText();
-        String surname = surnameField.getText();
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        RegisterUserBean registerUserBean = buildRegisterUserBean();
 
         try {
-            boolean success = registerController.registerCustomer(name, surname, username, password);
+            boolean success = registerController.registerCustomer(registerUserBean);
 
             if (success) {
                 AlertUtils.showInfo(
@@ -50,7 +48,7 @@ public class RegisterGraphicController {
             } else {
                 AlertUtils.showWarning(
                         "Registrazione non riuscita",
-                        "Username già esistente."
+                        "Controlla i dati inseriti o scegli uno username diverso."
                 );
             }
 
@@ -68,6 +66,15 @@ public class RegisterGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Errore nel ritorno alla login.");
         }
+    }
+
+    private RegisterUserBean buildRegisterUserBean() {
+        RegisterUserBean registerUserBean = new RegisterUserBean();
+        registerUserBean.setName(nameField.getText());
+        registerUserBean.setSurname(surnameField.getText());
+        registerUserBean.setUsername(usernameField.getText());
+        registerUserBean.setPassword(passwordField.getText());
+        return registerUserBean;
     }
 
     private void goToLogin() throws IOException {

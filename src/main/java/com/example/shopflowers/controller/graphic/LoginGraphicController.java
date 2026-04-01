@@ -3,6 +3,7 @@ package com.example.shopflowers.controller.graphic;
 import com.example.shopflowers.ShopFlowersApplication;
 import com.example.shopflowers.controller.application.CustomerOrdersController;
 import com.example.shopflowers.controller.application.LoginController;
+import com.example.shopflowers.model.bean.LoginBean;
 import com.example.shopflowers.model.entity.OrderSummary;
 import com.example.shopflowers.model.entity.User;
 import com.example.shopflowers.util.SceneNavigator;
@@ -38,13 +39,10 @@ public class LoginGraphicController {
 
     @FXML
     private void handleLogin() {
-        String username = usernameField.getText();
-        String password = passwordField.isVisible()
-                ? passwordField.getText()
-                : visiblePasswordField.getText();
+        LoginBean loginBean = buildLoginBean();
 
         try {
-            User user = loginController.login(username, password);
+            User user = loginController.login(loginBean);
 
             if (user == null) {
                 messageLabel.setText("Login non riuscito. Controlla username e password.");
@@ -68,6 +66,19 @@ public class LoginGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante l'apertura della schermata.");
         }
+    }
+
+    private LoginBean buildLoginBean() {
+        LoginBean loginBean = new LoginBean();
+        loginBean.setUsername(usernameField.getText());
+        loginBean.setPassword(getCurrentPassword());
+        return loginBean;
+    }
+
+    private String getCurrentPassword() {
+        return passwordField.isVisible()
+                ? passwordField.getText()
+                : visiblePasswordField.getText();
     }
 
     private void checkOrderStatusNotifications(String username) {
@@ -137,6 +148,7 @@ public class LoginGraphicController {
             messageLabel.setText("Si è verificato un errore durante l'apertura della schermata di cambio password.");
         }
     }
+
     @FXML
     private void handleTogglePassword() {
         if (passwordField.isVisible()) {

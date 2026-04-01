@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.bean.LoginBean;
 import com.example.shopflowers.model.dao.UserDAO;
 import com.example.shopflowers.model.entity.User;
 
@@ -13,7 +14,10 @@ public class LoginController {
         this.userDAO = new UserDAO();
     }
 
-    public User login(String username, String password) throws SQLException {
-        return userDAO.findByUsernameAndPassword(username, password);
+    public User login(LoginBean loginBean) throws SQLException {
+        return userDAO.findByUsernameAndPassword(
+                loginBean.getUsername(),
+                loginBean.getPassword()
+        );
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.bean.RegisterUserBean;
 import com.example.shopflowers.model.dao.UserDAO;
 import com.example.shopflowers.model.entity.User;
 
@@ -13,20 +14,36 @@ public class RegisterController {
         this.userDAO = new UserDAO();
     }
 
-    public boolean registerCustomer(String name, String surname, String username, String password) throws SQLException {
-        if (name == null || name.isBlank()
-                || surname == null || surname.isBlank()
-                || username == null || username.isBlank()
-                || password == null || password.isBlank()) {
+    public boolean registerCustomer(RegisterUserBean registerUserBean) throws SQLException {
+        if (!isValidRegisterBean(registerUserBean)) {
             return false;
         }
 
-        if (userDAO.existsByUsername(username)) {
+        if (userDAO.existsByUsername(registerUserBean.getUsername())) {
             return false;
         }
 
-        User user = new User(name, surname, username, password, "CUSTOMER");
+        User user = new User(
+                registerUserBean.getName(),
+                registerUserBean.getSurname(),
+                registerUserBean.getUsername(),
+                registerUserBean.getPassword(),
+                "CUSTOMER"
+        );
+
         userDAO.save(user);
         return true;
+    }
+
+    private boolean isValidRegisterBean(RegisterUserBean registerUserBean) {
+        return registerUserBean != null
+                && isNotBlank(registerUserBean.getName())
+                && isNotBlank(registerUserBean.getSurname())
+                && isNotBlank(registerUserBean.getUsername())
+                && isNotBlank(registerUserBean.getPassword());
+    }
+
+    private boolean isNotBlank(String value) {
+        return value != null && !value.isBlank();
     }
 }
