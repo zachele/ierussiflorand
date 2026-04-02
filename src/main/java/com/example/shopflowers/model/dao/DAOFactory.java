@@ -45,7 +45,7 @@ public final class DAOFactory {
             case DEMO:
                 return new UserMemoryDAO();
             case FILE:
-                return new UserDBDAO();
+                return new UserFileDAO();
             case FULL:
             default:
                 return new UserDBDAO();
