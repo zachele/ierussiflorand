@@ -214,11 +214,11 @@ public class UserFileDAO implements UserDAO {
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
                     writer.write("id;name;surname;username;password;role");
                     writer.newLine();
-                    writer.write("1;Admin;File;admin;admin;ADMIN");
+                    writer.write("1;Admin;File;admin;admin123;ADMIN");
                     writer.newLine();
-                    writer.write("2;Mario;Rossi;mario;mario;CUSTOMER");
+                    writer.write("2;Mario;Rossi;mario_rossi;cliente123;CUSTOMER");
                     writer.newLine();
-                    writer.write("3;Luca;Bianchi;operatore;operatore;OPERATOR");
+                    writer.write("3;Luca;Bianchi;operatore;operatore123;OPERATOR");
                     writer.newLine();
                 }
             }

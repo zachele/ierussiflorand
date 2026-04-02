@@ -64,4 +64,17 @@ public final class DAOFactory {
                 return new OperatorDetailsDBDAO();
         }
     }
+    public static CustomBouquetOrderDAO getCustomBouquetOrderDAO() throws SQLException {
+        AppMode mode = AppConfig.getMode();
+
+        switch (mode) {
+            case DEMO:
+                return new CustomBouquetOrderMemoryDAO();
+            case FILE:
+                return new CustomBouquetOrderFileDAO();
+            case FULL:
+            default:
+                return new CustomBouquetOrderDBDAO();
+        }
+    }
 }

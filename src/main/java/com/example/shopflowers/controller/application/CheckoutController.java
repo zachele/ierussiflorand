@@ -29,11 +29,10 @@ public class CheckoutController {
         try {
             this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
             this.orderDAO = DAOFactory.getOrderDAO();
+            this.customBouquetOrderDAO = DAOFactory.getCustomBouquetOrderDAO();
         } catch (SQLException e) {
             throw new IllegalStateException("Impossibile inizializzare le DAO dell'applicazione.", e);
         }
-
-        this.customBouquetOrderDAO = new CustomBouquetOrderDBDAO();
     }
 
     public Order createOrder(CheckoutBean checkoutBean, List<CartItem> cartItems) {
