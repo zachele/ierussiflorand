@@ -31,7 +31,7 @@ public class DAOFactory {
                 return new OrderFileDAO();
             case FULL:
             default:
-                return new OrderDAO();
+                return new OrderDBDAO();
         }
     }
 

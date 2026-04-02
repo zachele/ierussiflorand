@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.application;
 
 import com.example.shopflowers.model.bean.OperatorBean;
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.OperatorDetailsDAO;
 import com.example.shopflowers.model.dao.UserDAO;
 import com.example.shopflowers.model.entity.OperatorDetails;
@@ -18,7 +19,11 @@ public class ManageOperatorController {
     private final OperatorDetailsDAO operatorDetailsDAO;
 
     public ManageOperatorController() {
-        this.userDAO = new UserDAO();
+        try {
+            this.userDAO = DAOFactory.getUserDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO degli utenti.", e);
+        }
         this.operatorDetailsDAO = new OperatorDetailsDAO();
     }
 

@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.application;
 
 import com.example.shopflowers.model.bean.ChangePasswordBean;
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.UserDAO;
 
 import java.sql.SQLException;
@@ -10,7 +11,11 @@ public class ChangePasswordController {
     private final UserDAO userDAO;
 
     public ChangePasswordController() {
-        this.userDAO = new UserDAO();
+        try {
+            this.userDAO = DAOFactory.getUserDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO degli utenti.", e);
+        }
     }
 
     public boolean changePassword(ChangePasswordBean changePasswordBean) throws SQLException {
