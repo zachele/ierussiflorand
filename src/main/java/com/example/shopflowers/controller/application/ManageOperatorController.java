@@ -3,6 +3,7 @@ package com.example.shopflowers.controller.application;
 import com.example.shopflowers.model.bean.OperatorBean;
 import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.OperatorDetailsDAO;
+import com.example.shopflowers.model.dao.OperatorDetailsDBDAO;
 import com.example.shopflowers.model.dao.UserDAO;
 import com.example.shopflowers.model.entity.OperatorDetails;
 import com.example.shopflowers.model.entity.OperatorFullData;
@@ -24,7 +25,7 @@ public class ManageOperatorController {
         } catch (SQLException e) {
             throw new IllegalStateException("Impossibile inizializzare la DAO degli utenti.", e);
         }
-        this.operatorDetailsDAO = new OperatorDetailsDAO();
+        this.operatorDetailsDAO = new OperatorDetailsDBDAO();
     }
 
     public boolean createOperator(OperatorBean operatorBean) throws SQLException {
