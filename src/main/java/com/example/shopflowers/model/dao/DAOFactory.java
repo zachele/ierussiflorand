@@ -51,4 +51,17 @@ public final class DAOFactory {
                 return new UserDBDAO();
         }
     }
+    public static OperatorDetailsDAO getOperatorDetailsDAO() throws SQLException {
+        AppMode mode = AppConfig.getMode();
+
+        switch (mode) {
+            case DEMO:
+                return new OperatorDetailsMemoryDAO();
+            case FILE:
+                return new OperatorDetailsFileDAO();
+            case FULL:
+            default:
+                return new OperatorDetailsDBDAO();
+        }
+    }
 }
