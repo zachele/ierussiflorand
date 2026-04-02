@@ -35,10 +35,6 @@ public class CustomBouquetBuilder {
         this.maxBudget = maxBudget;
     }
 
-    public Double getMaxBudget() {
-        return maxBudget;
-    }
-
     public void addItem(CustomBouquetItem item) {
         for (int i = 0; i < items.size(); i++) {
             CustomBouquetItem existingItem = items.get(i);
