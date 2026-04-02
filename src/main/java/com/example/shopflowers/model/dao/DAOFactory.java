@@ -5,7 +5,10 @@ import com.example.shopflowers.config.AppMode;
 
 import java.sql.SQLException;
 
-public class DAOFactory {
+public final class DAOFactory {
+
+    private DAOFactory() {
+    }
 
     public static FlowerProductDAO getFlowerProductDAO() throws SQLException {
         AppMode mode = AppConfig.getMode();
@@ -28,7 +31,7 @@ public class DAOFactory {
             case DEMO:
                 return new OrderMemoryDAO();
             case FILE:
-                return new OrderFileDAO();
+                return new OrderDBDAO();
             case FULL:
             default:
                 return new OrderDBDAO();

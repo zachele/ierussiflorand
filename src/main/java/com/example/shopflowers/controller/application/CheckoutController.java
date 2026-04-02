@@ -12,6 +12,7 @@ import com.example.shopflowers.model.entity.CustomBouquetOrderData;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.model.entity.Order;
 import com.example.shopflowers.util.CustomBouquetSession;
+import com.example.shopflowers.model.dao.CustomBouquetOrderDBDAO;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class CheckoutController {
             throw new IllegalStateException("Impossibile inizializzare le DAO dell'applicazione.", e);
         }
 
-        this.customBouquetOrderDAO = new CustomBouquetOrderDAO();
+        this.customBouquetOrderDAO = new CustomBouquetOrderDBDAO();
     }
 
     public Order createOrder(CheckoutBean checkoutBean, List<CartItem> cartItems) {
