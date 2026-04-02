@@ -31,7 +31,7 @@ public final class DAOFactory {
             case DEMO:
                 return new OrderMemoryDAO();
             case FILE:
-                return new OrderDBDAO();
+                return new OrderFileDAO();
             case FULL:
             default:
                 return new OrderDBDAO();
