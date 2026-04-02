@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.application;
 
 import com.example.shopflowers.model.bean.RecommendationRequestBean;
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.model.entity.RecommendationRequest;
@@ -15,7 +16,11 @@ public class RecommendationController {
     private final RecommendationEngine recommendationEngine;
 
     public RecommendationController() {
-        this.flowerProductDAO = new FlowerProductDAO();
+        try {
+            this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
+        }
         this.recommendationEngine = new RecommendationEngine();
     }
 

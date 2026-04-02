@@ -2,6 +2,7 @@ package com.example.shopflowers.controller.application;
 
 import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.dao.CustomBouquetOrderDAO;
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
 import com.example.shopflowers.model.dao.OrderDAO;
 import com.example.shopflowers.model.entity.CartItem;
@@ -24,8 +25,13 @@ public class CheckoutController {
     private final CustomBouquetOrderDAO customBouquetOrderDAO;
 
     public CheckoutController() {
+        try {
+            this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
+        }
+
         this.orderDAO = new OrderDAO();
-        this.flowerProductDAO = new FlowerProductDAO();
         this.customBouquetOrderDAO = new CustomBouquetOrderDAO();
     }
 

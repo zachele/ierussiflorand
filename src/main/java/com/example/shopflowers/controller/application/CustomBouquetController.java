@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
 import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.model.entity.CustomBouquetItem;
@@ -14,7 +15,11 @@ public class CustomBouquetController {
     private final CustomBouquetBuilder builder;
 
     public CustomBouquetController() {
-        this.flowerProductDAO = new FlowerProductDAO();
+        try {
+            this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
+        }
         this.builder = new CustomBouquetBuilder();
     }
 

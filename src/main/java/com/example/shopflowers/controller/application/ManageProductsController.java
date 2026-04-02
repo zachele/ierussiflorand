@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.application;
 
 import com.example.shopflowers.model.bean.ProductBean;
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
 import com.example.shopflowers.model.entity.FlowerProduct;
 
@@ -11,7 +12,11 @@ public class ManageProductsController {
     private final FlowerProductDAO flowerProductDAO;
 
     public ManageProductsController() {
-        this.flowerProductDAO = new FlowerProductDAO();
+        try {
+            this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
+        }
     }
 
     public void addProduct(ProductBean productBean) throws SQLException {
