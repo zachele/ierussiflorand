@@ -20,4 +20,18 @@ public class DAOFactory {
                 return new FlowerProductDBDAO();
         }
     }
+
+    public static OrderDAO getOrderDAO() throws SQLException {
+        AppMode mode = AppConfig.getMode();
+
+        switch (mode) {
+            case DEMO:
+                return new OrderDBDAO();
+            case FILE:
+                return new OrderDBDAO();
+            case FULL:
+            default:
+                return new OrderDBDAO();
+        }
+    }
 }

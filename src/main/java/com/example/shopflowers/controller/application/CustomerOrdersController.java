@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.OrderDAO;
 import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
@@ -12,7 +13,11 @@ public class CustomerOrdersController {
     private final OrderDAO orderDAO;
 
     public CustomerOrdersController() {
-        this.orderDAO = new OrderDAO();
+        try {
+            this.orderDAO = DAOFactory.getOrderDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO degli ordini.", e);
+        }
     }
 
     public List<OrderSummary> getOrdersByUsername(String username) throws SQLException {

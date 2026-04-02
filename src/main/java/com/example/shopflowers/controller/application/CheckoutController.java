@@ -27,11 +27,11 @@ public class CheckoutController {
     public CheckoutController() {
         try {
             this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
+            this.orderDAO = DAOFactory.getOrderDAO();
         } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
+            throw new IllegalStateException("Impossibile inizializzare le DAO dell'applicazione.", e);
         }
 
-        this.orderDAO = new OrderDAO();
         this.customBouquetOrderDAO = new CustomBouquetOrderDAO();
     }
 
