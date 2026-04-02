@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.application;
 
 import com.example.shopflowers.model.bean.RegisterUserBean;
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.UserDAO;
 import com.example.shopflowers.model.entity.User;
 
@@ -11,7 +12,11 @@ public class RegisterController {
     private final UserDAO userDAO;
 
     public RegisterController() {
-        this.userDAO = new UserDAO();
+        try {
+            this.userDAO = DAOFactory.getUserDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO degli utenti.", e);
+        }
     }
 
     public boolean registerCustomer(RegisterUserBean registerUserBean) throws SQLException {

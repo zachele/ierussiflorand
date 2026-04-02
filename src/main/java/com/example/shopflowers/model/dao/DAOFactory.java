@@ -26,12 +26,26 @@ public class DAOFactory {
 
         switch (mode) {
             case DEMO:
-                return new OrderDBDAO();
+                return new OrderMemoryDAO();
             case FILE:
-                return new OrderDBDAO();
+                return new OrderFileDAO();
             case FULL:
             default:
-                return new OrderDBDAO();
+                return new OrderDAO();
+        }
+    }
+
+    public static UserDAO getUserDAO() throws SQLException {
+        AppMode mode = AppConfig.getMode();
+
+        switch (mode) {
+            case DEMO:
+                return new UserDBDAO();
+            case FILE:
+                return new UserDBDAO();
+            case FULL:
+            default:
+                return new UserDBDAO();
         }
     }
 }
