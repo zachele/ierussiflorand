@@ -1,0 +1,9 @@
+.std-btn {
+    -fx-background-color: #2B2B2B;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px;
+    -fx-cursor: hand;
+}
