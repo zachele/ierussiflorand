@@ -19,6 +19,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import com.example.shopflowers.model.dao.CustomBouquetOrderDBDAO;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -78,7 +79,7 @@ public class CustomerOrdersGraphicController {
     private Label messageLabel;
 
     private final CustomerOrdersController customerOrdersController = new CustomerOrdersController();
-    private final CustomBouquetOrderDAO customBouquetOrderDAO = new CustomBouquetOrderDAO();
+    private final CustomBouquetOrderDAO customBouquetOrderDAO = new CustomBouquetOrderDBDAO();
 
     private ObservableList<OrderSummary> masterOrderList = FXCollections.observableArrayList();
     private FilteredList<OrderSummary> filteredOrders;

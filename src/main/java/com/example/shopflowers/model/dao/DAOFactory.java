@@ -43,7 +43,7 @@ public final class DAOFactory {
 
         switch (mode) {
             case DEMO:
-                return new UserDBDAO();
+                return new UserMemoryDAO();
             case FILE:
                 return new UserDBDAO();
             case FULL:
