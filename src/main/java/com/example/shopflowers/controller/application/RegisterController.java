@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.exception.UserAlreadyExistsException;
 import com.example.shopflowers.model.bean.RegisterUserBean;
 import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.UserDAO;
@@ -19,13 +20,15 @@ public class RegisterController {
         }
     }
 
-    public boolean registerCustomer(RegisterUserBean registerUserBean) throws SQLException {
+    public boolean registerCustomer(RegisterUserBean registerUserBean)
+            throws SQLException, UserAlreadyExistsException {
+
         if (!isValidRegisterBean(registerUserBean)) {
             return false;
         }
 
         if (userDAO.existsByUsername(registerUserBean.getUsername())) {
-            return false;
+            throw new UserAlreadyExistsException("Username già esistente.");
         }
 
         User user = new User(

@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.RegisterController;
+import com.example.shopflowers.exception.UserAlreadyExistsException;
 import com.example.shopflowers.model.bean.RegisterUserBean;
 import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.SceneNavigator;
@@ -48,10 +49,15 @@ public class RegisterGraphicController {
             } else {
                 AlertUtils.showWarning(
                         "Registrazione non riuscita",
-                        "Controlla i dati inseriti o scegli uno username diverso."
+                        "Controlla i dati inseriti."
                 );
             }
 
+        } catch (UserAlreadyExistsException e) {
+            AlertUtils.showWarning(
+                    "Registrazione non riuscita",
+                    e.getMessage()
+            );
         } catch (SQLException e) {
             messageLabel.setText("Si è verificato un errore durante la registrazione.");
         } catch (IOException e) {
