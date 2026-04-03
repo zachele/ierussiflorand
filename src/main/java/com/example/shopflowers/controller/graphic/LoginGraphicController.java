@@ -49,7 +49,7 @@ public class LoginGraphicController {
                 return;
             }
 
-            Session.setSession(user.getUsername(), user.getRole());
+            Session.getInstance().setSession(user.getUsername(), user.getRole());
 
             switch (user.getRole()) {
                 case "ADMIN" -> openView("/com/example/shopflowers/admin-product-view.fxml", "Shop Flowers - Admin");

@@ -2,27 +2,33 @@ package com.example.shopflowers.util;
 
 public class Session {
 
-    private static String loggedUsername;
-    private static String loggedRole;
+    private static final Session INSTANCE = new Session();
+
+    private String loggedUsername;
+    private String loggedRole;
 
     private Session() {
     }
 
-    public static void setSession(String username, String role) {
-        loggedUsername = username;
-        loggedRole = role;
+    public static Session getInstance() {
+        return INSTANCE;
     }
 
-    public static String getLoggedUsername() {
+    public void setSession(String username, String role) {
+        this.loggedUsername = username;
+        this.loggedRole = role;
+    }
+
+    public String getLoggedUsername() {
         return loggedUsername;
     }
 
-    public static String getLoggedRole() {
+    public String getLoggedRole() {
         return loggedRole;
     }
 
-    public static void clearSession() {
-        loggedUsername = null;
-        loggedRole = null;
+    public void clearSession() {
+        this.loggedUsername = null;
+        this.loggedRole = null;
     }
 }

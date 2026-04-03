@@ -24,7 +24,7 @@ public class SceneNavigator {
     }
 
     public static void logoutToLogin(Stage stage) throws IOException {
-        Session.clearSession();
+        Session.getInstance().clearSession();
         goTo(stage, "/com/example/shopflowers/login-view.fxml", "Shop Flowers - Login");
     }
 }
