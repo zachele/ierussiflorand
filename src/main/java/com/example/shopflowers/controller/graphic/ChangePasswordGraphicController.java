@@ -1,6 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.ChangePasswordController;
+import com.example.shopflowers.exception.InvalidPasswordChangeException;
 import com.example.shopflowers.model.bean.ChangePasswordBean;
 import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.SceneNavigator;
@@ -40,7 +41,7 @@ public class ChangePasswordGraphicController {
             boolean changed = changePasswordController.changePassword(changePasswordBean);
 
             if (!changed) {
-                messageLabel.setText("Dati non validi, password attuale errata o conferma non corretta.");
+                messageLabel.setText("Compila correttamente tutti i campi richiesti.");
                 return;
             }
 
@@ -48,11 +49,13 @@ public class ChangePasswordGraphicController {
                     "Password",
                     "Password aggiornata con successo."
             );
-        } catch (SQLException e) {
+        } catch (InvalidPasswordChangeException e) {
             AlertUtils.showWarning(
                     "Cambio password",
-                    "La password attuale non è corretta."
+                    e.getMessage()
             );
+        } catch (SQLException e) {
+            messageLabel.setText("Si è verificato un errore durante il cambio password.");
         }
     }
 

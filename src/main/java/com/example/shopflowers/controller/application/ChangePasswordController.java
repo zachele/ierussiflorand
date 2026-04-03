@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.exception.InvalidPasswordChangeException;
 import com.example.shopflowers.model.bean.ChangePasswordBean;
 import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.UserDAO;
@@ -18,20 +19,22 @@ public class ChangePasswordController {
         }
     }
 
-    public boolean changePassword(ChangePasswordBean changePasswordBean) throws SQLException {
+    public boolean changePassword(ChangePasswordBean changePasswordBean)
+            throws SQLException, InvalidPasswordChangeException {
+
         if (!isValidChangePasswordBean(changePasswordBean)) {
             return false;
         }
 
         if (!changePasswordBean.getNewPassword().equals(changePasswordBean.getConfirmPassword())) {
-            return false;
+            throw new InvalidPasswordChangeException("La nuova password e la conferma non coincidono.");
         }
 
         if (!userDAO.existsByUsernameAndPassword(
                 changePasswordBean.getUsername(),
                 changePasswordBean.getOldPassword()
         )) {
-            return false;
+            throw new InvalidPasswordChangeException("La password attuale non è corretta.");
         }
 
         userDAO.updatePassword(
