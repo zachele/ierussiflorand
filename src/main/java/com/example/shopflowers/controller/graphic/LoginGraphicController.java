@@ -3,6 +3,7 @@ package com.example.shopflowers.controller.graphic;
 import com.example.shopflowers.ShopFlowersApplication;
 import com.example.shopflowers.controller.application.CustomerOrdersController;
 import com.example.shopflowers.controller.application.LoginController;
+import com.example.shopflowers.exception.InvalidCredentialsException;
 import com.example.shopflowers.model.bean.LoginBean;
 import com.example.shopflowers.model.entity.OrderSummary;
 import com.example.shopflowers.model.entity.User;
@@ -44,11 +45,6 @@ public class LoginGraphicController {
         try {
             User user = loginController.login(loginBean);
 
-            if (user == null) {
-                messageLabel.setText("Login non riuscito. Controlla username e password.");
-                return;
-            }
-
             Session.getInstance().setSession(user.getUsername(), user.getRole());
 
             switch (user.getRole()) {
@@ -61,6 +57,8 @@ public class LoginGraphicController {
                 default -> messageLabel.setText("Accesso non riuscito. Ruolo utente non riconosciuto.");
             }
 
+        } catch (InvalidCredentialsException e) {
+            messageLabel.setText(e.getMessage());
         } catch (SQLException e) {
             messageLabel.setText("Si è verificato un errore durante il login.");
         } catch (IOException e) {

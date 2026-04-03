@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.exception.InvalidCredentialsException;
 import com.example.shopflowers.model.bean.LoginBean;
 import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.UserDAO;
@@ -19,10 +20,16 @@ public class LoginController {
         }
     }
 
-    public User login(LoginBean loginBean) throws SQLException {
-        return userDAO.findByUsernameAndPassword(
+    public User login(LoginBean loginBean) throws SQLException, InvalidCredentialsException {
+        User user = userDAO.findByUsernameAndPassword(
                 loginBean.getUsername(),
                 loginBean.getPassword()
         );
+
+        if (user == null) {
+            throw new InvalidCredentialsException("Login non riuscito. Controlla username e password.");
+        }
+
+        return user;
     }
 }
