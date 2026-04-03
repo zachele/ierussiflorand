@@ -1,5 +1,7 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.exception.InvalidOperatorDataException;
+import com.example.shopflowers.exception.UserAlreadyExistsException;
 import com.example.shopflowers.model.bean.OperatorBean;
 import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.OperatorDetailsDAO;
@@ -27,18 +29,20 @@ public class ManageOperatorController {
         }
     }
 
-    public boolean createOperator(OperatorBean operatorBean) throws SQLException {
+    public boolean createOperator(OperatorBean operatorBean)
+            throws SQLException, UserAlreadyExistsException, InvalidOperatorDataException {
+
         if (!isValidCreateBean(operatorBean)) {
             return false;
         }
 
         if (userDAO.existsByUsername(operatorBean.getUsername())) {
-            return false;
+            throw new UserAlreadyExistsException("Username già esistente.");
         }
 
         OperatorDetails operatorDetails = parseOperatorDetails(-1, operatorBean);
         if (operatorDetails == null) {
-            return false;
+            throw new InvalidOperatorDataException("I dati economici o contrattuali dell'operatore non sono validi.");
         }
 
         User operator = new User(
@@ -66,14 +70,16 @@ public class ManageOperatorController {
         return operatorDetailsDAO.findAllOperatorFullData();
     }
 
-    public boolean updateOperator(OperatorBean operatorBean) throws SQLException {
+    public boolean updateOperator(OperatorBean operatorBean)
+            throws SQLException, InvalidOperatorDataException {
+
         if (!isValidUpdateBean(operatorBean)) {
             return false;
         }
 
         OperatorDetails operatorDetails = parseOperatorDetails(operatorBean.getUserId(), operatorBean);
         if (operatorDetails == null) {
-            return false;
+            throw new InvalidOperatorDataException("I dati economici o contrattuali dell'operatore non sono validi.");
         }
 
         userDAO.updateNameAndSurname(

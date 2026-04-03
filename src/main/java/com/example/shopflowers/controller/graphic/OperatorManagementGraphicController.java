@@ -1,6 +1,8 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.ManageOperatorController;
+import com.example.shopflowers.exception.InvalidOperatorDataException;
+import com.example.shopflowers.exception.UserAlreadyExistsException;
 import com.example.shopflowers.model.bean.OperatorBean;
 import com.example.shopflowers.model.entity.OperatorFullData;
 import com.example.shopflowers.util.SceneNavigator;
@@ -116,7 +118,7 @@ public class OperatorManagementGraphicController {
             boolean created = manageOperatorController.createOperator(operatorBean);
 
             if (!created) {
-                messageLabel.setText("Registrazione non riuscita. Username già esistente.");
+                messageLabel.setText("Compila correttamente tutti i campi richiesti.");
                 return;
             }
 
@@ -126,6 +128,8 @@ public class OperatorManagementGraphicController {
             loadOperators();
             messageLabel.setText("Operatore creato con successo.");
 
+        } catch (UserAlreadyExistsException | InvalidOperatorDataException e) {
+            messageLabel.setText(e.getMessage());
         } catch (SQLException e) {
             messageLabel.setText("Errore durante la creazione dell'operatore.");
         }
@@ -143,13 +147,15 @@ public class OperatorManagementGraphicController {
             boolean updated = manageOperatorController.updateOperator(operatorBean);
 
             if (!updated) {
-                messageLabel.setText("Operazione non riuscita. Controlla i dati inseriti per l'aggiornamento.");
+                messageLabel.setText("Compila correttamente tutti i campi richiesti.");
                 return;
             }
 
             loadOperators();
             messageLabel.setText("Operatore aggiornato con successo.");
 
+        } catch (InvalidOperatorDataException e) {
+            messageLabel.setText(e.getMessage());
         } catch (SQLException e) {
             messageLabel.setText("Si è verificato un errore durante l'aggiornamento dell'operatore.");
         }
