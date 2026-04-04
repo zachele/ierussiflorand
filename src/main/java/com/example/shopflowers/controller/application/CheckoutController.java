@@ -1,5 +1,7 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.exception.EmptyOrderException;
+import com.example.shopflowers.exception.InsufficientStockException;
 import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.dao.CustomBouquetOrderDAO;
 import com.example.shopflowers.model.dao.DAOFactory;
@@ -12,7 +14,6 @@ import com.example.shopflowers.model.entity.CustomBouquetOrderData;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.model.entity.Order;
 import com.example.shopflowers.util.CustomBouquetSession;
-import com.example.shopflowers.model.dao.CustomBouquetOrderDBDAO;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -59,9 +60,11 @@ public class CheckoutController {
         );
     }
 
-    public boolean confirmOrder(Order order) throws SQLException {
+    public boolean confirmOrder(Order order)
+            throws SQLException, EmptyOrderException, InsufficientStockException {
+
         if ((order.getItems() == null || order.getItems().isEmpty()) && !CustomBouquetSession.hasBouquet()) {
-            return false;
+            throw new EmptyOrderException("Impossibile creare un ordine vuoto.");
         }
 
         Map<Integer, Integer> requiredQuantities = new HashMap<>();
@@ -91,7 +94,7 @@ public class CheckoutController {
             FlowerProduct product = flowerProductDAO.findById(entry.getKey());
 
             if (product == null || product.getStockQuantity() < entry.getValue()) {
-                return false;
+                throw new InsufficientStockException("Stock insufficiente per uno o più prodotti.");
             }
         }
 

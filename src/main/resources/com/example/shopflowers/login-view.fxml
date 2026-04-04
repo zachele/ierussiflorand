@@ -14,50 +14,54 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER" prefHeight="800" prefWidth="1500" spacing="20" style="-fx-padding: 30;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController">
-   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="778.0">
-          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="150.0" prefWidth="182.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Ierussi Florand" textAlignment="CENTER" />
+    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="778.0">
+        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="150.0" prefWidth="182.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Ierussi Florand" textAlignment="CENTER" />
+    </HBox>
 
-   </HBox>
-   <HBox prefHeight="182.0" prefWidth="1439.0">
-          <GridPane alignment="CENTER" hgap="10" prefHeight="182.0" prefWidth="1440.0" vgap="10">
-              <padding>
-                  <Insets bottom="10" left="10" right="10" top="10" />
-              </padding>
-      
-              <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-              <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-      
-              <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-              <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                  <StackPane HBox.hgrow="ALWAYS">
-                      <PasswordField fx:id="passwordField" promptText="Password" />
-                      <TextField fx:id="visiblePasswordField" managed="false" promptText="Password" visible="false" />
-                  </StackPane>
-      
-                  <Button focusTraversable="false" onAction="#handleTogglePassword" text="👁" />
-              </HBox>
-      
-              <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                  <Button onAction="#handleLogin" styleClass="std-btn" stylesheets="@../../../Style.css" text="Login" />
-                  <Button onAction="#handleGoToRegister" styleClass="std-btn" stylesheets="@../../../Style.css" text="Registrati" />
-              </HBox>
-              <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                  <Hyperlink onAction="#handleGoToChangePassword" text="Cambia password" />
-              </VBox>
+    <HBox prefHeight="182.0" prefWidth="1439.0">
+        <GridPane alignment="CENTER" hgap="10" prefHeight="182.0" prefWidth="1440.0" vgap="10">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+            <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <StackPane HBox.hgrow="ALWAYS">
+                    <PasswordField fx:id="passwordField" promptText="Password" />
+                    <TextField fx:id="visiblePasswordField" managed="false" promptText="Password" visible="false" />
+                </StackPane>
+
+                <Button focusTraversable="false" onAction="#handleTogglePassword" text="👁" />
+            </HBox>
+
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Button onAction="#handleLogin" styleClass="std-btn" stylesheets="@../../../Style.css" text="Login" />
+                <Button onAction="#handleGoToRegister" styleClass="std-btn" stylesheets="@../../../Style.css" text="Registrati" />
+                <Button onAction="#handleGuestAccess" styleClass="std-btn" stylesheets="@../../../Style.css" text="Accedi come ospite" />
+            </HBox>
+
+            <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Hyperlink onAction="#handleGoToChangePassword" text="Cambia password" />
+            </VBox>
+
             <columnConstraints>
-               <ColumnConstraints />
-               <ColumnConstraints />
-               <ColumnConstraints />
-               <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints />
             </columnConstraints>
-            <rowConstraints>
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-            </rowConstraints>
-          </GridPane>
-   </HBox>
-    <Label fx:id="messageLabel" text="" />
 
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+    </HBox>
+
+    <Label fx:id="messageLabel" text="" />
 </VBox>

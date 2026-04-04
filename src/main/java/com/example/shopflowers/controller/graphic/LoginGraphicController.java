@@ -66,6 +66,16 @@ public class LoginGraphicController {
         }
     }
 
+    @FXML
+    private void handleGuestAccess() {
+        try {
+            Session.getInstance().setSession("guest", "GUEST");
+            openView("/com/example/shopflowers/catalog-view.fxml", "Shop Flowers - Catalogo Ospite");
+        } catch (IOException e) {
+            messageLabel.setText("Si è verificato un errore durante l'accesso come ospite.");
+        }
+    }
+
     private LoginBean buildLoginBean() {
         LoginBean loginBean = new LoginBean();
         loginBean.setUsername(usernameField.getText());

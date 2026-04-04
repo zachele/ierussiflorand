@@ -7,9 +7,11 @@ import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
+import com.example.shopflowers.util.ProductFilterUIUtils;
 import com.example.shopflowers.util.ProductFilterUtils;
 import com.example.shopflowers.util.ProductTableUtils;
 import com.example.shopflowers.util.SceneNavigator;
+import com.example.shopflowers.util.Session;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -28,8 +30,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.example.shopflowers.util.ProductFilterUIUtils;
-
 public class CustomerCatalogGraphicController {
 
     private static final String SELECT_PRODUCT_MESSAGE = "Seleziona prima un prodotto dal catalogo.";
@@ -37,6 +37,8 @@ public class CustomerCatalogGraphicController {
     private static final String INVALID_QUANTITY_MESSAGE = "Quantità non valida. Inserisci un numero corretto.";
     private static final String INVALID_POSITIVE_QUANTITY_MESSAGE =
             "Quantità non valida. Inserisci un valore maggiore di zero.";
+    private static final String GUEST_ONLY_BROWSE_MESSAGE =
+            "L'ospite può solo consultare il catalogo. Effettua il login o registrati per continuare.";
 
     @FXML
     private TableView<FlowerProduct> productTable;
@@ -112,10 +114,16 @@ public class CustomerCatalogGraphicController {
         configureCartTimer();
         loadProducts();
         refreshCart();
+        configureGuestMode();
     }
 
     @FXML
     private void handleAddToCart() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
         if (selectedProduct == null) {
             messageLabel.setText(SELECT_PRODUCT_MESSAGE);
             return;
@@ -144,6 +152,11 @@ public class CustomerCatalogGraphicController {
 
     @FXML
     private void handleGoToCheckout() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
         if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
             AlertUtils.showWarning(
                     "Checkout non disponibile",
@@ -167,10 +180,16 @@ public class CustomerCatalogGraphicController {
 
     @FXML
     private void handleRemoveFromCart() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
         if (selectedCartItem == null) {
             messageLabel.setText(SELECT_CART_ITEM_MESSAGE);
             return;
         }
+
         boolean confirmed = AlertUtils.showConfirmation(
                 "Conferma rimozione",
                 "L'articolo selezionato verrà eliminato dal carrello corrente."
@@ -187,6 +206,11 @@ public class CustomerCatalogGraphicController {
 
     @FXML
     private void handleClearCart() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
         if (customerCartController.isCartEmpty()) {
             messageLabel.setText("Il carrello è già vuoto.");
             return;
@@ -208,6 +232,11 @@ public class CustomerCatalogGraphicController {
 
     @FXML
     private void handleMyOrders() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
         goToScene(
                 "/com/example/shopflowers/customer-orders-view.fxml",
                 "Shop Flowers - I miei ordini",
@@ -226,6 +255,11 @@ public class CustomerCatalogGraphicController {
 
     @FXML
     private void handleRecommendationAssistant() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
         goToScene(
                 "/com/example/shopflowers/recommendation-view.fxml",
                 "Shop Flowers - Assistente Bouquet",
@@ -235,6 +269,11 @@ public class CustomerCatalogGraphicController {
 
     @FXML
     private void handleCustomBouquet() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
         goToScene(
                 "/com/example/shopflowers/custom-bouquet-view.fxml",
                 "Shop Flowers - Bouquet Personalizzato",
@@ -307,6 +346,23 @@ public class CustomerCatalogGraphicController {
         }));
 
         cartTimerLabel.setText(formatRemainingTime(600));
+    }
+
+    private void configureGuestMode() {
+        if (!isGuestUser()) {
+            return;
+        }
+
+        quantityField.setDisable(true);
+        cartTable.setDisable(true);
+        totalLabel.setText("Modalità ospite: acquisto non disponibile.");
+        cartTimerLabel.setText("Modalità ospite");
+        messageLabel.setText("Accesso come ospite attivo: puoi solo consultare il catalogo.");
+    }
+
+    private boolean isGuestUser() {
+        String role = Session.getInstance().getLoggedRole();
+        return "GUEST".equalsIgnoreCase(role);
     }
 
     private void loadProducts() {
