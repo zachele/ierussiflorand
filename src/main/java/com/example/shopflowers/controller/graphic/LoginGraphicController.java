@@ -1,6 +1,8 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.ShopFlowersApplication;
+import com.example.shopflowers.config.AppConfig;
+import com.example.shopflowers.config.AppMode;
 import com.example.shopflowers.controller.application.CustomerOrdersController;
 import com.example.shopflowers.controller.application.LoginController;
 import com.example.shopflowers.exception.InvalidCredentialsException;
@@ -14,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -21,8 +24,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class LoginGraphicController {
+
+    private static final Logger LOGGER = Logger.getLogger(LoginGraphicController.class.getName());
+
+    @FXML
+    private MenuButton modeMenuButton;
 
     @FXML
     private TextField usernameField;
@@ -37,6 +46,39 @@ public class LoginGraphicController {
     private TextField visiblePasswordField;
 
     private final LoginController loginController = new LoginController();
+
+    @FXML
+    public void initialize() {
+        updateModeLabel();
+    }
+
+    @FXML
+    private void handleSetDemoMode() {
+        applyMode(AppMode.DEMO);
+    }
+
+    @FXML
+    private void handleSetFileMode() {
+        applyMode(AppMode.FILE);
+    }
+
+    @FXML
+    private void handleSetFullMode() {
+        applyMode(AppMode.FULL);
+    }
+
+    private void applyMode(AppMode mode) {
+        AppConfig.setMode(mode);
+        Session.getInstance().clearSession();
+        updateModeLabel();
+        messageLabel.setText("Modalità applicata: " + mode.name());
+    }
+
+    private void updateModeLabel() {
+        if (modeMenuButton != null) {
+            modeMenuButton.setText("⚙");
+        }
+    }
 
     @FXML
     private void handleLogin() {
@@ -117,7 +159,7 @@ public class LoginGraphicController {
             customerOrdersController.markOrdersAsNotified(username);
 
         } catch (SQLException e) {
-            System.out.println("Errore nel caricamento notifiche ordini.");
+            LOGGER.severe("Errore nel caricamento notifiche ordini: " + e.getMessage());
         }
     }
 
