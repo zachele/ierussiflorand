@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FlowerProductFileDAO implements FlowerProductDAO {
 
@@ -50,16 +51,19 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
                     continue;
                 }
 
-                FlowerProduct product = new FlowerProduct(
-                        Integer.parseInt(parts[0]),
-                        parts[1],
-                        Double.parseDouble(parts[2]),
-                        parts[3],
-                        parts[4],
-                        Integer.parseInt(parts[5])
-                );
+                try {
+                    FlowerProduct product = new FlowerProduct(
+                            Integer.parseInt(parts[0].trim()),
+                            parts[1].trim(),
+                            Double.parseDouble(parts[2].trim().replace(',', '.')),
+                            parts[3].trim(),
+                            parts[4].trim(),
+                            Integer.parseInt(parts[5].trim())
+                    );
 
-                products.add(product);
+                    products.add(product);
+                } catch (NumberFormatException e) {
+                }
             }
 
         } catch (IOException e) {
@@ -123,7 +127,7 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
             writer.newLine();
 
             for (FlowerProduct product : products) {
-                writer.write(String.format(
+                writer.write(String.format(Locale.US,
                         "%d;%s;%.2f;%s;%s;%d",
                         product.getId(),
                         escape(product.getName()),

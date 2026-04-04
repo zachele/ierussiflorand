@@ -1,6 +1,7 @@
 id;name;price;color;variety;stockQuantity
-1;Rosa Rossa;12.50;Rosso;Rose;20
-2;Tulipano Bianco;8.90;Bianco;Tulipani;15
-3;Gerbera Gialla;6.50;Giallo;Gerbere;25
-4;Lilium Rosa;14.00;Rosa;Gigli;10
-5;Bouquet Misto Primavera;19.90;Misto;Bouquet;8
+1;Rose Rosse;4.99;Rosso;Rosa;50
+2;Tulipani Gialli;3.49;Giallo;Tulipano;40
+3;Gigli Bianchi;5.99;Bianco;Giglio;30
+4;Orchidea Rosa;12.50;Rosa;Orchidea;15
+5;Margherite Miste;2.99;Misto;Margherita;60
+7;Margherite Blu;2.99;Blu;Margherita;60

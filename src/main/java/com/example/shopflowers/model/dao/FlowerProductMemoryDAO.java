@@ -70,7 +70,6 @@ public class FlowerProductMemoryDAO implements FlowerProductDAO {
                 );
             }
         }
-
         return null;
     }
 
@@ -84,16 +83,18 @@ public class FlowerProductMemoryDAO implements FlowerProductDAO {
         }
     }
 
-    private void initializeIfNeeded() throws SQLException {
+    private void initializeIfNeeded() {
         if (initialized) {
             return;
         }
 
-        FlowerProductFileDAO fileDAO = new FlowerProductFileDAO();
-        List<FlowerProduct> initialProducts = fileDAO.findAll();
-
         products.clear();
-        products.addAll(copyProducts(initialProducts));
+        products.add(new FlowerProduct(1, "Rose Rosse", 4.99, "Rosso", "Rosa", 50));
+        products.add(new FlowerProduct(2, "Tulipani Gialli", 3.49, "Giallo", "Tulipano", 40));
+        products.add(new FlowerProduct(3, "Gigli Bianchi", 5.99, "Bianco", "Giglio", 30));
+        products.add(new FlowerProduct(4, "Orchidea Rosa", 12.50, "Rosa", "Orchidea", 15));
+        products.add(new FlowerProduct(5, "Margherite Miste", 2.99, "Misto", "Margherita", 60));
+
         initialized = true;
     }
 

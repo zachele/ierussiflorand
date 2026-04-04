@@ -15,52 +15,75 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="800" prefWidth="1500" spacing="20" style="-fx-padding: 30;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController">
-    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="778.0">
-        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="150.0" prefWidth="182.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Ierussi Florand" textAlignment="CENTER" />
+<VBox alignment="CENTER"
+      prefHeight="800"
+      prefWidth="1500"
+      spacing="20"
+      style="-fx-padding: 30;"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController">
+
+    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="778.0" spacing="20">
+        <Label alignment="CENTER"
+               contentDisplay="CENTER"
+               prefHeight="100.0"
+               prefWidth="262.0"
+               style="-fx-font-size: 22px; -fx-font-weight: bold;"
+               text="IERUSSI FLOWERS"
+               textAlignment="CENTER" />
+
+        <MenuButton fx:id="modeMenuButton"
+                    alignment="CENTER"
+                    contentDisplay="CENTER"
+                    prefWidth="40.0"
+                    prefHeight="40.0"
+                    style="-fx-background-color: #2b2f34; -fx-text-fill: white; -fx-font-size: 15px; -fx-background-radius: 0; -fx-border-radius: 0; -fx-padding: 0; -fx-cursor: hand;"
+                    text="⚙">
+            <items>
+                <MenuItem text="DEMO" onAction="#handleSetDemoMode" />
+                <MenuItem text="FILE" onAction="#handleSetFileMode" />
+                <MenuItem text="FULL" onAction="#handleSetFullMode" />
+            </items>
+        </MenuButton>
     </HBox>
 
     <HBox prefHeight="182.0" prefWidth="1439.0">
-        <GridPane alignment="CENTER" hgap="10" prefHeight="182.0" prefWidth="1440.0" vgap="10">
+        <GridPane alignment="CENTER" hgap="10" prefHeight="94.0" prefWidth="1440.0" vgap="10">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
-            <Label text="Modalità:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <MenuButton fx:id="modeMenuButton"
-                            stylesheets="@../../../Style.css"
-                            style="-fx-background-color: #2b2f34; -fx-text-fill: white; -fx-font-size: 20px; -fx-background-radius: 0; -fx-border-radius: 0; -fx-min-width: 48px; -fx-min-height: 48px; -fx-pref-width: 48px; -fx-pref-height: 48px; -fx-padding: 0; -fx-cursor: hand;"
-                            text="⚙">
-                    <items>
-                        <MenuItem onAction="#handleSetDemoMode" text="DEMO" />
-                        <MenuItem onAction="#handleSetFileMode" text="FILE" />
-                        <MenuItem onAction="#handleSetFullMode" text="FULL" />
-                    </items>
-                </MenuButton>
-            </HBox>
-
             <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="usernameField"
+                       promptText="username utente"
+                       GridPane.columnIndex="1"
+                       GridPane.rowIndex="1" />
 
             <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <StackPane HBox.hgrow="ALWAYS">
                     <PasswordField fx:id="passwordField" promptText="Password" />
-                    <TextField fx:id="visiblePasswordField" managed="false" promptText="Password" visible="false" />
+                    <TextField fx:id="visiblePasswordField"
+                               managed="false"
+                               promptText="Password"
+                               visible="false" />
                 </StackPane>
-
-                <Button focusTraversable="false" onAction="#handleTogglePassword" text="👁" />
+                <Button text="👁" focusTraversable="false" onAction="#handleTogglePassword" />
             </HBox>
 
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <Button onAction="#handleLogin" styleClass="std-btn" stylesheets="@../../../Style.css" text="Login" />
-                <Button onAction="#handleGoToRegister" styleClass="std-btn" stylesheets="@../../../Style.css" text="Registrati" />
-                <Button onAction="#handleGuestAccess" styleClass="std-btn" stylesheets="@../../../Style.css" text="Accedi come ospite" />
+                <Button text="Login" onAction="#handleLogin" />
+                <Button text="Registrati" onAction="#handleGoToRegister" />
+                <Button text="Accedi come ospite" onAction="#handleGuestAccess" />
             </HBox>
 
             <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Hyperlink onAction="#handleGoToChangePassword" text="Cambia password" />
+                <Hyperlink alignment="CENTER"
+                           prefHeight="24.0"
+                           prefWidth="254.0"
+                           text="Cambia password"
+                           onAction="#handleGoToChangePassword" />
             </VBox>
 
             <columnConstraints>

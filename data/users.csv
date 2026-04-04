@@ -1,0 +1,4 @@
+id;name;surname;username;password;role
+1;Admin;File;admin;admin123;ADMIN
+2;Mario;Rossi;mario_rossi;cliente123;CUSTOMER
+3;Luca;Bianchi;operatore;operatore123;OPERATOR

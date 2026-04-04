@@ -45,7 +45,7 @@ public class LoginGraphicController {
     @FXML
     private TextField visiblePasswordField;
 
-    private final LoginController loginController = new LoginController();
+    private LoginController loginController;
 
     @FXML
     public void initialize() {
@@ -85,6 +85,7 @@ public class LoginGraphicController {
         LoginBean loginBean = buildLoginBean();
 
         try {
+            loginController = new LoginController();
             User user = loginController.login(loginBean);
 
             Session.getInstance().setSession(user.getUsername(), user.getRole());
@@ -111,6 +112,7 @@ public class LoginGraphicController {
     @FXML
     private void handleGuestAccess() {
         try {
+            Session.getInstance().clearSession();
             Session.getInstance().setSession("guest", "GUEST");
             openView("/com/example/shopflowers/catalog-view.fxml", "Shop Flowers - Catalogo Ospite");
         } catch (IOException e) {
