@@ -2,6 +2,8 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.CheckoutController;
 import com.example.shopflowers.controller.application.CustomerCartController;
+import com.example.shopflowers.exception.EmptyCartException;
+import com.example.shopflowers.exception.InsufficientStockException;
 import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.CustomBouquet;
@@ -99,12 +101,7 @@ public class CheckoutGraphicController {
                     sharedCartController != null ? sharedCartController.getCartItems() : Collections.emptyList()
             );
 
-            boolean confirmed = checkoutController.confirmOrder(order);
-
-            if (!confirmed) {
-                messageLabel.setText("Ordine non confermato: stock insufficiente o ordine vuoto.");
-                return;
-            }
+            checkoutController.confirmOrder(order);
 
             clearCheckoutAfterSuccess();
             AlertUtils.showInfo(
@@ -112,8 +109,12 @@ public class CheckoutGraphicController {
                     "Ordine confermato con successo."
             );
 
+        } catch (EmptyCartException e) {
+            messageLabel.setText(e.getMessage());
+        } catch (InsufficientStockException e) {
+            messageLabel.setText(e.getMessage());
         } catch (Exception e) {
-            messageLabel.setText("Ordine non confermato: uno o più prodotti non sono più disponibili nella quantità richiesta.");
+            messageLabel.setText("Si è verificato un errore durante la conferma dell'ordine.");
         }
     }
 
@@ -161,9 +162,16 @@ public class CheckoutGraphicController {
         CustomBouquetSession.clear();
         bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
 
-        double total = sharedCartController != null ? sharedCartController.getCartTotal() : 0.0;
-        totalLabel.setText(String.format("Totale ordine: € %.2f", total));
+        double total = 0.0;
+        if (sharedCartController != null) {
+            try {
+                total = sharedCartController.getCartTotal();
+            } catch (EmptyCartException ignored) {
+                total = 0.0;
+            }
+        }
 
+        totalLabel.setText(String.format("Totale ordine: € %.2f", total));
         messageLabel.setText("Bouquet rimosso dal pagamento corrente con successo.");
     }
 
@@ -210,7 +218,12 @@ public class CheckoutGraphicController {
 
         checkoutTable.setItems(FXCollections.observableArrayList(sharedCartController.getCartItems()));
 
-        double total = sharedCartController.getCartTotal();
+        double total;
+        try {
+            total = sharedCartController.getCartTotal();
+        } catch (EmptyCartException e) {
+            total = 0.0;
+        }
 
         if (CustomBouquetSession.hasBouquet()) {
             CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
@@ -234,7 +247,7 @@ public class CheckoutGraphicController {
         if ((sharedCartController == null || sharedCartController.isCartEmpty()) && !CustomBouquetSession.hasBouquet()) {
             AlertUtils.showWarning(
                     "Ordine non confermato",
-                    "Uno o più prodotti non sono disponibili nella quantità richiesta."
+                    "Il carrello e il bouquet personalizzato sono vuoti."
             );
             return false;
         }
@@ -293,7 +306,10 @@ public class CheckoutGraphicController {
 
     private void clearCheckoutAfterSuccess() {
         if (sharedCartController != null) {
-            sharedCartController.clearCart();
+            try {
+                sharedCartController.clearCart();
+            } catch (EmptyCartException ignored) {
+            }
         }
 
         checkoutTable.getItems().clear();

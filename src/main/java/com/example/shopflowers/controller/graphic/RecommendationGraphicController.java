@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import com.example.shopflowers.exception.InvalidQuantityException;
 
 public class RecommendationGraphicController {
 
@@ -136,7 +137,6 @@ public class RecommendationGraphicController {
             messageLabel.setText("Errore nel caricamento delle proposte.");
         }
     }
-
     @FXML
     private void handleAddRecommendedToCart() {
         if (selectedRecommendation == null) {
@@ -144,8 +144,18 @@ public class RecommendationGraphicController {
             return;
         }
 
-        customerCartController.addToCart(selectedRecommendation.getProduct(), 1);
-        messageLabel.setText("Prodotto consigliato aggiunto al carrello.");
+        try {
+            boolean added = customerCartController.addToCart(selectedRecommendation.getProduct(), 1);
+
+            if (!added) {
+                messageLabel.setText("Operazione non riuscita. Quantità richiesta non disponibile.");
+                return;
+            }
+
+            messageLabel.setText("Prodotto consigliato aggiunto al carrello.");
+        } catch (InvalidQuantityException e) {
+            messageLabel.setText(e.getMessage());
+        }
     }
 
     @FXML

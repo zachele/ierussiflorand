@@ -1,5 +1,8 @@
 package com.example.shopflowers.controller.application;
 
+import com.example.shopflowers.exception.EmptyCartException;
+import com.example.shopflowers.exception.InvalidQuantityException;
+import com.example.shopflowers.exception.ProductNotFoundException;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
 
@@ -10,9 +13,13 @@ public class CustomerCartController {
 
     private final List<CartItem> cartItems = new ArrayList<>();
 
-    public boolean addToCart(FlowerProduct product, int quantity) {
+    public boolean addToCart(FlowerProduct product, int quantity) throws InvalidQuantityException {
+        if (product == null) {
+            throw new InvalidQuantityException("Prodotto non valido.");
+        }
+
         if (quantity <= 0) {
-            return false;
+            throw new InvalidQuantityException("La quantità deve essere maggiore di zero.");
         }
 
         for (CartItem item : cartItems) {
@@ -40,21 +47,35 @@ public class CustomerCartController {
         return new ArrayList<>(cartItems);
     }
 
-    public double getCartTotal() {
+    public double getCartTotal() throws EmptyCartException {
+        if (cartItems.isEmpty()) {
+            throw new EmptyCartException("Il carrello è vuoto.");
+        }
+
         double total = 0;
         for (CartItem item : cartItems) {
             total += item.getTotalPrice();
         }
         return total;
     }
+
     public boolean isCartEmpty() {
         return cartItems.isEmpty();
     }
-    public void removeFromCart(int productId) {
-        cartItems.removeIf(item -> item.getProduct().getId() == productId);
+
+    public void removeFromCart(int productId) throws ProductNotFoundException {
+        boolean removed = cartItems.removeIf(item -> item.getProduct().getId() == productId);
+
+        if (!removed) {
+            throw new ProductNotFoundException("Prodotto non presente nel carrello.");
+        }
     }
 
-    public void clearCart() {
+    public void clearCart() throws EmptyCartException {
+        if (cartItems.isEmpty()) {
+            throw new EmptyCartException("Il carrello è già vuoto.");
+        }
+
         cartItems.clear();
     }
 }

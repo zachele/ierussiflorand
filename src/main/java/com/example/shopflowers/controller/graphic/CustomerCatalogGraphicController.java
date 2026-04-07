@@ -2,6 +2,9 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.CustomerCartController;
+import com.example.shopflowers.exception.EmptyCartException;
+import com.example.shopflowers.exception.InvalidQuantityException;
+import com.example.shopflowers.exception.ProductNotFoundException;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.util.AlertUtils;
@@ -147,6 +150,8 @@ public class CustomerCatalogGraphicController {
 
         } catch (NumberFormatException e) {
             messageLabel.setText(INVALID_QUANTITY_MESSAGE);
+        } catch (InvalidQuantityException e) {
+            messageLabel.setText(e.getMessage());
         }
     }
 
@@ -196,9 +201,13 @@ public class CustomerCatalogGraphicController {
         );
 
         if (confirmed) {
-            customerCartController.removeFromCart(selectedCartItem.getProduct().getId());
-            selectedCartItem = null;
-            completeCartOperation("Articolo rimosso dal carrello con successo.");
+            try {
+                customerCartController.removeFromCart(selectedCartItem.getProduct().getId());
+                selectedCartItem = null;
+                completeCartOperation("Articolo rimosso dal carrello con successo.");
+            } catch (ProductNotFoundException e) {
+                messageLabel.setText(e.getMessage());
+            }
         } else {
             messageLabel.setText("Operazione annullata.");
         }
@@ -222,9 +231,13 @@ public class CustomerCatalogGraphicController {
         );
 
         if (confirmed) {
-            customerCartController.clearCart();
-            selectedCartItem = null;
-            completeCartOperation("Carrello svuotato con successo.");
+            try {
+                customerCartController.clearCart();
+                selectedCartItem = null;
+                completeCartOperation("Carrello svuotato con successo.");
+            } catch (EmptyCartException e) {
+                messageLabel.setText(e.getMessage());
+            }
         } else {
             messageLabel.setText("Operazione annullata.");
         }
@@ -332,7 +345,12 @@ public class CustomerCatalogGraphicController {
         ));
 
         CartTimerManager.setOnTimeoutAction(() -> Platform.runLater(() -> {
-            customerCartController.clearCart();
+            try {
+                customerCartController.clearCart();
+            } catch (EmptyCartException ignored) {
+                // nessuna azione necessaria
+            }
+
             CustomBouquetSession.clear();
             selectedCartItem = null;
             refreshCart();
@@ -387,7 +405,12 @@ public class CustomerCatalogGraphicController {
     private void refreshCart() {
         cartTable.setItems(FXCollections.observableArrayList(customerCartController.getCartItems()));
         cartTable.refresh();
-        totalLabel.setText(String.format("Totale carrello: € %.2f", customerCartController.getCartTotal()));
+
+        try {
+            totalLabel.setText(String.format("Totale carrello: € %.2f", customerCartController.getCartTotal()));
+        } catch (EmptyCartException e) {
+            totalLabel.setText("Totale carrello: € 0.00");
+        }
     }
 
     private void completeCartOperation(String successMessage) {

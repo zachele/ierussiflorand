@@ -1,6 +1,6 @@
 package com.example.shopflowers.controller.application;
 
-import com.example.shopflowers.exception.EmptyOrderException;
+import com.example.shopflowers.exception.EmptyCartException;
 import com.example.shopflowers.exception.InsufficientStockException;
 import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.dao.CustomBouquetOrderDAO;
@@ -60,11 +60,11 @@ public class CheckoutController {
         );
     }
 
-    public boolean confirmOrder(Order order)
-            throws SQLException, EmptyOrderException, InsufficientStockException {
+    public void confirmOrder(Order order)
+            throws SQLException, EmptyCartException, InsufficientStockException {
 
         if ((order.getItems() == null || order.getItems().isEmpty()) && !CustomBouquetSession.hasBouquet()) {
-            throw new EmptyOrderException("Impossibile creare un ordine vuoto.");
+            throw new EmptyCartException("Impossibile confermare un ordine vuoto.");
         }
 
         Map<Integer, Integer> requiredQuantities = new HashMap<>();
@@ -126,6 +126,5 @@ public class CheckoutController {
         }
 
         CustomBouquetSession.clear();
-        return true;
     }
 }
