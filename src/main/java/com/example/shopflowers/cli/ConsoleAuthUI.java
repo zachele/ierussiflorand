@@ -21,13 +21,13 @@ public class ConsoleAuthUI {
     }
 
     public boolean handleLogin() {
-        System.out.println();
-        System.out.println("=== LOGIN ===");
+        ConsolePrinter.println();
+        ConsolePrinter.println("=== LOGIN ===");
 
-        System.out.print("Username: ");
+        ConsolePrinter.print("Username: ");
         String username = scanner.nextLine().trim();
 
-        System.out.print("Password: ");
+        ConsolePrinter.print("Password: ");
         String password = scanner.nextLine().trim();
 
         LoginBean loginBean = new LoginBean();
@@ -40,36 +40,36 @@ public class ConsoleAuthUI {
 
             Session.getInstance().setSession(user.getUsername(), user.getRole());
 
-            System.out.println("Login effettuato con successo come " + user.getRole() + ".");
+            ConsolePrinter.println("Login effettuato con successo come " + user.getRole() + ".");
             return true;
 
         } catch (InvalidCredentialsException e) {
-            System.out.println("Errore: " + e.getMessage());
+            ConsolePrinter.println("Errore: " + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("Errore durante il login.");
+            ConsolePrinter.println("Errore durante il login.");
         } catch (IllegalStateException e) {
-            System.out.println("Errore di inizializzazione applicazione: " + e.getMessage());
+            ConsolePrinter.println("Errore di inizializzazione applicazione: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Errore imprevisto durante il login: " + e.getMessage());
+            ConsolePrinter.println("Errore imprevisto durante il login: " + e.getMessage());
         }
 
         return false;
     }
 
     public void handleRegister() {
-        System.out.println();
-        System.out.println("=== REGISTRAZIONE ===");
+        ConsolePrinter.println();
+        ConsolePrinter.println("=== REGISTRAZIONE ===");
 
-        System.out.print("Nome: ");
+        ConsolePrinter.print("Nome: ");
         String name = scanner.nextLine().trim();
 
-        System.out.print("Cognome: ");
+        ConsolePrinter.print("Cognome: ");
         String surname = scanner.nextLine().trim();
 
-        System.out.print("Username: ");
+        ConsolePrinter.print("Username: ");
         String username = scanner.nextLine().trim();
 
-        System.out.print("Password: ");
+        ConsolePrinter.print("Password: ");
         String password = scanner.nextLine().trim();
 
         RegisterUserBean registerUserBean = new RegisterUserBean();
@@ -83,19 +83,19 @@ public class ConsoleAuthUI {
             boolean success = registerController.registerCustomer(registerUserBean);
 
             if (success) {
-                System.out.println("Registrazione completata con successo.");
+                ConsolePrinter.println("Registrazione completata con successo.");
             } else {
-                System.out.println("Registrazione non riuscita. Controlla i dati inseriti.");
+                ConsolePrinter.println("Registrazione non riuscita. Controlla i dati inseriti.");
             }
 
         } catch (UserAlreadyExistsException e) {
-            System.out.println("Errore: " + e.getMessage());
+            ConsolePrinter.println("Errore: " + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("Errore durante la registrazione.");
+            ConsolePrinter.println("Errore durante la registrazione.");
         } catch (IllegalStateException e) {
-            System.out.println("Errore di inizializzazione applicazione: " + e.getMessage());
+            ConsolePrinter.println("Errore di inizializzazione applicazione: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Errore imprevisto durante la registrazione: " + e.getMessage());
+            ConsolePrinter.println("Errore imprevisto durante la registrazione: " + e.getMessage());
         }
     }
 }

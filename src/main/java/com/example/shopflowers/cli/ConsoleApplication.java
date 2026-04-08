@@ -1,10 +1,10 @@
 package com.example.shopflowers.cli;
 
+import com.example.shopflowers.config.AppConfig;
+import com.example.shopflowers.config.AppMode;
 import com.example.shopflowers.util.Session;
 
 import java.util.Scanner;
-import com.example.shopflowers.config.AppConfig;
-import com.example.shopflowers.config.AppMode;
 
 public class ConsoleApplication {
 
@@ -13,7 +13,7 @@ public class ConsoleApplication {
 
     public void start() {
         boolean running = true;
-        System.out.println("Modalità attiva: " + AppConfig.getMode().name());
+
         while (running) {
             printMainMenu();
             String choice = scanner.nextLine().trim();
@@ -23,38 +23,39 @@ public class ConsoleApplication {
                 case "2" -> consoleAuthUI.handleRegister();
                 case "3" -> handleGuestAccess();
                 case "4" -> running = false;
-                default -> System.out.println("Scelta non valida.");
+                default -> ConsolePrinter.println("Scelta non valida.");
             }
         }
 
-        System.out.println("Chiusura applicazione console.");
+        ConsolePrinter.println("Chiusura applicazione console.");
     }
 
     private void printMainMenu() {
-        System.out.println();
-        System.out.println("====================================");
-        System.out.println("         IERUSSI FLOWERS CLI        ");
-        System.out.println("====================================");
-        System.out.println("1. Login");
-        System.out.println("2. Registrazione");
-        System.out.println("3. Accesso come ospite");
-        System.out.println("4. Esci");
-        System.out.print("Seleziona un'opzione: ");
+        ConsolePrinter.println();
+        ConsolePrinter.println("====================================");
+        ConsolePrinter.println("         IERUSSI FLOWERS CLI        ");
+        ConsolePrinter.println("====================================");
+        ConsolePrinter.println("Modalità attiva: " + AppConfig.getMode().name());
+        ConsolePrinter.println("1. Login");
+        ConsolePrinter.println("2. Registrazione");
+        ConsolePrinter.println("3. Accesso come ospite");
+        ConsolePrinter.println("4. Esci");
+        ConsolePrinter.print("Seleziona un'opzione: ");
     }
 
     private void handleLogin() {
         boolean loggedIn = consoleAuthUI.handleLogin();
 
         if (loggedIn) {
-            System.out.println("Area utente CLI in costruzione.");
+            ConsolePrinter.println("Area utente CLI in costruzione.");
             Session.getInstance().clearSession();
         }
     }
 
     private void handleGuestAccess() {
         Session.getInstance().setSession("guest", "GUEST");
-        System.out.println("Accesso come ospite effettuato.");
-        System.out.println("Catalogo CLI in costruzione.");
+        ConsolePrinter.println("Accesso come ospite effettuato.");
+        ConsolePrinter.println("Catalogo CLI in costruzione.");
         Session.getInstance().clearSession();
     }
 
