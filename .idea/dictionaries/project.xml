@@ -12,6 +12,7 @@
       <w>Biglietto</w>
       <w>Cambia</w>
       <w>Cerca</w>
+      <w>Chiusura</w>
       <w>Cliente</w>
       <w>Clienti</w>
       <w>Cognome</w>
@@ -28,6 +29,7 @@
       <w>Effettua</w>
       <w>Elimina</w>
       <w>Eliminazione</w>
+      <w>Esci</w>
       <w>Gerbere</w>
       <w>Gialla</w>
       <w>Gigli</w>
@@ -66,6 +68,7 @@
       <w>Rimuovi</w>
       <w>Rosse</w>
       <w>Ruolo</w>
+      <w>Scelta</w>
       <w>Sessione</w>
       <w>Statistiche</w>
       <w>Stato</w>
@@ -137,6 +140,7 @@
       <w>corrente</w>
       <w>corretta</w>
       <w>correttamente</w>
+      <w>costruzione</w>
       <w>creare</w>
       <w>creato</w>
       <w>creazione</w>
@@ -161,6 +165,7 @@
       <w>disponibili</w>
       <w>disponibilità</w>
       <w>diverso</w>
+      <w>effettuato</w>
       <w>elegante</w>
       <w>elementi</w>
       <w>eliminare</w>
@@ -178,9 +183,11 @@
       <w>gestione</w>
       <w>giglio</w>
       <w>ierussi</w>
+      <w>imprevisto</w>
       <w>inattività</w>
       <w>indirizzo</w>
       <w>inizializzare</w>
+      <w>inizializzazione</w>
       <w>inseriti</w>
       <w>l'accesso</w>
       <w>l'aggiornamento</w>
@@ -289,6 +296,7 @@
       <w>tuoi</w>
       <w>tutto</w>
       <w>un'attività</w>
+      <w>un'opzione</w>
       <w>utente</w>
       <w>utenti</w>
       <w>valida</w>
