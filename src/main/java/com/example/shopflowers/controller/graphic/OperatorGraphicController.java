@@ -2,6 +2,7 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.OperatorOrdersController;
 import com.example.shopflowers.model.dao.CustomBouquetOrderDAO;
+import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.entity.CustomBouquetOrderSummary;
 import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
@@ -18,7 +19,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import com.example.shopflowers.model.dao.CustomBouquetOrderDBDAO;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,6 +46,9 @@ public class OperatorGraphicController {
 
     @FXML
     private TableColumn<OrderSummary, String> paymentColumn;
+
+    @FXML
+    private TableColumn<OrderSummary, String> statusColumn;
 
     @FXML
     private TableColumn<OrderSummary, Double> totalColumn;
@@ -80,14 +83,24 @@ public class OperatorGraphicController {
     @FXML
     private Label messageLabel;
 
-    private final OperatorOrdersController operatorOrdersController = new OperatorOrdersController();
-    private final CustomBouquetOrderDAO customBouquetOrderDAO = new CustomBouquetOrderDBDAO();
+    private final OperatorOrdersController operatorOrdersController;
+    private final CustomBouquetOrderDAO customBouquetOrderDAO;
 
     private ObservableList<OrderSummary> masterOrderList = FXCollections.observableArrayList();
     private FilteredList<OrderSummary> filteredOrders;
 
     private OrderSummary selectedOrder;
     private boolean showingCompletedOrders = false;
+
+    public OperatorGraphicController() {
+        this.operatorOrdersController = new OperatorOrdersController();
+
+        try {
+            this.customBouquetOrderDAO = DAOFactory.getCustomBouquetOrderDAO();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Impossibile inizializzare la DAO dei bouquet ordine.", e);
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -97,6 +110,7 @@ public class OperatorGraphicController {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         deliveryColumn.setCellValueFactory(new PropertyValueFactory<>("deliveryMode"));
         paymentColumn.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
 
@@ -123,12 +137,17 @@ public class OperatorGraphicController {
 
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedOrder = newSelection;
+
             if (newSelection != null) {
+                statusComboBox.setValue(newSelection.getStatus());
                 loadOrderItems(newSelection.getId());
                 loadBouquetDetails(newSelection.getId());
+                messageLabel.setText("Ordine selezionato: stato attuale = " + newSelection.getStatus());
             } else {
+                statusComboBox.setValue(null);
                 orderItemsTable.getItems().clear();
                 bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
+                messageLabel.setText("");
             }
         });
 
@@ -152,6 +171,7 @@ public class OperatorGraphicController {
 
             orderItemsTable.getItems().clear();
             bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
+            statusComboBox.setValue(null);
             selectedOrder = null;
 
         } catch (SQLException e) {
@@ -177,7 +197,8 @@ public class OperatorGraphicController {
                     || safe(order.getSurname()).contains(searchText)
                     || safe(order.getUsername()).contains(searchText)
                     || safe(order.getDeliveryMode()).contains(searchText)
-                    || safe(order.getPaymentMethod()).contains(searchText);
+                    || safe(order.getPaymentMethod()).contains(searchText)
+                    || safe(order.getStatus()).contains(searchText);
 
             boolean matchesStatus = selectedStatus == null
                     || selectedStatus.equalsIgnoreCase("Tutti")
@@ -236,6 +257,11 @@ public class OperatorGraphicController {
         String newStatus = statusComboBox.getValue();
         if (newStatus == null || newStatus.isBlank()) {
             messageLabel.setText("Seleziona uno stato ordine valido.");
+            return;
+        }
+
+        if (newStatus.equalsIgnoreCase(selectedOrder.getStatus())) {
+            messageLabel.setText("L'ordine è già nello stato selezionato.");
             return;
         }
 

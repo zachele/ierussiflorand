@@ -33,20 +33,21 @@
            style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
     <HBox spacing="12">
-        <TextField fx:id="searchField" promptText="Cerca per nome, cognome, cliente, consegna o pagamento" prefWidth="320"/>
+        <TextField fx:id="searchField" promptText="Cerca per nome, cognome, cliente, consegna, pagamento o stato" prefWidth="380"/>
         <ComboBox fx:id="statusFilterComboBox" prefWidth="180"/>
     </HBox>
 
     <TableView fx:id="orderTable" prefHeight="250">
         <columns>
-            <TableColumn fx:id="orderIdColumn" text="ID Ordine" prefWidth="90" />
-            <TableColumn fx:id="nameColumn" text="Nome" prefWidth="120" />
-            <TableColumn fx:id="surnameColumn" text="Cognome" prefWidth="120" />
-            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="140" />
-            <TableColumn fx:id="deliveryColumn" text="Consegna" prefWidth="120" />
-            <TableColumn fx:id="paymentColumn" text="Pagamento" prefWidth="140" />
-            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="100" />
-            <TableColumn fx:id="dateColumn" text="Data" prefWidth="220" />
+            <TableColumn fx:id="orderIdColumn" text="ID Ordine" prefWidth="80" />
+            <TableColumn fx:id="nameColumn" text="Nome" prefWidth="110" />
+            <TableColumn fx:id="surnameColumn" text="Cognome" prefWidth="110" />
+            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="130" />
+            <TableColumn fx:id="deliveryColumn" text="Consegna" prefWidth="110" />
+            <TableColumn fx:id="paymentColumn" text="Pagamento" prefWidth="120" />
+            <TableColumn fx:id="statusColumn" text="Stato attuale" prefWidth="140" />
+            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="90" />
+            <TableColumn fx:id="dateColumn" text="Data" prefWidth="200" />
         </columns>
     </TableView>
 
