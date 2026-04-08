@@ -2,6 +2,7 @@ package com.example.shopflowers.cli;
 
 import com.example.shopflowers.config.AppConfig;
 import com.example.shopflowers.config.AppMode;
+import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.util.Session;
 
 import java.util.Scanner;
@@ -11,6 +12,8 @@ public class ConsoleApplication {
     private final Scanner scanner = new Scanner(System.in);
     private final ConsoleAuthUI consoleAuthUI = new ConsoleAuthUI(scanner);
     private final ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
+    private final CustomerCartController customerCartController = new CustomerCartController();
+    private final ConsoleCartUI consoleCartUI = new ConsoleCartUI(scanner, customerCartController);
 
     public void start() {
         boolean running = true;
@@ -48,7 +51,7 @@ public class ConsoleApplication {
         boolean loggedIn = consoleAuthUI.handleLogin();
 
         if (loggedIn) {
-            consoleCatalogUI.start();
+            openUserArea();
             Session.getInstance().clearSession();
         }
     }
@@ -58,6 +61,28 @@ public class ConsoleApplication {
         ConsolePrinter.println("Accesso come ospite effettuato.");
         consoleCatalogUI.start();
         Session.getInstance().clearSession();
+    }
+
+    private void openUserArea() {
+        boolean running = true;
+
+        while (running) {
+            ConsolePrinter.println();
+            ConsolePrinter.println("============= AREA UTENTE =============");
+            ConsolePrinter.println("1. Catalogo");
+            ConsolePrinter.println("2. Operazioni Carrello");
+            ConsolePrinter.println("3. Logout");
+            ConsolePrinter.print("Seleziona un'opzione: ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1" -> consoleCatalogUI.start();
+                case "2" -> consoleCartUI.start();
+                case "3" -> running = false;
+                default -> ConsolePrinter.println("Scelta non valida.");
+            }
+        }
     }
 
     public static void main(String[] args) {
