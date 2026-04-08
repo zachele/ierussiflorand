@@ -9,7 +9,6 @@ import com.example.shopflowers.model.entity.Order;
 import com.example.shopflowers.util.Session;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleCheckoutUI {
