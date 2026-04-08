@@ -10,6 +10,7 @@ public class ConsoleApplication {
 
     private final Scanner scanner = new Scanner(System.in);
     private final ConsoleAuthUI consoleAuthUI = new ConsoleAuthUI(scanner);
+    private final ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
 
     public void start() {
         boolean running = true;
@@ -47,7 +48,7 @@ public class ConsoleApplication {
         boolean loggedIn = consoleAuthUI.handleLogin();
 
         if (loggedIn) {
-            ConsolePrinter.println("Area utente CLI in costruzione.");
+            consoleCatalogUI.start();
             Session.getInstance().clearSession();
         }
     }
@@ -55,7 +56,7 @@ public class ConsoleApplication {
     private void handleGuestAccess() {
         Session.getInstance().setSession("guest", "GUEST");
         ConsolePrinter.println("Accesso come ospite effettuato.");
-        ConsolePrinter.println("Catalogo CLI in costruzione.");
+        consoleCatalogUI.start();
         Session.getInstance().clearSession();
     }
 
