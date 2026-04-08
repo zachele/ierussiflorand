@@ -54,7 +54,7 @@
                     <PasswordField fx:id="passwordField" promptText="Password" />
                     <TextField fx:id="visiblePasswordField" managed="false" promptText="Password" visible="false" />
                 </StackPane>
-                <Button focusTraversable="false" mouseTransparent="true" onAction="#handleTogglePassword" text="👁" />
+                <Button focusTraversable="false" onAction="#handleTogglePassword" text="👁" />
             </HBox>
 
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">

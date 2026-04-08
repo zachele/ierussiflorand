@@ -9,6 +9,7 @@ import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.model.entity.Order;
 import com.example.shopflowers.util.AlertUtils;
+import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
 import com.example.shopflowers.util.Session;
@@ -309,8 +310,11 @@ public class CheckoutGraphicController {
             try {
                 sharedCartController.clearCart();
             } catch (EmptyCartException ignored) {
+                // nessuna azione necessaria
             }
         }
+
+        CartTimerManager.stopTimer();
 
         checkoutTable.getItems().clear();
         CustomBouquetSession.clear();

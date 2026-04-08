@@ -227,6 +227,7 @@ public class CustomerCatalogGraphicController {
 
         if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
             messageLabel.setText("Il carrello è già vuoto.");
+            resetCartTimerDisplay();
             return;
         }
 
@@ -242,7 +243,9 @@ public class CustomerCatalogGraphicController {
                 }
                 CustomBouquetSession.clear();
                 selectedCartItem = null;
-                completeCartOperation("Carrello svuotato con successo.");
+                stopAndResetCartTimer();
+                refreshCart();
+                messageLabel.setText("Carrello svuotato con successo.");
             } catch (EmptyCartException e) {
                 messageLabel.setText(e.getMessage());
             }
@@ -306,6 +309,7 @@ public class CustomerCatalogGraphicController {
     private void handleLogout() {
         try {
             CartTimerManager.stopTimer();
+            resetCartTimerDisplay();
             SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
@@ -361,6 +365,7 @@ public class CustomerCatalogGraphicController {
 
             CustomBouquetSession.clear();
             selectedCartItem = null;
+            stopAndResetCartTimer();
             refreshCart();
             messageLabel.setText("Sessione carrello scaduta: il carrello è stato svuotato per inattività.");
 
@@ -371,7 +376,7 @@ public class CustomerCatalogGraphicController {
             alert.showAndWait();
         }));
 
-        cartTimerLabel.setText(formatRemainingTime(600));
+        resetCartTimerDisplay();
     }
 
     private void configureGuestMode() {
@@ -438,12 +443,25 @@ public class CustomerCatalogGraphicController {
         }
 
         totalLabel.setText(String.format("Totale carrello: € %.2f", total));
+
+        if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
+            stopAndResetCartTimer();
+        }
     }
 
     private void completeCartOperation(String successMessage) {
         CartTimerManager.startOrResetTimer();
         refreshCart();
         messageLabel.setText(successMessage);
+    }
+
+    private void stopAndResetCartTimer() {
+        CartTimerManager.stopTimer();
+        resetCartTimerDisplay();
+    }
+
+    private void resetCartTimerDisplay() {
+        cartTimerLabel.setText(formatRemainingTime(600));
     }
 
     private String formatRemainingTime(int totalSeconds) {
