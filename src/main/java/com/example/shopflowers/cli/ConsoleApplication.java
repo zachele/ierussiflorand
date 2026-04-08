@@ -16,6 +16,7 @@ public class ConsoleApplication {
     private final ConsoleCartUI consoleCartUI = new ConsoleCartUI(scanner, customerCartController);
     private final ConsoleCheckoutUI consoleCheckoutUI = new ConsoleCheckoutUI(scanner, customerCartController);
     private final ConsoleAdminProductUI consoleAdminProductUI = new ConsoleAdminProductUI(scanner);
+    private final ConsoleOperatorOrdersUI consoleOperatorOrdersUI = new ConsoleOperatorOrdersUI(scanner);
 
     public void start() {
         boolean running = true;
@@ -130,15 +131,17 @@ public class ConsoleApplication {
         while (running) {
             ConsolePrinter.println();
             ConsolePrinter.println("========== AREA OPERATORE ==========");
-            ConsolePrinter.println("1. Visualizza catalogo");
-            ConsolePrinter.println("2. Logout");
+            ConsolePrinter.println("1. Gestione ordini");
+            ConsolePrinter.println("2. Visualizza catalogo");
+            ConsolePrinter.println("3. Logout");
             ConsolePrinter.print("Seleziona un'opzione: ");
 
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
-                case "1" -> consoleCatalogUI.start();
-                case "2" -> running = false;
+                case "1" -> consoleOperatorOrdersUI.start();
+                case "2" -> consoleCatalogUI.start();
+                case "3" -> running = false;
                 default -> ConsolePrinter.println("Scelta non valida.");
             }
         }
