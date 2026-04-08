@@ -14,6 +14,7 @@ public class ConsoleApplication {
     private final ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
     private final CustomerCartController customerCartController = new CustomerCartController();
     private final ConsoleCartUI consoleCartUI = new ConsoleCartUI(scanner, customerCartController);
+    private final ConsoleCheckoutUI consoleCheckoutUI = new ConsoleCheckoutUI(scanner, customerCartController);
 
     public void start() {
         boolean running = true;
@@ -50,10 +51,23 @@ public class ConsoleApplication {
     private void handleLogin() {
         boolean loggedIn = consoleAuthUI.handleLogin();
 
-        if (loggedIn) {
-            openUserArea();
-            Session.getInstance().clearSession();
+        if (!loggedIn) {
+            return;
         }
+
+        String role = Session.getInstance().getLoggedRole();
+
+        if ("CUSTOMER".equalsIgnoreCase(role)) {
+            openCustomerArea();
+        } else if ("ADMIN".equalsIgnoreCase(role)) {
+            openAdminArea();
+        } else if ("OPERATOR".equalsIgnoreCase(role)) {
+            openOperatorArea();
+        } else {
+            ConsolePrinter.println("Ruolo non riconosciuto.");
+        }
+
+        Session.getInstance().clearSession();
     }
 
     private void handleGuestAccess() {
@@ -63,15 +77,16 @@ public class ConsoleApplication {
         Session.getInstance().clearSession();
     }
 
-    private void openUserArea() {
+    private void openCustomerArea() {
         boolean running = true;
 
         while (running) {
             ConsolePrinter.println();
-            ConsolePrinter.println("============= AREA UTENTE =============");
+            ConsolePrinter.println("=========== AREA CUSTOMER ===========");
             ConsolePrinter.println("1. Catalogo");
-            ConsolePrinter.println("2. Operazioni Carrello");
-            ConsolePrinter.println("3. Logout");
+            ConsolePrinter.println("2. Carrello");
+            ConsolePrinter.println("3. Checkout");
+            ConsolePrinter.println("4. Logout");
             ConsolePrinter.print("Seleziona un'opzione: ");
 
             String choice = scanner.nextLine().trim();
@@ -79,7 +94,48 @@ public class ConsoleApplication {
             switch (choice) {
                 case "1" -> consoleCatalogUI.start();
                 case "2" -> consoleCartUI.start();
-                case "3" -> running = false;
+                case "3" -> consoleCheckoutUI.start();
+                case "4" -> running = false;
+                default -> ConsolePrinter.println("Scelta non valida.");
+            }
+        }
+    }
+
+    private void openAdminArea() {
+        boolean running = true;
+
+        while (running) {
+            ConsolePrinter.println();
+            ConsolePrinter.println("============ AREA ADMIN =============");
+            ConsolePrinter.println("1. Visualizza catalogo");
+            ConsolePrinter.println("2. Logout");
+            ConsolePrinter.print("Seleziona un'opzione: ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1" -> consoleCatalogUI.start();
+                case "2" -> running = false;
+                default -> ConsolePrinter.println("Scelta non valida.");
+            }
+        }
+    }
+
+    private void openOperatorArea() {
+        boolean running = true;
+
+        while (running) {
+            ConsolePrinter.println();
+            ConsolePrinter.println("========== AREA OPERATORE ==========");
+            ConsolePrinter.println("1. Visualizza catalogo");
+            ConsolePrinter.println("2. Logout");
+            ConsolePrinter.print("Seleziona un'opzione: ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1" -> consoleCatalogUI.start();
+                case "2" -> running = false;
                 default -> ConsolePrinter.println("Scelta non valida.");
             }
         }
