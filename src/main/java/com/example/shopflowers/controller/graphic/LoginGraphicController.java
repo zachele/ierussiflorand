@@ -1,12 +1,11 @@
 package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.ShopFlowersApplication;
+import com.example.shopflowers.boundary.LoginBoundary;
 import com.example.shopflowers.config.AppConfig;
 import com.example.shopflowers.config.AppMode;
 import com.example.shopflowers.controller.application.CustomerOrdersController;
-import com.example.shopflowers.controller.application.LoginController;
 import com.example.shopflowers.exception.InvalidCredentialsException;
-import com.example.shopflowers.model.bean.LoginBean;
 import com.example.shopflowers.model.entity.OrderSummary;
 import com.example.shopflowers.model.entity.User;
 import com.example.shopflowers.util.SceneNavigator;
@@ -45,7 +44,7 @@ public class LoginGraphicController {
     @FXML
     private TextField visiblePasswordField;
 
-    private LoginController loginController;
+    private final LoginBoundary loginBoundary = new LoginBoundary();
 
     @FXML
     public void initialize() {
@@ -82,11 +81,11 @@ public class LoginGraphicController {
 
     @FXML
     private void handleLogin() {
-        LoginBean loginBean = buildLoginBean();
-
         try {
-            loginController = new LoginController();
-            User user = loginController.login(loginBean);
+            User user = loginBoundary.login(
+                    usernameField.getText(),
+                    getCurrentPassword()
+            );
 
             Session.getInstance().setSession(user.getUsername(), user.getRole());
 
@@ -118,13 +117,6 @@ public class LoginGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante l'accesso come ospite.");
         }
-    }
-
-    private LoginBean buildLoginBean() {
-        LoginBean loginBean = new LoginBean();
-        loginBean.setUsername(usernameField.getText());
-        loginBean.setPassword(getCurrentPassword());
-        return loginBean;
     }
 
     private String getCurrentPassword() {
