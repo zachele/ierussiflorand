@@ -1,8 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.boundary.ProductBoundary;
 import com.example.shopflowers.controller.application.BrowseCatalogController;
-import com.example.shopflowers.controller.application.ManageProductsController;
-import com.example.shopflowers.model.bean.ProductBean;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.util.ProductFilterUIUtils;
 import com.example.shopflowers.util.ProductFilterUtils;
@@ -79,7 +78,7 @@ public class AdminProductGraphicController {
     private Label messageLabel;
 
     private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
-    private final ManageProductsController manageProductsController = new ManageProductsController();
+    private final ProductBoundary productBoundary = new ProductBoundary();
 
     private FilteredList<FlowerProduct> filteredProducts;
     private FlowerProduct selectedProduct;
@@ -116,8 +115,13 @@ public class AdminProductGraphicController {
     @FXML
     private void handleAddProduct() {
         try {
-            ProductBean productBean = buildProductBeanFromFields();
-            manageProductsController.addProduct(productBean);
+            productBoundary.addProduct(
+                    nameField.getText(),
+                    Double.parseDouble(priceField.getText()),
+                    colorField.getText(),
+                    varietyField.getText(),
+                    Integer.parseInt(stockField.getText())
+            );
 
             messageLabel.setText("Prodotto aggiunto con successo.");
             clearFields();
@@ -138,10 +142,14 @@ public class AdminProductGraphicController {
         }
 
         try {
-            ProductBean productBean = buildProductBeanFromFields();
-            productBean.setId(selectedProduct.getId());
-
-            manageProductsController.updateProduct(productBean);
+            productBoundary.updateProduct(
+                    selectedProduct.getId(),
+                    nameField.getText(),
+                    Double.parseDouble(priceField.getText()),
+                    colorField.getText(),
+                    varietyField.getText(),
+                    Integer.parseInt(stockField.getText())
+            );
 
             messageLabel.setText("Prodotto aggiornato con successo.");
             clearFields();
@@ -174,7 +182,7 @@ public class AdminProductGraphicController {
         }
 
         try {
-            manageProductsController.deleteProductById(selectedProduct.getId());
+            productBoundary.deleteProduct(selectedProduct.getId());
             clearFields();
             loadProducts();
             selectedProduct = null;
@@ -182,16 +190,6 @@ public class AdminProductGraphicController {
         } catch (SQLException e) {
             messageLabel.setText("Si è verificato un errore durante l'eliminazione del prodotto.");
         }
-    }
-
-    private ProductBean buildProductBeanFromFields() {
-        ProductBean productBean = new ProductBean();
-        productBean.setName(nameField.getText());
-        productBean.setPrice(Double.parseDouble(priceField.getText()));
-        productBean.setColor(colorField.getText());
-        productBean.setVariety(varietyField.getText());
-        productBean.setStockQuantity(Integer.parseInt(stockField.getText()));
-        return productBean;
     }
 
     private void loadProducts() {

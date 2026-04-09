@@ -1,18 +1,16 @@
 package com.example.shopflowers.controller.graphic;
 
-import com.example.shopflowers.controller.application.CheckoutController;
+import com.example.shopflowers.boundary.CheckoutBoundary;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.exception.EmptyCartException;
 import com.example.shopflowers.exception.InsufficientStockException;
 import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.CustomBouquet;
-import com.example.shopflowers.model.entity.Order;
 import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
-import com.example.shopflowers.util.Session;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -27,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -72,7 +71,7 @@ public class CheckoutGraphicController {
 
     private static CustomerCartController sharedCartController;
 
-    private final CheckoutController checkoutController = new CheckoutController();
+    private final CheckoutBoundary checkoutBoundary = new CheckoutBoundary();
 
     public static void setCartController(CustomerCartController cartController) {
         sharedCartController = cartController;
@@ -97,12 +96,14 @@ public class CheckoutGraphicController {
         }
 
         try {
-            Order order = checkoutController.createOrder(
-                    checkoutBean,
+            checkoutBoundary.confirmOrder(
+                    checkoutBean.getDeliveryMode(),
+                    checkoutBean.getPaymentMethod(),
+                    checkoutBean.getDeliveryAddress(),
+                    checkoutBean.getPickupDate(),
+                    checkoutBean.getPickupTime(),
                     sharedCartController != null ? sharedCartController.getCartItems() : Collections.emptyList()
             );
-
-            checkoutController.confirmOrder(order);
 
             clearCheckoutAfterSuccess();
             AlertUtils.showInfo(
@@ -114,7 +115,7 @@ public class CheckoutGraphicController {
             messageLabel.setText(e.getMessage());
         } catch (InsufficientStockException e) {
             messageLabel.setText(e.getMessage());
-        } catch (Exception e) {
+        } catch (SQLException e) {
             messageLabel.setText("Si è verificato un errore durante la conferma dell'ordine.");
         }
     }
@@ -127,7 +128,6 @@ public class CheckoutGraphicController {
                     "/com/example/shopflowers/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
-
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
         }
@@ -257,7 +257,6 @@ public class CheckoutGraphicController {
 
     private CheckoutBean buildCheckoutBean() {
         CheckoutBean checkoutBean = new CheckoutBean();
-        checkoutBean.setUsername(Session.getInstance().getLoggedUsername());
         checkoutBean.setDeliveryMode(deliveryModeComboBox.getValue());
         checkoutBean.setPaymentMethod(paymentField.getText());
         checkoutBean.setDeliveryAddress(addressField.getText());

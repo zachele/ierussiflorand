@@ -1,9 +1,9 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.boundary.OperatorBoundary;
 import com.example.shopflowers.controller.application.ManageOperatorController;
 import com.example.shopflowers.exception.InvalidOperatorDataException;
 import com.example.shopflowers.exception.UserAlreadyExistsException;
-import com.example.shopflowers.model.bean.OperatorBean;
 import com.example.shopflowers.model.entity.OperatorFullData;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
@@ -80,6 +80,7 @@ public class OperatorManagementGraphicController {
     private Label messageLabel;
 
     private final ManageOperatorController manageOperatorController = new ManageOperatorController();
+    private final OperatorBoundary operatorBoundary = new OperatorBoundary();
 
     private ObservableList<OperatorFullData> masterOperatorList = FXCollections.observableArrayList();
     private FilteredList<OperatorFullData> filteredOperators;
@@ -114,8 +115,15 @@ public class OperatorManagementGraphicController {
     @FXML
     private void handleCreateOperator() {
         try {
-            OperatorBean operatorBean = buildCreateOperatorBean();
-            boolean created = manageOperatorController.createOperator(operatorBean);
+            boolean created = operatorBoundary.createOperator(
+                    nameField.getText(),
+                    surnameField.getText(),
+                    usernameField.getText(),
+                    passwordField.getText(),
+                    salaryField.getText(),
+                    contractYearField.getText(),
+                    annualHoursField.getText()
+            );
 
             if (!created) {
                 messageLabel.setText("Compila correttamente tutti i campi richiesti.");
@@ -143,8 +151,14 @@ public class OperatorManagementGraphicController {
         }
 
         try {
-            OperatorBean operatorBean = buildUpdateOperatorBean();
-            boolean updated = manageOperatorController.updateOperator(operatorBean);
+            boolean updated = operatorBoundary.updateOperator(
+                    selectedOperator.getUserId(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    salaryField.getText(),
+                    contractYearField.getText(),
+                    annualHoursField.getText()
+            );
 
             if (!updated) {
                 messageLabel.setText("Compila correttamente tutti i campi richiesti.");
@@ -180,7 +194,7 @@ public class OperatorManagementGraphicController {
         }
 
         try {
-            manageOperatorController.deleteOperator(selectedOperator.getUserId());
+            operatorBoundary.deleteOperator(selectedOperator.getUserId());
             selectedOperator = null;
             clearFields();
             usernameField.setDisable(false);
@@ -212,29 +226,6 @@ public class OperatorManagementGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
         }
-    }
-
-    private OperatorBean buildCreateOperatorBean() {
-        OperatorBean operatorBean = new OperatorBean();
-        operatorBean.setName(nameField.getText());
-        operatorBean.setSurname(surnameField.getText());
-        operatorBean.setUsername(usernameField.getText());
-        operatorBean.setPassword(passwordField.getText());
-        operatorBean.setSalary(salaryField.getText());
-        operatorBean.setContractYear(contractYearField.getText());
-        operatorBean.setAnnualHours(annualHoursField.getText());
-        return operatorBean;
-    }
-
-    private OperatorBean buildUpdateOperatorBean() {
-        OperatorBean operatorBean = new OperatorBean();
-        operatorBean.setUserId(selectedOperator.getUserId());
-        operatorBean.setName(nameField.getText());
-        operatorBean.setSurname(surnameField.getText());
-        operatorBean.setSalary(salaryField.getText());
-        operatorBean.setContractYear(contractYearField.getText());
-        operatorBean.setAnnualHours(annualHoursField.getText());
-        return operatorBean;
     }
 
     private void populateFields(OperatorFullData operator) {
