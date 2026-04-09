@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.shopflowers.controller.graphic.CartGraphicController"
+      spacing="15"
+      prefWidth="1500"
+      prefHeight="800"
+      style="-fx-padding: 20;">
+
+    <MenuBar>
+        <Menu text="Navigazione">
+            <MenuItem text="Torna al catalogo" onAction="#handleBackToCatalog"/>
+            <MenuItem text="Logout" onAction="#handleLogout"/>
+        </Menu>
+    </MenuBar>
+
+    <VBox spacing="6">
+        <Label text="🛒 Carrello Cliente"
+               style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+        <Label text="Riepilogo degli articoli selezionati prima del checkout"
+               style="-fx-font-size: 14px;" />
+    </VBox>
+
+    <Separator />
+
+    <VBox spacing="8">
+        <Label text="Stato carrello"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <Label fx:id="cartTimerLabel"
+               text="Vai al checkout per attivare o proseguire il timer carrello."
+               style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+    </VBox>
+
+    <TableView fx:id="cartTable" prefHeight="300">
+        <columns>
+            <TableColumn fx:id="cartNameColumn" text="Prodotto" prefWidth="350" />
+            <TableColumn fx:id="cartQuantityColumn" text="Quantità" prefWidth="180" />
+            <TableColumn fx:id="cartTotalColumn" text="Totale" prefWidth="220" />
+        </columns>
+    </TableView>
+
+    <VBox spacing="8">
+        <Label text="Bouquet personalizzato"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <Label fx:id="bouquetInfoLabel"
+               text="Nessun bouquet personalizzato nel carrello."
+               wrapText="true"
+               style="-fx-font-size: 14px;" />
+    </VBox>
+
+    <Label fx:id="totalLabel"
+           text="Totale carrello: € 0.00"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <HBox spacing="10">
+        <Button text="Rimuovi selezionato" onAction="#handleRemoveSelected" />
+        <Button text="Svuota carrello" onAction="#handleClearCart" />
+        <Button text="Vai al checkout" onAction="#handleGoToCheckout" />
+    </HBox>
+
+    <Label fx:id="messageLabel" text="" />
+</VBox>

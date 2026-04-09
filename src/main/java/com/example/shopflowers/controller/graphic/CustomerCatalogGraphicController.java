@@ -4,9 +4,6 @@ import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.exception.EmptyCartException;
 import com.example.shopflowers.exception.InvalidQuantityException;
-import com.example.shopflowers.exception.ProductNotFoundException;
-import com.example.shopflowers.model.entity.CartItem;
-import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.CartSession;
@@ -18,7 +15,6 @@ import com.example.shopflowers.util.ProductTableUtils;
 import com.example.shopflowers.util.SceneNavigator;
 import com.example.shopflowers.util.Session;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -28,7 +24,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -38,13 +33,11 @@ import java.util.List;
 public class CustomerCatalogGraphicController {
 
     private static final String SELECT_PRODUCT_MESSAGE = "Seleziona prima un prodotto dal catalogo.";
-    private static final String SELECT_CART_ITEM_MESSAGE = "Seleziona prima un articolo dal carrello.";
     private static final String INVALID_QUANTITY_MESSAGE = "Quantità non valida. Inserisci un numero corretto.";
     private static final String INVALID_POSITIVE_QUANTITY_MESSAGE =
             "Quantità non valida. Inserisci un valore maggiore di zero.";
     private static final String GUEST_ONLY_BROWSE_MESSAGE =
             "L'ospite può solo consultare il catalogo. Effettua il login o registrati per continuare.";
-    private static final String NO_BOUQUET_MESSAGE = "Nessun bouquet personalizzato nel carrello.";
 
     @FXML
     private TableView<FlowerProduct> productTable;
@@ -74,25 +67,7 @@ public class CustomerCatalogGraphicController {
     private Label messageLabel;
 
     @FXML
-    private TableView<CartItem> cartTable;
-
-    @FXML
-    private TableColumn<CartItem, String> cartNameColumn;
-
-    @FXML
-    private TableColumn<CartItem, Integer> cartQuantityColumn;
-
-    @FXML
-    private TableColumn<CartItem, Double> cartTotalColumn;
-
-    @FXML
-    private Label totalLabel;
-
-    @FXML
     private Label cartTimerLabel;
-
-    @FXML
-    private Label bouquetInfoLabel;
 
     @FXML
     private TextField searchField;
@@ -107,17 +82,14 @@ public class CustomerCatalogGraphicController {
 
     private FilteredList<FlowerProduct> filteredProducts;
     private FlowerProduct selectedProduct;
-    private CartItem selectedCartItem;
 
     @FXML
     public void initialize() {
         configureProductTable();
-        configureCartTable();
         configureFilters();
         configureSelectionListeners();
         configureCartTimer();
         loadProducts();
-        refreshCart();
         configureGuestMode();
     }
 
@@ -184,72 +156,6 @@ public class CustomerCatalogGraphicController {
     }
 
     @FXML
-    private void handleRemoveFromCart() {
-        if (isGuestUser()) {
-            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
-            return;
-        }
-
-        if (selectedCartItem == null) {
-            messageLabel.setText(SELECT_CART_ITEM_MESSAGE);
-            return;
-        }
-
-        boolean confirmed = AlertUtils.showConfirmation(
-                "Conferma rimozione",
-                "L'articolo selezionato verrà eliminato dal carrello corrente."
-        );
-
-        if (confirmed) {
-            try {
-                getCartController().removeFromCart(selectedCartItem.getProduct().getId());
-                selectedCartItem = null;
-                completeCartOperation("Articolo rimosso dal carrello con successo.");
-            } catch (ProductNotFoundException e) {
-                messageLabel.setText(e.getMessage());
-            }
-        } else {
-            messageLabel.setText("Operazione annullata.");
-        }
-    }
-
-    @FXML
-    private void handleClearCart() {
-        if (isGuestUser()) {
-            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
-            return;
-        }
-
-        if (getCartController().isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
-            messageLabel.setText("Il carrello è già vuoto.");
-            resetCartTimerDisplay();
-            return;
-        }
-
-        boolean confirmed = AlertUtils.showConfirmation(
-                "Conferma svuotamento",
-                "Tutti gli articoli e l'eventuale bouquet verranno rimossi dal carrello."
-        );
-
-        if (confirmed) {
-            try {
-                if (!getCartController().isCartEmpty()) {
-                    getCartController().clearCart();
-                }
-                CustomBouquetSession.clear();
-                selectedCartItem = null;
-                stopAndResetCartTimer();
-                refreshCart();
-                messageLabel.setText("Carrello svuotato con successo.");
-            } catch (EmptyCartException e) {
-                messageLabel.setText(e.getMessage());
-            }
-        } else {
-            messageLabel.setText("Operazione annullata.");
-        }
-    }
-
-    @FXML
     private void handleMyOrders() {
         if (isGuestUser()) {
             messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
@@ -301,6 +207,20 @@ public class CustomerCatalogGraphicController {
     }
 
     @FXML
+    private void handleGoToCart() {
+        if (isGuestUser()) {
+            messageLabel.setText(GUEST_ONLY_BROWSE_MESSAGE);
+            return;
+        }
+
+        goToScene(
+                "/com/example/shopflowers/cart-view.fxml",
+                "Shop Flowers - Carrello",
+                "Si è verificato un errore durante l'apertura del carrello."
+        );
+    }
+
+    @FXML
     private void handleLogout() {
         try {
             CartTimerManager.stopTimer();
@@ -328,12 +248,6 @@ public class CustomerCatalogGraphicController {
         );
     }
 
-    private void configureCartTable() {
-        cartNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        cartQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        cartTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
-    }
-
     private void configureFilters() {
         ProductFilterUIUtils.configureColorFilter(colorFilterComboBox);
         ProductFilterUIUtils.bindFilterListeners(
@@ -347,9 +261,6 @@ public class CustomerCatalogGraphicController {
     private void configureSelectionListeners() {
         productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
                 selectedProduct = newSelection);
-
-        cartTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-                selectedCartItem = newSelection);
     }
 
     private void configureCartTimer() {
@@ -365,10 +276,8 @@ public class CustomerCatalogGraphicController {
             }
 
             CustomBouquetSession.clear();
-            selectedCartItem = null;
             CartSession.resetCart();
             stopAndResetCartTimer();
-            refreshCart();
             messageLabel.setText("Sessione carrello scaduta: il carrello è stato svuotato per inattività.");
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -387,10 +296,7 @@ public class CustomerCatalogGraphicController {
         }
 
         quantityField.setDisable(true);
-        cartTable.setDisable(true);
-        totalLabel.setText("Modalità ospite: acquisto non disponibile.");
         cartTimerLabel.setText("Modalità ospite");
-        bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
         messageLabel.setText("Accesso come ospite attivo: puoi solo consultare il catalogo.");
     }
 
@@ -418,42 +324,8 @@ public class CustomerCatalogGraphicController {
         );
     }
 
-    private void refreshCart() {
-        cartTable.setItems(FXCollections.observableArrayList(getCartController().getCartItems()));
-        cartTable.refresh();
-
-        double total = 0.0;
-
-        try {
-            total = getCartController().getCartTotal();
-        } catch (EmptyCartException ignored) {
-            total = 0.0;
-        }
-
-        if (CustomBouquetSession.hasBouquet()) {
-            CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
-            bouquetInfoLabel.setText(
-                    String.format(
-                            "Bouquet personalizzato: %s | Totale bouquet: € %.2f",
-                            bouquet.getDescription(),
-                            bouquet.getTotalPrice()
-                    )
-            );
-            total += bouquet.getTotalPrice();
-        } else {
-            bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
-        }
-
-        totalLabel.setText(String.format("Totale carrello: € %.2f", total));
-
-        if (getCartController().isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
-            stopAndResetCartTimer();
-        }
-    }
-
     private void completeCartOperation(String successMessage) {
         CartTimerManager.startOrResetTimer();
-        refreshCart();
         messageLabel.setText(successMessage);
     }
 
