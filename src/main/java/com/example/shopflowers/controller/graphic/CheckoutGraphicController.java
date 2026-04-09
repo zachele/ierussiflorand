@@ -1,17 +1,19 @@
 package com.example.shopflowers.controller.graphic;
 
-import com.example.shopflowers.boundary.CheckoutBoundary;
+import com.example.shopflowers.controller.application.CheckoutController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.exception.EmptyCartException;
 import com.example.shopflowers.exception.InsufficientStockException;
 import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.CustomBouquet;
+import com.example.shopflowers.model.entity.Order;
 import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.CartSession;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
+import com.example.shopflowers.util.Session;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -70,7 +72,7 @@ public class CheckoutGraphicController {
     @FXML
     private Label bouquetInfoLabel;
 
-    private final CheckoutBoundary checkoutBoundary = new CheckoutBoundary();
+    private final CheckoutController checkoutController = new CheckoutController();
 
     @FXML
     public void initialize() {
@@ -91,14 +93,12 @@ public class CheckoutGraphicController {
         }
 
         try {
-            checkoutBoundary.confirmOrder(
-                    checkoutBean.getDeliveryMode(),
-                    checkoutBean.getPaymentMethod(),
-                    checkoutBean.getDeliveryAddress(),
-                    checkoutBean.getPickupDate(),
-                    checkoutBean.getPickupTime(),
+            Order order = checkoutController.createOrder(
+                    checkoutBean,
                     getCartController() != null ? getCartController().getCartItems() : Collections.emptyList()
             );
+
+            checkoutController.confirmOrder(order);
 
             clearCheckoutAfterSuccess();
             AlertUtils.showInfo(
@@ -259,6 +259,7 @@ public class CheckoutGraphicController {
 
     private CheckoutBean buildCheckoutBean() {
         CheckoutBean checkoutBean = new CheckoutBean();
+        checkoutBean.setUsername(Session.getInstance().getLoggedUsername());
         checkoutBean.setDeliveryMode(deliveryModeComboBox.getValue());
         checkoutBean.setPaymentMethod(paymentField.getText());
         checkoutBean.setDeliveryAddress(addressField.getText());
