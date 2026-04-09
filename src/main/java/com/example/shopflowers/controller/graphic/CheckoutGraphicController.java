@@ -8,6 +8,7 @@ import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.util.AlertUtils;
+import com.example.shopflowers.util.CartSession;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
@@ -69,13 +70,7 @@ public class CheckoutGraphicController {
     @FXML
     private Label bouquetInfoLabel;
 
-    private static CustomerCartController sharedCartController;
-
     private final CheckoutBoundary checkoutBoundary = new CheckoutBoundary();
-
-    public static void setCartController(CustomerCartController cartController) {
-        sharedCartController = cartController;
-    }
 
     @FXML
     public void initialize() {
@@ -102,7 +97,7 @@ public class CheckoutGraphicController {
                     checkoutBean.getDeliveryAddress(),
                     checkoutBean.getPickupDate(),
                     checkoutBean.getPickupTime(),
-                    sharedCartController != null ? sharedCartController.getCartItems() : Collections.emptyList()
+                    getCartController() != null ? getCartController().getCartItems() : Collections.emptyList()
             );
 
             clearCheckoutAfterSuccess();
@@ -136,6 +131,9 @@ public class CheckoutGraphicController {
     @FXML
     private void handleLogout() {
         try {
+            CartTimerManager.stopTimer();
+            CartSession.resetCart();
+            CustomBouquetSession.clear();
             SceneNavigator.logoutToLogin((Stage) checkoutTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
@@ -164,9 +162,9 @@ public class CheckoutGraphicController {
         bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
 
         double total = 0.0;
-        if (sharedCartController != null) {
+        if (getCartController() != null) {
             try {
-                total = sharedCartController.getCartTotal();
+                total = getCartController().getCartTotal();
             } catch (EmptyCartException ignored) {
                 total = 0.0;
             }
@@ -174,6 +172,10 @@ public class CheckoutGraphicController {
 
         totalLabel.setText(String.format("Totale ordine: € %.2f", total));
         messageLabel.setText("Bouquet rimosso dal pagamento corrente con successo.");
+    }
+
+    private CustomerCartController getCartController() {
+        return CartSession.getCartController();
     }
 
     private void configureCheckoutTable() {
@@ -213,15 +215,15 @@ public class CheckoutGraphicController {
     }
 
     private void loadCheckoutData() {
-        if (sharedCartController == null) {
+        if (getCartController() == null) {
             return;
         }
 
-        checkoutTable.setItems(FXCollections.observableArrayList(sharedCartController.getCartItems()));
+        checkoutTable.setItems(FXCollections.observableArrayList(getCartController().getCartItems()));
 
         double total;
         try {
-            total = sharedCartController.getCartTotal();
+            total = getCartController().getCartTotal();
         } catch (EmptyCartException e) {
             total = 0.0;
         }
@@ -245,7 +247,7 @@ public class CheckoutGraphicController {
     }
 
     private boolean isCheckoutAvailable() {
-        if ((sharedCartController == null || sharedCartController.isCartEmpty()) && !CustomBouquetSession.hasBouquet()) {
+        if ((getCartController() == null || getCartController().isCartEmpty()) && !CustomBouquetSession.hasBouquet()) {
             AlertUtils.showWarning(
                     "Ordine non confermato",
                     "Il carrello e il bouquet personalizzato sono vuoti."
@@ -305,15 +307,16 @@ public class CheckoutGraphicController {
     }
 
     private void clearCheckoutAfterSuccess() {
-        if (sharedCartController != null) {
+        if (getCartController() != null) {
             try {
-                sharedCartController.clearCart();
+                getCartController().clearCart();
             } catch (EmptyCartException ignored) {
                 // nessuna azione necessaria
             }
         }
 
         CartTimerManager.stopTimer();
+        CartSession.resetCart();
 
         checkoutTable.getItems().clear();
         CustomBouquetSession.clear();

@@ -5,20 +5,26 @@ import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.model.entity.CustomBouquetItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
+import com.example.shopflowers.util.CartSession;
+import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-import com.example.shopflowers.util.CustomBouquetSession;
 
 public class CustomBouquetGraphicController {
 
@@ -88,7 +94,7 @@ public class CustomBouquetGraphicController {
     @FXML
     public void initialize() {
         try {
-            customerCartController = CustomerCatalogGraphicController.getSharedCartController();
+            customerCartController = CartSession.getCartController();
 
             sizeComboBox.setItems(FXCollections.observableArrayList("PICCOLO", "MEDIO", "GRANDE"));
             packagingComboBox.setItems(FXCollections.observableArrayList("STANDARD", "PREMIUM"));
@@ -311,6 +317,7 @@ public class CustomBouquetGraphicController {
                 budget
         );
     }
+
     private void loadFlowers() {
         try {
             List<FlowerProduct> flowers = customBouquetController.getAvailableFlowers();

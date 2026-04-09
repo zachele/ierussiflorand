@@ -2,8 +2,10 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.controller.application.RecommendationController;
+import com.example.shopflowers.exception.InvalidQuantityException;
 import com.example.shopflowers.model.bean.RecommendationRequestBean;
 import com.example.shopflowers.model.entity.RecommendationResult;
+import com.example.shopflowers.util.CartSession;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -18,7 +20,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import com.example.shopflowers.exception.InvalidQuantityException;
 
 public class RecommendationGraphicController {
 
@@ -59,7 +60,6 @@ public class RecommendationGraphicController {
     private Label messageLabel;
 
     private final RecommendationController recommendationController = new RecommendationController();
-    private final CustomerCartController customerCartController = CustomerCatalogGraphicController.getSharedCartController();
 
     private RecommendationResult selectedRecommendation;
 
@@ -117,7 +117,6 @@ public class RecommendationGraphicController {
             );
 
             List<RecommendationResult> results = recommendationController.getRecommendations(requestBean);
-
             recommendationTable.setItems(FXCollections.observableArrayList(results));
 
             if (results.isEmpty()) {
@@ -137,6 +136,7 @@ public class RecommendationGraphicController {
             messageLabel.setText("Errore nel caricamento delle proposte.");
         }
     }
+
     @FXML
     private void handleAddRecommendedToCart() {
         if (selectedRecommendation == null) {
@@ -145,7 +145,7 @@ public class RecommendationGraphicController {
         }
 
         try {
-            boolean added = customerCartController.addToCart(selectedRecommendation.getProduct(), 1);
+            boolean added = getCartController().addToCart(selectedRecommendation.getProduct(), 1);
 
             if (!added) {
                 messageLabel.setText("Operazione non riuscita. Quantità richiesta non disponibile.");
@@ -178,6 +178,10 @@ public class RecommendationGraphicController {
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
         }
+    }
+
+    private CustomerCartController getCartController() {
+        return CartSession.getCartController();
     }
 
     private RecommendationRequestBean buildRecommendationRequestBean(

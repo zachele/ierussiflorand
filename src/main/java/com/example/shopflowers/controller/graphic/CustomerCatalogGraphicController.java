@@ -9,6 +9,7 @@ import com.example.shopflowers.model.entity.CartItem;
 import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.model.entity.FlowerProduct;
 import com.example.shopflowers.util.AlertUtils;
+import com.example.shopflowers.util.CartSession;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.ProductFilterUIUtils;
@@ -103,15 +104,10 @@ public class CustomerCatalogGraphicController {
     private CheckBox availableOnlyCheckBox;
 
     private final BrowseCatalogController browseCatalogController = new BrowseCatalogController();
-    private static final CustomerCartController customerCartController = new CustomerCartController();
 
     private FilteredList<FlowerProduct> filteredProducts;
     private FlowerProduct selectedProduct;
     private CartItem selectedCartItem;
-
-    public static CustomerCartController getSharedCartController() {
-        return customerCartController;
-    }
 
     @FXML
     public void initialize() {
@@ -145,7 +141,7 @@ public class CustomerCatalogGraphicController {
                 return;
             }
 
-            if (!customerCartController.addToCart(selectedProduct, quantity)) {
+            if (!getCartController().addToCart(selectedProduct, quantity)) {
                 messageLabel.setText("Operazione non riuscita. Quantità richiesta non disponibile.");
                 return;
             }
@@ -167,7 +163,7 @@ public class CustomerCatalogGraphicController {
             return;
         }
 
-        if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
+        if (getCartController().isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
             AlertUtils.showWarning(
                     "Checkout non disponibile",
                     "Il carrello e il bouquet personalizzato sono vuoti."
@@ -177,7 +173,6 @@ public class CustomerCatalogGraphicController {
 
         try {
             CartTimerManager.startOrResetTimer();
-            CheckoutGraphicController.setCartController(customerCartController);
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
                     "/com/example/shopflowers/checkout-view.fxml",
@@ -207,7 +202,7 @@ public class CustomerCatalogGraphicController {
 
         if (confirmed) {
             try {
-                customerCartController.removeFromCart(selectedCartItem.getProduct().getId());
+                getCartController().removeFromCart(selectedCartItem.getProduct().getId());
                 selectedCartItem = null;
                 completeCartOperation("Articolo rimosso dal carrello con successo.");
             } catch (ProductNotFoundException e) {
@@ -225,7 +220,7 @@ public class CustomerCatalogGraphicController {
             return;
         }
 
-        if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
+        if (getCartController().isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
             messageLabel.setText("Il carrello è già vuoto.");
             resetCartTimerDisplay();
             return;
@@ -238,8 +233,8 @@ public class CustomerCatalogGraphicController {
 
         if (confirmed) {
             try {
-                if (!customerCartController.isCartEmpty()) {
-                    customerCartController.clearCart();
+                if (!getCartController().isCartEmpty()) {
+                    getCartController().clearCart();
                 }
                 CustomBouquetSession.clear();
                 selectedCartItem = null;
@@ -310,10 +305,16 @@ public class CustomerCatalogGraphicController {
         try {
             CartTimerManager.stopTimer();
             resetCartTimerDisplay();
+            CartSession.resetCart();
+            CustomBouquetSession.clear();
             SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
         }
+    }
+
+    private CustomerCartController getCartController() {
+        return CartSession.getCartController();
     }
 
     private void configureProductTable() {
@@ -358,13 +359,14 @@ public class CustomerCatalogGraphicController {
 
         CartTimerManager.setOnTimeoutAction(() -> Platform.runLater(() -> {
             try {
-                customerCartController.clearCart();
+                getCartController().clearCart();
             } catch (EmptyCartException ignored) {
                 // nessuna azione necessaria
             }
 
             CustomBouquetSession.clear();
             selectedCartItem = null;
+            CartSession.resetCart();
             stopAndResetCartTimer();
             refreshCart();
             messageLabel.setText("Sessione carrello scaduta: il carrello è stato svuotato per inattività.");
@@ -417,13 +419,13 @@ public class CustomerCatalogGraphicController {
     }
 
     private void refreshCart() {
-        cartTable.setItems(FXCollections.observableArrayList(customerCartController.getCartItems()));
+        cartTable.setItems(FXCollections.observableArrayList(getCartController().getCartItems()));
         cartTable.refresh();
 
         double total = 0.0;
 
         try {
-            total = customerCartController.getCartTotal();
+            total = getCartController().getCartTotal();
         } catch (EmptyCartException ignored) {
             total = 0.0;
         }
@@ -444,7 +446,7 @@ public class CustomerCatalogGraphicController {
 
         totalLabel.setText(String.format("Totale carrello: € %.2f", total));
 
-        if (customerCartController.isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
+        if (getCartController().isCartEmpty() && !CustomBouquetSession.hasBouquet()) {
             stopAndResetCartTimer();
         }
     }
