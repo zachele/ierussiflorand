@@ -1,19 +1,149 @@
+.root {
+    -fx-font-family: "Arial";
+    -fx-background-color: #f8f5f0;
+}
+
+/* ---------- BUTTONS ---------- */
+
 .beige-button {
     -fx-background-color: #bfa27a;
     -fx-text-fill: black;
-
     -fx-background-radius: 999;
     -fx-border-radius: 999;
     -fx-border-color: transparent;
-
-    -fx-font-family: "Arial";
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-
     -fx-cursor: hand;
-
     -fx-padding: 8 16 8 16;
 }
+
+.beige-button:hover {
+    -fx-background-color: #cbb08b;
+}
+
+.beige-button:pressed {
+    -fx-background-color: #a88c66;
+}
+
+.button {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 8 14 8 14;
+    -fx-font-size: 13px;
+}
+
+/* ---------- INPUTS ---------- */
+
+.text-field,
+.password-field,
+.combo-box,
+.date-picker {
+    -fx-background-color: white;
+    -fx-border-color: #d6cec2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8;
+    -fx-font-size: 13px;
+}
+
+.text-field:focused,
+.password-field:focused,
+.combo-box:focused,
+.date-picker:focused {
+    -fx-border-color: #bfa27a;
+    -fx-background-color: white;
+}
+
+/* ---------- LABELS ---------- */
+
+.label {
+    -fx-text-fill: #2f2a24;
+}
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.section-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.info-label {
+    -fx-font-size: 14px;
+}
+
+.message-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7a2e2e;
+}
+
+/* ---------- MENU BAR ---------- */
+
+.menu-bar {
+    -fx-background-color: #f3ece2;
+    -fx-border-color: #ddd2c2;
+    -fx-border-width: 0 0 1 0;
+}
+
+.menu-bar .label {
+    -fx-text-fill: #2f2a24;
+    -fx-font-weight: bold;
+}
+
+.menu-item .label {
+    -fx-font-weight: normal;
+}
+
+/* ---------- TABLE VIEW ---------- */
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #ddd2c2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 4;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #efe5d7;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #efe5d7;
+    -fx-border-color: transparent transparent #ddd2c2 transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #2f2a24;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f0ebe4 transparent;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e8dccb;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: black;
+}
+
+/* ---------- CHECKBOX ---------- */
+
+.check-box {
+    -fx-font-size: 13px;
+}
+
+/* ---------- HAMBURGER BUTTON ---------- */
 
 .hamburger-menu-button {
     -fx-background-color: #020817;

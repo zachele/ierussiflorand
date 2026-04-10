@@ -8,57 +8,45 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.shopflowers.controller.graphic.CustomerOrdersGraphicController"
-      spacing="15"
-      prefWidth="1500"
-      prefHeight="800"
-      style="-fx-padding: 20;">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerOrdersGraphicController">
 
-    <HBox spacing="15">
-        <Label text="I miei ordini"
-               style="-fx-font-size: 22px; -fx-font-weight: bold;" />
-        <Button text="Torna al catalogo" onAction="#handleBackToCatalog" />
-        <Button text="Logout" onAction="#handleLogout" />
+    <HBox alignment="CENTER" spacing="15">
+        <Button onAction="#handleBackToCatalog" styleClass="beige-button" text="Torna al catalogo" />
+        <Label alignment="CENTER" prefHeight="26.0" prefWidth="167.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="I MIEI ORDINI" />
+        <Button onAction="#handleLogout" prefHeight="32.0" prefWidth="98.0" styleClass="beige-button" text="Logout" />
     </HBox>
 
-    <Label text="Ordini effettuati"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-
     <HBox spacing="12">
-        <ComboBox fx:id="statusFilterComboBox" prefWidth="180" />
+   
+       <Label alignment="CENTER" prefHeight="42.0" prefWidth="226.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Ordini effettuati:" />
+        <ComboBox fx:id="statusFilterComboBox" prefHeight="42.0" prefWidth="177.0" styleClass="combo-box" />
     </HBox>
 
     <TableView fx:id="orderTable" prefHeight="260">
         <columns>
-            <TableColumn fx:id="orderIdColumn" text="ID Ordine" prefWidth="90" />
-            <TableColumn fx:id="deliveryColumn" text="Modalità" prefWidth="120" />
-            <TableColumn fx:id="addressColumn" text="Indirizzo" prefWidth="220" />
-            <TableColumn fx:id="pickupDateColumn" text="Data ritiro" prefWidth="120" />
-            <TableColumn fx:id="pickupTimeColumn" text="Ora ritiro" prefWidth="110" />
-            <TableColumn fx:id="paymentColumn" text="Pagamento" prefWidth="140" />
-            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="110" />
-            <TableColumn fx:id="dateColumn" text="Data ordine" prefWidth="220" />
-            <TableColumn fx:id="statusColumn" text="Stato" prefWidth="130" />
+            <TableColumn fx:id="orderIdColumn" prefWidth="90" text="ID Ordine" />
+            <TableColumn fx:id="deliveryColumn" prefWidth="120" text="Modalità" />
+            <TableColumn fx:id="addressColumn" prefWidth="220" text="Indirizzo" />
+            <TableColumn fx:id="pickupDateColumn" prefWidth="158.4000244140625" text="Data ritiro" />
+            <TableColumn fx:id="pickupTimeColumn" prefWidth="158.39996337890625" text="Ora ritiro" />
+            <TableColumn fx:id="paymentColumn" prefWidth="156.800048828125" text="Pagamento" />
+            <TableColumn fx:id="totalColumn" prefWidth="179.199951171875" text="Totale" />
+            <TableColumn fx:id="dateColumn" prefWidth="191.199951171875" text="Data ordine" />
+            <TableColumn fx:id="statusColumn" prefWidth="182.4000244140625" text="Stato" />
         </columns>
     </TableView>
 
-    <Label text="Dettagli ordine selezionato"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <Label alignment="CENTER" prefHeight="22.0" prefWidth="1665.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Dettagli ordine selezionato" />
 
     <TableView fx:id="orderItemsTable" prefHeight="220">
         <columns>
-            <TableColumn fx:id="productColumn" text="Prodotto" prefWidth="280" />
-            <TableColumn fx:id="quantityColumn" text="Quantità" prefWidth="120" />
-            <TableColumn fx:id="unitPriceColumn" text="Prezzo unitario" prefWidth="150" />
+            <TableColumn fx:id="productColumn" prefWidth="545.600025177002" text="Prodotto" />
+            <TableColumn fx:id="quantityColumn" prefWidth="466.4000244140625" text="Quantità" />
+            <TableColumn fx:id="unitPriceColumn" prefWidth="445.60003662109375" text="Prezzo unitario" />
         </columns>
     </TableView>
 
-    <Label fx:id="bouquetDetailsLabel"
-           text="Questo ordine non contiene un bouquet personalizzato."
-           wrapText="true"
-           style="-fx-font-size: 14px;" />
+    <Label fx:id="bouquetDetailsLabel" alignment="CENTER" prefHeight="16.0" prefWidth="1573.0" style="-fx-font-size: 14px;" styleClass="text-field" text="Questo ordine non contiene un bouquet personalizzato." wrapText="true" />
 
     <Label fx:id="messageLabel" text="" />
 

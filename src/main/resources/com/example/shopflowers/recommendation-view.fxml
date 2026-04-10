@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.RecommendationGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.RecommendationGraphicController">
 
     <MenuBar>
         <Menu text="Navigazione">
@@ -25,32 +25,24 @@
         </Menu>
     </MenuBar>
 
-    <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Assistente Guidato alla Scelta" textFill="RED" />
+    <Label alignment="CENTER" prefHeight="27.0" prefWidth="1467.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Assistente Guidato alla Scelta" />
 
-    <GridPane hgap="12" vgap="12">
+    <GridPane alignment="TOP_CENTER" hgap="12" vgap="12">
         <padding>
             <Insets bottom="10" left="10" right="10" top="10" />
         </padding>
+        <ComboBox fx:id="occasionComboBox" prefHeight="42.0" prefWidth="466.0" promptText="Occasione:" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <ComboBox fx:id="styleComboBox" prefHeight="42.0" prefWidth="462.0" promptText="Stile:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <ComboBox fx:id="colorComboBox" prefHeight="42.0" prefWidth="469.0" promptText="Colore preferito:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextField fx:id="budgetField" prefHeight="34.0" prefWidth="349.0" promptText="Budget massimo (€):" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-        <Label text="Occasione:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <ComboBox fx:id="occasionComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-        <Label text="Stile:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <ComboBox fx:id="styleComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-        <Label text="Colore preferito:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <ComboBox fx:id="colorComboBox" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-
-        <Label text="Budget massimo (€):" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <TextField fx:id="budgetField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
-            <Button onAction="#handleFindRecommendations" text="Trova proposte" />
-            <Button onAction="#handleAddRecommendedToCart" text="Aggiungi selezionato al carrello" />
+        <HBox alignment="TOP_CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Button onAction="#handleFindRecommendations" styleClass="beige-button" text="Trova proposte" />
+            <Button onAction="#handleAddRecommendedToCart" styleClass="beige-button" text="Aggiungi selezionato al carrello" />
         </HBox>
       <columnConstraints>
-         <ColumnConstraints />
-         <ColumnConstraints />
+         <ColumnConstraints maxWidth="105.60002441406255" minWidth="0.0" prefWidth="0.0" />
+         <ColumnConstraints maxWidth="460.80000000000007" minWidth="355.1999755859375" prefWidth="460.80000000000007" />
       </columnConstraints>
       <rowConstraints>
          <RowConstraints />
@@ -61,16 +53,16 @@
       </rowConstraints>
     </GridPane>
 
-    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Proposte consigliate" />
+    <Label prefHeight="46.0" prefWidth="230.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Proposte consigliate" />
 
-    <TableView fx:id="recommendationTable" prefHeight="320">
+    <TableView fx:id="recommendationTable" prefHeight="382.0" prefWidth="1460.0">
         <columns>
-            <TableColumn fx:id="nameColumn" prefWidth="180" text="Prodotto" />
-            <TableColumn fx:id="priceColumn" prefWidth="100" text="Prezzo" />
-            <TableColumn fx:id="colorColumn" prefWidth="120" text="Colore" />
-            <TableColumn fx:id="varietyColumn" prefWidth="180" text="Varietà" />
-            <TableColumn fx:id="budgetColumn" prefWidth="120" text="Budget" />
-            <TableColumn fx:id="reasonColumn" prefWidth="480" text="Motivazione" />
+            <TableColumn fx:id="nameColumn" prefWidth="242.3999786376953" text="Prodotto" />
+            <TableColumn fx:id="priceColumn" prefWidth="119.20004272460938" text="Prezzo" />
+            <TableColumn fx:id="colorColumn" prefWidth="154.4000244140625" text="Colore" />
+            <TableColumn fx:id="varietyColumn" prefWidth="189.5999755859375" text="Varietà" />
+            <TableColumn fx:id="budgetColumn" prefWidth="272.0" text="Budget" />
+            <TableColumn fx:id="reasonColumn" prefWidth="475.20013427734375" text="Motivazione" />
         </columns>
     </TableView>
 

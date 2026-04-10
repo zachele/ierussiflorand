@@ -2,79 +2,55 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.shopflowers.controller.graphic.CheckoutGraphicController"
-      spacing="15"
-      prefWidth="1500"
-      prefHeight="800"
-      style="-fx-padding: 20;">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CheckoutGraphicController">
 
     <MenuBar>
         <Menu text="Impostazioni">
-            <MenuItem text="Torna al catalogo" onAction="#handleBackToCatalog"/>
-            <MenuItem text="Logout" onAction="#handleLogout"/>
+            <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
+            <MenuItem onAction="#handleLogout" text="Logout" />
         </Menu>
     </MenuBar>
 
-    <Label text="Checkout Cliente"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <Label alignment="CENTER" prefHeight="27.0" prefWidth="1491.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="CHECKOUT CLIENTE" />
 
     <TableView fx:id="checkoutTable" prefHeight="200">
         <columns>
-            <TableColumn fx:id="productColumn" text="Prodotto" prefWidth="300"/>
-            <TableColumn fx:id="quantityColumn" text="Quantità" prefWidth="150"/>
-            <TableColumn fx:id="totalColumn" text="Totale" prefWidth="200"/>
+            <TableColumn fx:id="productColumn" prefWidth="558.4000053405762" text="Prodotto" />
+            <TableColumn fx:id="quantityColumn" prefWidth="501.59991455078125" text="Quantità" />
+            <TableColumn fx:id="totalColumn" prefWidth="393.60003662109375" text="Totale" />
         </columns>
     </TableView>
 
-    <Label fx:id="bouquetInfoLabel"
-           text="Nessun bouquet personalizzato nel pagamento corrente."
-           wrapText="true"
-           style="-fx-font-size: 14px;" />
+    <Label fx:id="bouquetInfoLabel" alignment="TOP_LEFT" prefHeight="26.0" prefWidth="524.0" style="-fx-font-size: 14px;" styleClass="text" text="Nessun bouquet personalizzato nel pagamento corrente." wrapText="true" />
 
-    <Label fx:id="totalLabel"
-           text="Totale ordine: € 0.0"
-           style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+    <Label fx:id="totalLabel" alignment="CENTER" prefHeight="20.0" prefWidth="1474.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" styleClass="text-field" text="Totale ordine: € 0.0" />
+    <ComboBox fx:id="deliveryModeComboBox" prefHeight="42.0" prefWidth="238.0" promptText="MODALITA' DI CONSEGNA" />
+    <TextField fx:id="addressField" promptText="Indirizzo per la consegna" />
 
-    <Label text="Modalità di consegna:" />
-    <ComboBox fx:id="deliveryModeComboBox" prefWidth="250" />
-
-    <Label text="Indirizzo di consegna:" />
-    <TextField fx:id="addressField" promptText="Inserisci indirizzo solo per consegna" />
-
-    <HBox spacing="20">
-        <VBox spacing="8">
-            <Label text="Giorno ritiro:" />
-            <DatePicker fx:id="pickupDatePicker" prefWidth="180" />
-        </VBox>
-
-        <VBox spacing="8">
-            <Label text="Ora ritiro:" />
-            <ComboBox fx:id="pickupTimeComboBox" prefWidth="180" />
-        </VBox>
+    <HBox alignment="CENTER" spacing="20">
+         <DatePicker fx:id="pickupDatePicker" prefWidth="180" promptText=" DATA RITIRO" styleClass="date-picker" />
+         <ComboBox fx:id="pickupTimeComboBox" prefHeight="42.0" prefWidth="274.0" promptText="ORA RITIRO" />
     </HBox>
 
-    <Label text="Metodo di pagamento:" />
-    <TextField fx:id="paymentField" promptText="Es. Carta, PayPal, Contanti" />
+    <Label alignment="TOP_LEFT" prefHeight="45.0" prefWidth="312.0" styleClass="title-label" text="Metodo di pagamento:" />
+    <TextField fx:id="paymentField" prefHeight="64.0" prefWidth="1460.0" promptText="Es. Carta, PayPal, Contanti" />
 
-    <HBox spacing="12">
-        <Button text="Conferma ordine" onAction="#handleConfirmOrder"/>
-        <Button text="Rimuovi bouquet" onAction="#handleRemoveBouquet"/>
-        <Button text="Torna al catalogo" onAction="#handleBackToCatalog"/>
-        <Button text="Logout" onAction="#handleLogout"/>
+    <HBox alignment="CENTER" spacing="12">
+        <Button onAction="#handleConfirmOrder" styleClass="beige-button" text="Conferma ordine" />
+        <Button onAction="#handleRemoveBouquet" styleClass="beige-button" text="Rimuovi bouquet" />
+        <Button onAction="#handleBackToCatalog" styleClass="beige-button" text="Torna al catalogo" />
+        <Button onAction="#handleLogout" styleClass="beige-button" text="Logout" />
     </HBox>
 
     <Label fx:id="messageLabel" text="" />

@@ -2,51 +2,32 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.shopflowers.controller.graphic.CompanyInfoGraphicController"
-      spacing="15"
-      prefWidth="1500"
-      prefHeight="800"
-      style="-fx-padding: 20;">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CompanyInfoGraphicController">
 
-    <Label text="Ierussi Flowers - Informazioni Azienda"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <Label alignment="CENTER" prefHeight="27.0" prefWidth="1538.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Ierussi Flowers - Informazioni Azienda" />
 
-    <Label text="Chi siamo"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-    <Label wrapText="true"
-           text="Shop Flowers è un'attività dedicata alla vendita di fiori, nata con l'obiettivo di offrire qualità, cura estetica e attenzione al cliente. L'azienda propone prodotti per occasioni speciali, eventi e acquisti quotidiani." />
+    <Label alignment="TOP_LEFT" prefHeight="22.0" prefWidth="1558.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Chi siamo?" />
+    <Label alignment="TOP_LEFT" prefHeight="52.0" prefWidth="1501.0" text="La Ierussi-Flowers è un'attività dedicata alla vendita di fiori, nata con l'obiettivo di offrire qualità, cura estetica e attenzione al cliente. L'azienda propone prodotti per occasioni speciali, eventi e acquisti quotidiani." wrapText="true" />
 
-    <Label text="Giorni lavorativi"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-    <Label text="Lunedì - Sabato" />
+    <Label alignment="TOP_LEFT" prefHeight="22.0" prefWidth="1486.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Giorni lavorativi" />
+    <Label alignment="TOP_LEFT" prefHeight="26.0" prefWidth="1207.0" text="Lunedì - Sabato" />
 
-    <Label text="Orari di apertura"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Orari di apertura" />
     <Label text="08:30 - 13:00 / 15:30 - 19:30" />
 
-    <Label text="Indirizzo"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Indirizzo" />
     <Label text="Via dei Fiori 25, Roma" />
 
-    <Label text="Posizione"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-    <Label wrapText="true"
-           text="L'azienda si trova in zona centrale, facilmente raggiungibile sia in auto sia con i mezzi pubblici.
-            È disponibile il ritiro in sede per gli ordini effettuati tramite applicazione." />
+    <Label prefHeight="22.0" prefWidth="234.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Posizione" />
+    <Label alignment="TOP_LEFT" prefHeight="86.0" prefWidth="1503.0" text="L'azienda si trova in zona centrale, facilmente raggiungibile sia in auto sia con i mezzi pubblici. È disponibile il ritiro in sede per gli ordini effettuati tramite applicazione." wrapText="true" />
 
-    <Label text="Contatti"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <Label prefHeight="22.0" prefWidth="222.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Contatti:" />
     <Label text="Telefono: 06 1234567" />
     <Label text="Email: info@shopflowers.it" />
 
-    <Button text="Torna al catalogo" onAction="#handleBackToCatalog"/>
+    <Button onAction="#handleBackToCatalog" styleClass="beige-button" text="Torna al catalogo" />
 
     <Label fx:id="messageLabel" text="" />
 </VBox>

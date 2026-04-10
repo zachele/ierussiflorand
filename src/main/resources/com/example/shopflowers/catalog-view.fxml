@@ -13,59 +13,62 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.shopflowers.controller.graphic.CustomerCatalogGraphicController"
-      spacing="15"
-      prefWidth="1500"
-      prefHeight="800"
-      style="-fx-padding: 20;">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerCatalogGraphicController">
 
+    <!-- MENU -->
     <MenuBar>
         <Menu text="Navigazione">
-            <MenuItem text="Assistente bouquet" onAction="#handleRecommendationAssistant"/>
-            <MenuItem text="Bouquet personalizzato" onAction="#handleCustomBouquet"/>
-            <MenuItem text="I miei ordini" onAction="#handleMyOrders"/>
-            <MenuItem text="Info azienda" onAction="#handleCompanyInfo"/>
-            <MenuItem text="Logout" onAction="#handleLogout"/>
+            <MenuItem onAction="#handleRecommendationAssistant" text="Assistente bouquet" />
+            <MenuItem onAction="#handleCustomBouquet" text="Bouquet personalizzato" />
+            <MenuItem onAction="#handleMyOrders" text="I miei ordini" />
+            <MenuItem onAction="#handleCompanyInfo" text="Info azienda" />
+            <MenuItem onAction="#handleLogout" text="Logout" />
         </Menu>
 
         <Menu text="🛒 Carrello">
-            <MenuItem text="Apri carrello" onAction="#handleGoToCart"/>
+            <MenuItem onAction="#handleGoToCart" text="Apri carrello" />
         </Menu>
     </MenuBar>
 
-    <Label text="Catalogo Cliente"
-           style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+    <!-- TITOLO -->
+    <Label styleClass="title-label" text="Catalogo Cliente" />
 
-    <HBox spacing="12">
-        <TextField fx:id="searchField" promptText="Cerca per nome, colore o varietà" prefWidth="260"/>
-        <ComboBox fx:id="colorFilterComboBox" prefWidth="160"/>
-        <CheckBox fx:id="availableOnlyCheckBox" text="Solo disponibili"/>
+    <!-- FILTRI -->
+    <HBox alignment="CENTER" spacing="12">
+        <TextField fx:id="searchField" prefWidth="260" promptText="Cerca per nome, colore o varietà" />
+
+        <ComboBox fx:id="colorFilterComboBox" prefWidth="160" />
+
+        <CheckBox fx:id="availableOnlyCheckBox" text="Solo disponibili" />
     </HBox>
 
-    <TableView fx:id="productTable" prefHeight="420">
+    <!-- TABELLA -->
+    <TableView fx:id="productTable" prefHeight="500">
         <columns>
-            <TableColumn fx:id="idColumn" text="ID" prefWidth="60" />
-            <TableColumn fx:id="nameColumn" text="Nome" prefWidth="160" />
-            <TableColumn fx:id="priceColumn" text="Prezzo" prefWidth="100" />
-            <TableColumn fx:id="colorColumn" text="Colore" prefWidth="120" />
-            <TableColumn fx:id="varietyColumn" text="Varietà" prefWidth="180" />
-            <TableColumn fx:id="stockColumn" text="Stock" prefWidth="100" />
+            <TableColumn fx:id="idColumn" prefWidth="60" text="ID" />
+            <TableColumn fx:id="nameColumn" prefWidth="180" text="Nome" />
+            <TableColumn fx:id="priceColumn" prefWidth="120" text="Prezzo" />
+            <TableColumn fx:id="colorColumn" prefWidth="140" text="Colore" />
+            <TableColumn fx:id="varietyColumn" prefWidth="200" text="Varietà" />
+            <TableColumn fx:id="stockColumn" prefWidth="100" text="Stock" />
         </columns>
     </TableView>
 
-    <HBox spacing="10">
-        <Label text="Quantità:" />
+    <!-- AZIONI -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+
+        <Label fx:id="cartTimerLabel" prefHeight="16.0" prefWidth="500.0" styleClass="info-label" text="Timer carrello: 10:00" />
+
+        <Label styleClass="section-label" text="Quantità:" />
+
         <TextField fx:id="quantityField" prefWidth="100" />
-        <Button text="Aggiungi al carrello" onAction="#handleAddToCart" />
-        <Button text="Vai al checkout" onAction="#handleGoToCheckout"/>
+
+        <Button onAction="#handleAddToCart" styleClass="beige-button" text="Aggiungi al carrello" />
+
+        <Button onAction="#handleGoToCheckout" styleClass="beige-button" text="Vai al checkout" />
     </HBox>
 
-    <Label fx:id="cartTimerLabel"
-           text="Timer carrello: 10:00"
-           style="-fx-font-size: 14px; -fx-font-weight: bold;" />
-
-    <Label fx:id="messageLabel" text="" />
+    <!-- MESSAGGI -->
+    <Label fx:id="messageLabel" styleClass="message-label" />
 
 </VBox>
