@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
@@ -8,82 +7,66 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" cache="true" prefHeight="800" prefWidth="1500" spacing="20" style="-fx-padding: 30;" styleClass="root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController">
+<StackPane prefHeight="800" prefWidth="1500" styleClass="login-root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController">
 
-    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="778.0" spacing="20">
-        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="109.0" prefWidth="262.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" styleClass="title-label" text="IERUSSI FLOWERS" textAlignment="CENTER">
-         <font>
-            <Font size="37.0" />
-         </font>
-      </Label>
-
-        <MenuButton fx:id="modeMenuButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" prefHeight="40.0" prefWidth="40.0" styleClass="hamburger-menu-button">
-            <graphic>
-                <VBox alignment="CENTER" spacing="4">
-                    <children>
-                        <Rectangle arcHeight="2.0" arcWidth="2.0" height="2.5" styleClass="hamburger-line" width="16.0" />
-                        <Rectangle arcHeight="2.0" arcWidth="2.0" height="2.5" styleClass="hamburger-line" width="12.0" />
-                        <Rectangle arcHeight="2.0" arcWidth="2.0" height="2.5" styleClass="hamburger-line" width="16.0" />
-                    </children>
-                </VBox>
-            </graphic>
-            <items>
-                <MenuItem onAction="#handleSetDemoMode" text="DEMO" />
-                <MenuItem onAction="#handleSetFileMode" text="FILE" />
-                <MenuItem onAction="#handleSetFullMode" text="FULL" />
-            </items>
-        </MenuButton>
-    </HBox>
-
-    <HBox prefHeight="182.0" prefWidth="1439.0">
-        <GridPane alignment="CENTER" hgap="10" prefHeight="94.0" prefWidth="1440.0" vgap="10">
-            <padding>
-                <Insets bottom="10" left="10" right="10" top="10" />
-            </padding>
-            <TextField fx:id="usernameField" prefHeight="34.0" prefWidth="334.0" promptText="username utente" styleClass="message-label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <StackPane HBox.hgrow="ALWAYS">
-                    <PasswordField fx:id="passwordField" promptText="Password" styleClass="message-label" />
-                    <TextField fx:id="visiblePasswordField" managed="false" promptText="Password" visible="false" />
-                </StackPane>
-                <Button focusTraversable="false" onAction="#handleTogglePassword" text="👁" />
-            </HBox>
-
-            <HBox alignment="TOP_CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <Button onAction="#handleLogin" styleClass="beige-button" text="Login" />
-                <Button onAction="#handleGoToRegister" styleClass="beige-button" text="Registrati" />
-                <Button onAction="#handleGuestAccess" styleClass="beige-button" text="Accedi come ospite" />
-            </HBox>
-
-            <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <Hyperlink alignment="CENTER" onAction="#handleGoToChangePassword" prefHeight="22.0" prefWidth="431.0" text="Cambia password" />
+    <VBox alignment="CENTER" spacing="20">
+   
+        <VBox alignment="CENTER" maxWidth="430" spacing="18" styleClass="login-card">
+         <ImageView fitHeight="204.0" fitWidth="231.0">
+               <Image url="@images/products/logo.png" />
+         </ImageView>
+   
+            <VBox alignment="CENTER" spacing="8">
+   
+                  <HBox alignment="CENTER_RIGHT" prefWidth="390">
+                   <Region prefHeight="36.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                   <Label alignment="CENTER" prefHeight="32.0" prefWidth="334.0" styleClass="login-title" text="IERUSSI FLOWERS" />
+                   <MenuButton fx:id="modeMenuButton" alignment="CENTER" contentDisplay="TEXT_ONLY" prefHeight="36" prefWidth="44" styleClass="login-mode-button" text="+*">
+                       <items>
+                           <MenuItem onAction="#handleSetDemoMode" text="DEMO" />
+                           <MenuItem onAction="#handleSetFileMode" text="FILE" />
+                           <MenuItem onAction="#handleSetFullMode" text="FULL" />
+                       </items>
+                   </MenuButton>
+               </HBox>
+                <Label styleClass="login-subtitle" text="Accedi al sistema" />
             </VBox>
-
-            <columnConstraints>
-                <ColumnConstraints maxWidth="64.00001220703126" minWidth="0.0" prefWidth="0.0" />
-                <ColumnConstraints maxWidth="426.40000000000003" minWidth="362.3999877929688" prefWidth="426.40000000000003" />
-                <ColumnConstraints />
-                <ColumnConstraints />
-            </columnConstraints>
-
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
-        </GridPane>
-    </HBox>
-
-    <Label fx:id="messageLabel" text="" />
-</VBox>
+   
+            <VBox maxWidth="320" spacing="14">
+                <TextField fx:id="usernameField" prefHeight="44" promptText="Username" />
+   
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <StackPane HBox.hgrow="ALWAYS">
+                        <PasswordField fx:id="passwordField" prefHeight="44" promptText="Password" />
+                        <TextField fx:id="visiblePasswordField" managed="false" prefHeight="44" promptText="Password" visible="false" />
+                    </StackPane>
+   
+                    <Button focusTraversable="false" onAction="#handleTogglePassword" prefHeight="44" prefWidth="44" styleClass="login-secondary-button" text="👁" />
+                </HBox>
+            </VBox>
+   
+            <HBox alignment="CENTER" spacing="10">
+                <Button onAction="#handleLogin" prefHeight="42" prefWidth="120" styleClass="login-primary-button" text="Login" />
+   
+                <Button onAction="#handleGoToRegister" prefHeight="42" prefWidth="120" styleClass="login-primary-button" text="Registrati" />
+            </HBox>
+   
+            <Button onAction="#handleGuestAccess" prefHeight="40" prefWidth="250" styleClass="login-secondary-button" text="Accedi come ospite" />
+   
+            <Hyperlink onAction="#handleGoToChangePassword" styleClass="login-link" text="Cambia password" />
+   
+        </VBox>
+        <Label fx:id="messageLabel"
+               text=""
+               wrapText="true"
+               alignment="CENTER"
+               styleClass="message-label"/>
+    </VBox>
+</StackPane>
