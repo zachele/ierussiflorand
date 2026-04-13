@@ -16,17 +16,24 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 public class CustomBouquetGraphicController {
+
+    private static final String PRODUCT_IMAGES_PATH = "/com/example/shopflowers/images/products/";
+    private static final String DEFAULT_IMAGE = "default_product.png";
 
     @FXML
     private ComboBox<String> sizeComboBox;
@@ -42,6 +49,9 @@ public class CustomBouquetGraphicController {
 
     @FXML
     private TableView<FlowerProduct> flowerTable;
+
+    @FXML
+    private TableColumn<FlowerProduct, String> flowerImageColumn;
 
     @FXML
     private TableColumn<FlowerProduct, String> flowerNameColumn;
@@ -102,16 +112,8 @@ public class CustomBouquetGraphicController {
             sizeComboBox.setItems(FXCollections.observableArrayList("PICCOLO", "MEDIO", "GRANDE"));
             packagingComboBox.setItems(FXCollections.observableArrayList("STANDARD", "PREMIUM"));
 
-            flowerNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-            flowerPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-            flowerColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
-            flowerVarietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
-            flowerStockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
-
-            bouquetNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
-            bouquetQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-            bouquetUnitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-            bouquetSubtotalColumn.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+            configureFlowerTable();
+            configureBouquetTable();
 
             flowerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
                     selectedFlower = newSelection);
@@ -300,6 +302,57 @@ public class CustomBouquetGraphicController {
         }
     }
 
+    private void configureFlowerTable() {
+        flowerImageColumn.setCellValueFactory(new PropertyValueFactory<>("imageName"));
+        flowerImageColumn.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            {
+                imageView.setFitWidth(80);
+                imageView.setFitHeight(80);
+                imageView.setPreserveRatio(true);
+                imageView.getStyleClass().add("product-image");
+
+                setOnMouseEntered(event -> {
+                    imageView.setScaleX(1.35);
+                    imageView.setScaleY(1.35);
+                    imageView.toFront();
+                });
+
+                setOnMouseExited(event -> {
+                    imageView.setScaleX(1.0);
+                    imageView.setScaleY(1.0);
+                });
+            }
+
+            @Override
+            protected void updateItem(String imageName, boolean empty) {
+                super.updateItem(imageName, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                imageView.setImage(loadProductImage(imageName));
+                setGraphic(imageView);
+            }
+        });
+
+        flowerNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        flowerPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        flowerColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
+        flowerVarietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
+        flowerStockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+    }
+
+    private void configureBouquetTable() {
+        bouquetNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        bouquetQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        bouquetUnitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        bouquetSubtotalColumn.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+    }
+
     private void applyBouquetConfiguration() {
         Double budget = null;
 
@@ -356,5 +409,23 @@ public class CustomBouquetGraphicController {
                 totalFlowers,
                 customBouquetController.getCurrentTotal()
         ));
+    }
+
+    private Image loadProductImage(String imageName) {
+        String resolvedImageName = (imageName == null || imageName.isBlank())
+                ? DEFAULT_IMAGE
+                : imageName;
+
+        InputStream inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + resolvedImageName);
+
+        if (inputStream == null) {
+            inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + DEFAULT_IMAGE);
+        }
+
+        if (inputStream == null) {
+            return null;
+        }
+
+        return new Image(inputStream);
     }
 }
