@@ -56,7 +56,9 @@
       <w>Operatori</w>
       <w>Orari</w>
       <w>Ordini</w>
+      <w>Originale</w>
       <w>Pagamento</w>
+      <w>Peonia</w>
       <w>Posizione</w>
       <w>Prezzi</w>
       <w>Procedi</w>
@@ -73,6 +75,7 @@
       <w>Ruolo</w>
       <w>Scelta</w>
       <w>Sessione</w>
+      <w>Speciale</w>
       <w>Stati</w>
       <w>Statistiche</w>
       <w>Stato</w>
@@ -144,6 +147,7 @@
       <w>consegnato</w>
       <w>consigliato</w>
       <w>consultare</w>
+      <w>contanti</w>
       <w>contiene</w>
       <w>continuare</w>
       <w>contratto</w>
@@ -185,6 +189,7 @@
       <w>entro</w>
       <w>errore</w>
       <w>esistente</w>
+      <w>esistere</w>
       <w>essere</w>
       <w>estetica</w>
       <w>eventi</w>
@@ -200,6 +205,7 @@
       <w>inattività</w>
       <w>indietro</w>
       <w>indirizzo</w>
+      <w>inesistente</w>
       <w>inizializzare</w>
       <w>inizializzazione</w>
       <w>inseriti</w>
@@ -298,6 +304,7 @@
       <w>rosso</w>
       <w>salvataggio</w>
       <w>salvato</w>
+      <w>sbagliata</w>
       <w>scaduta</w>
       <w>scegli</w>
       <w>schermata</w>

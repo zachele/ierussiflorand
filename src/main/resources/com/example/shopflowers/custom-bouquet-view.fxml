@@ -111,13 +111,11 @@
         </columns>
     </TableView>
    <HBox alignment="CENTER" prefHeight="0.0" prefWidth="1460.0">
-      <children>
           <Label fx:id="totalLabel" alignment="CENTER" prefHeight="39.0" prefWidth="240.0" text="Totale bouquet: € 0.00">
             <styleClass>
                <String fx:value="section-label" />
                <String fx:value="text-field" />
             </styleClass>
          </Label>
-      </children>
    </HBox>
 </VBox>

@@ -24,7 +24,8 @@ class CustomerCartControllerTest {
                 10.0,
                 "Rosso",
                 "Romantico",
-                10
+                10,
+                "rose_red.png"
         );
     }
 

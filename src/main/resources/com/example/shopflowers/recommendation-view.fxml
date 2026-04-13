@@ -65,6 +65,5 @@
             <TableColumn fx:id="reasonColumn" prefWidth="475.20013427734375" text="Motivazione" />
         </columns>
     </TableView>
-
     <Label fx:id="messageLabel" text="" />
 </VBox>
