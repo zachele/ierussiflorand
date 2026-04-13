@@ -127,6 +127,7 @@
 .table-row-cell {
     -fx-background-color: white;
     -fx-border-color: transparent transparent #f0ebe4 transparent;
+    -fx-cell-size: 92px;
 }
 
 .table-row-cell:selected {
@@ -135,6 +136,12 @@
 
 .table-row-cell:selected .text {
     -fx-fill: black;
+}
+
+/* ---------- PRODUCT IMAGES ---------- */
+
+.product-image {
+    -fx-cursor: hand;
 }
 
 /* ---------- CHECKBOX ---------- */

@@ -185,9 +185,21 @@ public class CartGraphicController {
             private final ImageView imageView = new ImageView();
 
             {
-                imageView.setFitWidth(50);
-                imageView.setFitHeight(50);
+                imageView.setFitWidth(80);
+                imageView.setFitHeight(80);
                 imageView.setPreserveRatio(true);
+                imageView.getStyleClass().add("product-image");
+
+                setOnMouseEntered(event -> {
+                    imageView.setScaleX(1.35);
+                    imageView.setScaleY(1.35);
+                    imageView.toFront();
+                });
+
+                setOnMouseExited(event -> {
+                    imageView.setScaleX(1.0);
+                    imageView.setScaleY(1.0);
+                });
             }
 
             @Override
