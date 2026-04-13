@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -16,32 +17,46 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomBouquetGraphicController">
 
     <MenuBar>
-        <Menu text="Impostazioni">
+        <Menu text="Navigazione">
             <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
             <MenuItem onAction="#handleLogout" text="Logout" />
         </Menu>
     </MenuBar>
 
-    <Label alignment="TOP_CENTER" prefHeight="27.0" prefWidth="1487.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Bouquet Personalizzato" />
-    <VBox spacing="4">
-        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Prezzi extra bouquet:" />
-        <Label alignment="CENTER" prefHeight="15.0" prefWidth="1470.0" text="Dimensione media: +5€ | Dimensione grande: +10€ | Confezione premium: +7€ | Biglietto: +3€ | Vaso: +8€" />
+    <Label styleClass="title-label" text="Bouquet Personalizzato" />
+
+    <VBox prefHeight="0.0" prefWidth="1460.0" spacing="4">
+        <Label text="Prezzi extra bouquet: Dimensione media: +5€ | Dimensione grande: +10€ | Confezione premium: +7€ | Biglietto: +3€ | Vaso: +8€">
+         <styleClass>
+            <String fx:value="section-label" />
+            <String fx:value="text" />
+         </styleClass>
+         <font>
+            <Font size="10.0" />
+         </font></Label>
     </VBox>
-    <GridPane alignment="CENTER" hgap="12" vgap="12">
+
+    <GridPane alignment="CENTER" hgap="12" prefHeight="216.0" prefWidth="1460.0" vgap="12">
         <padding>
             <Insets bottom="10" left="10" right="10" top="10" />
         </padding>
-        <ComboBox fx:id="sizeComboBox" prefHeight="42.0" prefWidth="755.0" promptText="Dimensione:" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <ComboBox fx:id="packagingComboBox" prefHeight="42.0" prefWidth="753.0" promptText="Confezione:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <HBox alignment="CENTER" spacing="12" styleClass="beige-button" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <CheckBox fx:id="cardCheckBox" prefHeight="18.0" prefWidth="82.0" text="Biglietto" />
+
+        <ComboBox fx:id="sizeComboBox" prefWidth="755" promptText="Dimensione:" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <ComboBox fx:id="packagingComboBox" prefWidth="755" promptText="Confezione:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <HBox alignment="CENTER_LEFT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <CheckBox fx:id="cardCheckBox" text="Biglietto" />
             <CheckBox fx:id="vaseCheckBox" text="Vaso" />
         </HBox>
+
         <TextField fx:id="budgetField" prefWidth="160" promptText="Budget massimo (€):" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
         <TextField fx:id="quantityField" prefWidth="160" promptText="Quantità fiore:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
         <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
@@ -50,42 +65,44 @@
             <Button onAction="#handleResetBouquet" styleClass="beige-button" text="Reset bouquet" />
             <Button onAction="#handleConfirmCustomBouquet" styleClass="beige-button" text="Conferma bouquet" />
         </HBox>
-      <columnConstraints>
-         <ColumnConstraints maxWidth="106.40001220703124" minWidth="0.0" prefWidth="0.0" />
-         <ColumnConstraints maxWidth="749.5999999999999" minWidth="642.3999877929689" prefWidth="749.5999999999999" />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints prefWidth="0.0" />
+            <ColumnConstraints prefWidth="750.0" />
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
     </GridPane>
 
-    <Label prefHeight="22.0" prefWidth="180.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Fiori disponibili:" />
+    <Label styleClass="section-label" text="Fiori disponibili:" />
 
-    <TableView fx:id="flowerTable" prefHeight="132.0" prefWidth="1460.0">
+    <TableView fx:id="flowerTable" prefHeight="205.0" prefWidth="1460">
         <columns>
-            <TableColumn fx:id="flowerNameColumn" prefWidth="505.5999870300293" text="Nome" />
-            <TableColumn fx:id="flowerPriceColumn" prefWidth="228.80001831054688" text="Prezzo" />
-            <TableColumn fx:id="flowerColorColumn" prefWidth="180.80010986328125" text="Colore" />
-            <TableColumn fx:id="flowerVarietyColumn" prefWidth="260.7999267578125" text="Varietà" />
-            <TableColumn fx:id="flowerStockColumn" prefWidth="280.7999267578125" text="Stock" />
+            <TableColumn fx:id="flowerNameColumn" prefWidth="505.6" text="Nome" />
+            <TableColumn fx:id="flowerPriceColumn" prefWidth="228.8" text="Prezzo" />
+            <TableColumn fx:id="flowerColorColumn" prefWidth="180.8" text="Colore" />
+            <TableColumn fx:id="flowerVarietyColumn" prefWidth="260.8" text="Varietà" />
+            <TableColumn fx:id="flowerStockColumn" prefWidth="280.8" text="Stock" />
         </columns>
     </TableView>
 
-    <Label prefHeight="22.0" prefWidth="226.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Composizione corrente:" />
+    <Label styleClass="section-label" text="Composizione corrente:" />
 
-    <TableView fx:id="bouquetTable" prefHeight="122.0" prefWidth="1460.0">
+    <TableView fx:id="bouquetTable" prefHeight="121.0" prefWidth="1460">
         <columns>
-            <TableColumn fx:id="bouquetNameColumn" prefWidth="381.5999565124512" text="Fiore" />
-            <TableColumn fx:id="bouquetQuantityColumn" prefWidth="372.8000183105469" text="Quantità" />
-            <TableColumn fx:id="bouquetUnitPriceColumn" prefWidth="394.40008544921875" text="Prezzo unitario" />
-            <TableColumn fx:id="bouquetSubtotalColumn" prefWidth="310.39996337890625" text="Subtotale" />
+            <TableColumn fx:id="bouquetNameColumn" prefWidth="381.6" text="Fiore" />
+            <TableColumn fx:id="bouquetQuantityColumn" prefWidth="372.8" text="Quantità" />
+            <TableColumn fx:id="bouquetUnitPriceColumn" prefWidth="394.4" text="Prezzo unitario" />
+            <TableColumn fx:id="bouquetSubtotalColumn" prefWidth="310.4" text="Subtotale" />
         </columns>
     </TableView>
 
-    <Label fx:id="totalLabel" prefHeight="9.0" prefWidth="1460.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" styleClass="text-field" text="Totale bouquet: € 0.00" />
+    <Label fx:id="totalLabel" styleClass="section-label" text="Totale bouquet: € 0.00" />
 </VBox>

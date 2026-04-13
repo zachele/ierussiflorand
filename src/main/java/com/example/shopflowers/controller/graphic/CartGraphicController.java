@@ -10,23 +10,32 @@ import com.example.shopflowers.util.CartSession;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
 import com.example.shopflowers.util.SceneNavigator;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
+import java.io.InputStream;
 
 public class CartGraphicController {
 
     private static final String NO_BOUQUET_MESSAGE = "Nessun bouquet personalizzato nel carrello.";
+    private static final String PRODUCT_IMAGES_PATH = "/com/example/shopflowers/images/products/";
+    private static final String DEFAULT_IMAGE = "default_product.png";
 
     @FXML
     private TableView<CartItem> cartTable;
+
+    @FXML
+    private TableColumn<CartItem, String> cartImageColumn;
 
     @FXML
     private TableColumn<CartItem, String> cartNameColumn;
@@ -152,11 +161,49 @@ public class CartGraphicController {
         }
     }
 
+    @FXML
+    private void handleLogout() {
+        try {
+            CartTimerManager.stopTimer();
+            CartSession.resetCart();
+            CustomBouquetSession.clear();
+            SceneNavigator.logoutToLogin((Stage) cartTable.getScene().getWindow());
+        } catch (IOException e) {
+            messageLabel.setText("Si è verificato un errore durante il logout.");
+        }
+    }
+
     private CustomerCartController getCartController() {
         return CartSession.getCartController();
     }
 
     private void configureCartTable() {
+        cartImageColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getProduct().getImageName())
+        );
+        cartImageColumn.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            {
+                imageView.setFitWidth(50);
+                imageView.setFitHeight(50);
+                imageView.setPreserveRatio(true);
+            }
+
+            @Override
+            protected void updateItem(String imageName, boolean empty) {
+                super.updateItem(imageName, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                imageView.setImage(loadProductImage(imageName));
+                setGraphic(imageView);
+            }
+        });
+
         cartNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         cartQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         cartTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
@@ -175,8 +222,7 @@ public class CartGraphicController {
         cartTable.setItems(FXCollections.observableArrayList(getCartController().getCartItems()));
         cartTable.refresh();
 
-        double total = 0.0;
-
+        double total;
         try {
             total = getCartController().getCartTotal();
         } catch (EmptyCartException ignored) {
@@ -199,15 +245,22 @@ public class CartGraphicController {
 
         totalLabel.setText(String.format("Totale carrello: € %.2f", total));
     }
-    @FXML
-    private void handleLogout() {
-        try {
-            CartTimerManager.stopTimer();
-            CartSession.resetCart();
-            CustomBouquetSession.clear();
-            SceneNavigator.logoutToLogin((Stage) cartTable.getScene().getWindow());
-        } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
+
+    private Image loadProductImage(String imageName) {
+        String resolvedImageName = (imageName == null || imageName.isBlank())
+                ? DEFAULT_IMAGE
+                : imageName;
+
+        InputStream inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + resolvedImageName);
+
+        if (inputStream == null) {
+            inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + DEFAULT_IMAGE);
         }
+
+        if (inputStream == null) {
+            return null;
+        }
+
+        return new Image(inputStream);
     }
 }

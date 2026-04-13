@@ -30,6 +30,20 @@ import java.util.Optional;
 
 public class AdminProductGraphicController {
 
+    private static final List<String> AVAILABLE_IMAGES = List.of(
+            "rose_red.png",
+            "rose_white.png",
+            "rose_pink.png",
+            "tulip_red.png",
+            "tulip_white.png",
+            "tulip_yellow.png",
+            "orchid_purple.png",
+            "orchid_white.png",
+            "sunflower_yellow.png",
+            "lily_white.png",
+            "mixed_bouquet.png"
+    );
+
     @FXML
     private TableView<FlowerProduct> productTable;
 
@@ -67,6 +81,9 @@ public class AdminProductGraphicController {
     private TextField stockField;
 
     @FXML
+    private ComboBox<String> imageComboBox;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -94,6 +111,8 @@ public class AdminProductGraphicController {
                 varietyColumn,
                 stockColumn
         );
+
+        configureImageSelection();
 
         ProductFilterUIUtils.configureColorFilter(colorFilterComboBox);
         ProductFilterUIUtils.bindFilterListeners(
@@ -184,6 +203,11 @@ public class AdminProductGraphicController {
         }
     }
 
+    private void configureImageSelection() {
+        imageComboBox.setItems(FXCollections.observableArrayList(AVAILABLE_IMAGES));
+        imageComboBox.setPromptText("Seleziona immagine prodotto");
+    }
+
     private ProductBean buildProductBeanFromFields() {
         ProductBean productBean = new ProductBean();
         productBean.setName(nameField.getText());
@@ -191,6 +215,7 @@ public class AdminProductGraphicController {
         productBean.setColor(colorField.getText());
         productBean.setVariety(varietyField.getText());
         productBean.setStockQuantity(Integer.parseInt(stockField.getText()));
+        productBean.setImageName(imageComboBox.getValue());
         return productBean;
     }
 
@@ -227,6 +252,7 @@ public class AdminProductGraphicController {
         colorField.setText(product.getColor());
         varietyField.setText(product.getVariety());
         stockField.setText(String.valueOf(product.getStockQuantity()));
+        imageComboBox.setValue(product.getImageName());
     }
 
     private void clearFields() {
@@ -235,6 +261,7 @@ public class AdminProductGraphicController {
         colorField.clear();
         varietyField.clear();
         stockField.clear();
+        imageComboBox.setValue(null);
         productTable.getSelectionModel().clearSelection();
     }
 

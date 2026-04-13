@@ -38,7 +38,8 @@ public class ManageProductsController {
                 productBean.getPrice(),
                 productBean.getColor(),
                 productBean.getVariety(),
-                productBean.getStockQuantity()
+                productBean.getStockQuantity(),
+                productBean.getImageName()
         );
     }
 }

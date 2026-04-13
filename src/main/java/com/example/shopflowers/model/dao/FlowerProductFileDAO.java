@@ -47,22 +47,26 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
                 }
 
                 String[] parts = line.split(";", -1);
-                if (parts.length != 6) {
+                if (parts.length < 6) {
                     continue;
                 }
 
                 try {
+                    String imageName = parts.length >= 7 ? parts[6].trim() : null;
+
                     FlowerProduct product = new FlowerProduct(
                             Integer.parseInt(parts[0].trim()),
                             parts[1].trim(),
                             Double.parseDouble(parts[2].trim().replace(',', '.')),
                             parts[3].trim(),
                             parts[4].trim(),
-                            Integer.parseInt(parts[5].trim())
+                            Integer.parseInt(parts[5].trim()),
+                            imageName
                     );
 
                     products.add(product);
                 } catch (NumberFormatException e) {
+                    // riga non valida: ignorata
                 }
             }
 
@@ -123,18 +127,19 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
         ensureFileExists();
 
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(FILE_PATH))) {
-            writer.write("id;name;price;color;variety;stockQuantity");
+            writer.write("id;name;price;color;variety;stockQuantity;imageName");
             writer.newLine();
 
             for (FlowerProduct product : products) {
                 writer.write(String.format(Locale.US,
-                        "%d;%s;%.2f;%s;%s;%d",
+                        "%d;%s;%.2f;%s;%s;%d;%s",
                         product.getId(),
                         escape(product.getName()),
                         product.getPrice(),
                         escape(product.getColor()),
                         escape(product.getVariety()),
-                        product.getStockQuantity()
+                        product.getStockQuantity(),
+                        escape(product.getImageName())
                 ));
                 writer.newLine();
             }
@@ -155,7 +160,7 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
 
             if (Files.notExists(filePath)) {
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                    writer.write("id;name;price;color;variety;stockQuantity");
+                    writer.write("id;name;price;color;variety;stockQuantity;imageName");
                     writer.newLine();
                 }
             }

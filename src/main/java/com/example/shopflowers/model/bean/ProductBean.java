@@ -8,6 +8,7 @@ public class ProductBean {
     private String color;
     private String variety;
     private int stockQuantity;
+    private String imageName;
 
     public ProductBean() {
     }
@@ -58,5 +59,13 @@ public class ProductBean {
 
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }

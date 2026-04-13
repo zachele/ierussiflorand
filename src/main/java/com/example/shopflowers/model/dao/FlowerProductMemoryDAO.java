@@ -24,7 +24,8 @@ public class FlowerProductMemoryDAO implements FlowerProductDAO {
                 product.getPrice(),
                 product.getColor(),
                 product.getVariety(),
-                product.getStockQuantity()
+                product.getStockQuantity(),
+                product.getImageName()
         );
         products.add(newProduct);
     }
@@ -44,7 +45,8 @@ public class FlowerProductMemoryDAO implements FlowerProductDAO {
                         product.getPrice(),
                         product.getColor(),
                         product.getVariety(),
-                        product.getStockQuantity()
+                        product.getStockQuantity(),
+                        product.getImageName()
                 ));
                 return;
             }
@@ -66,7 +68,8 @@ public class FlowerProductMemoryDAO implements FlowerProductDAO {
                         product.getPrice(),
                         product.getColor(),
                         product.getVariety(),
-                        product.getStockQuantity()
+                        product.getStockQuantity(),
+                        product.getImageName()
                 );
             }
         }
@@ -89,11 +92,11 @@ public class FlowerProductMemoryDAO implements FlowerProductDAO {
         }
 
         products.clear();
-        products.add(new FlowerProduct(1, "Rose Rosse", 4.99, "Rosso", "Rosa", 50));
-        products.add(new FlowerProduct(2, "Tulipani Gialli", 3.49, "Giallo", "Tulipano", 40));
-        products.add(new FlowerProduct(3, "Gigli Bianchi", 5.99, "Bianco", "Giglio", 30));
-        products.add(new FlowerProduct(4, "Orchidea Rosa", 12.50, "Rosa", "Orchidea", 15));
-        products.add(new FlowerProduct(5, "Margherite Miste", 2.99, "Misto", "Margherita", 60));
+        products.add(new FlowerProduct(1, "Rose Rosse", 4.99, "Rosso", "Rosa", 50, "rose_red.png"));
+        products.add(new FlowerProduct(2, "Tulipani Gialli", 3.49, "Giallo", "Tulipano", 40, "tulip_yellow.png"));
+        products.add(new FlowerProduct(3, "Gigli Bianchi", 5.99, "Bianco", "Giglio", 30, "lily_white.png"));
+        products.add(new FlowerProduct(4, "Orchidea Rosa", 12.50, "Rosa", "Orchidea", 15, "orchid_purple.png"));
+        products.add(new FlowerProduct(5, "Margherite Miste", 2.99, "Misto", "Margherita", 60, "mixed_bouquet.png"));
 
         initialized = true;
     }
@@ -120,7 +123,8 @@ public class FlowerProductMemoryDAO implements FlowerProductDAO {
                     product.getPrice(),
                     product.getColor(),
                     product.getVariety(),
-                    product.getStockQuantity()
+                    product.getStockQuantity(),
+                    product.getImageName()
             ));
         }
 

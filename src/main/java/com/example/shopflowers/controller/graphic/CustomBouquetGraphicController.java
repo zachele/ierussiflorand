@@ -15,7 +15,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -279,7 +278,7 @@ public class CustomBouquetGraphicController {
     private void handleBackToCatalog() {
         try {
             SceneNavigator.goTo(
-                    (Stage) messageLabel.getScene().getWindow(),
+                    (Stage) flowerTable.getScene().getWindow(),
                     "/com/example/shopflowers/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
@@ -291,7 +290,7 @@ public class CustomBouquetGraphicController {
     @FXML
     private void handleLogout() {
         try {
-            SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
+            SceneNavigator.logoutToLogin((Stage) flowerTable.getScene().getWindow());
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante il logout.");
         }

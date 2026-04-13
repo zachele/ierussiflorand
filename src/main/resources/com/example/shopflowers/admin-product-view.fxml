@@ -1,80 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.AdminProductGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15"
+      style="-fx-padding: 20;"
+      stylesheets="@../../../Style.css"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.shopflowers.controller.graphic.AdminProductGraphicController">
 
     <MenuBar>
         <Menu text="Gestione">
-            <MenuItem text="Prodotti" />
-            <MenuItem onAction="#handleGoToOperatorManagement" text="Nuovo operatore" />
-            <MenuItem onAction="#handleGoToStatistics" text="Statistiche vendite" />
-            <MenuItem onAction="#handleLogout" text="Logout" />
+            <MenuItem text="Prodotti"/>
+            <MenuItem text="Nuovo operatore" onAction="#handleGoToOperatorManagement"/>
+            <MenuItem text="Statistiche vendite" onAction="#handleGoToStatistics"/>
+            <MenuItem text="Logout" onAction="#handleLogout"/>
         </Menu>
     </MenuBar>
 
-    <Label alignment="CENTER" prefHeight="23.0" prefWidth="1493.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="GESTIONE PRODOTTI ADMIN" />
+    <Label text="GESTIONE PRODOTTI ADMIN"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
     <GridPane alignment="CENTER" hgap="10" vgap="10">
         <padding>
-            <Insets bottom="10" left="10" right="10" top="10" />
+            <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
-        <TextField fx:id="nameField" prefHeight="34.0" prefWidth="486.0" promptText="NOME" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <TextField fx:id="priceField" promptText="PREZZO" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <TextField fx:id="colorField" promptText="COLORE" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <TextField fx:id="varietyField" promptText="VARIETA'" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <TextField fx:id="stockField" prefHeight="34.0" prefWidth="464.0" promptText="STOCK" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
-            <Button onAction="#handleAddProduct" prefHeight="34.0" prefWidth="170.0" styleClass="beige-button" text="Aggiungi prodotto" />
-            <Button onAction="#handleUpdateProduct" prefHeight="34.0" prefWidth="178.0" styleClass="beige-button" text="Aggiorna prodotto" />
-            <Button onAction="#handleDeleteProduct" prefHeight="34.0" prefWidth="153.0" styleClass="beige-button" text="Elimina prodotto" />
+        <TextField fx:id="nameField"
+                   promptText="NOME"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="0"/>
+
+        <TextField fx:id="priceField"
+                   promptText="PREZZO"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="1"/>
+
+        <TextField fx:id="colorField"
+                   promptText="COLORE"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+
+        <TextField fx:id="varietyField"
+                   promptText="VARIETA'"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="3"/>
+
+        <TextField fx:id="stockField"
+                   promptText="STOCK"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="4"/>
+
+        <ComboBox fx:id="imageComboBox"
+                  prefWidth="450"
+                  promptText="Seleziona immagine prodotto"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="5"/>
+
+        <HBox spacing="10"
+              GridPane.columnIndex="1"
+              GridPane.rowIndex="6">
+            <Button text="Aggiungi prodotto"
+                    onAction="#handleAddProduct"
+                    styleClass="beige-button"/>
+
+            <Button text="Aggiorna prodotto"
+                    onAction="#handleUpdateProduct"
+                    styleClass="beige-button"/>
+
+            <Button text="Elimina prodotto"
+                    onAction="#handleDeleteProduct"
+                    styleClass="beige-button"/>
         </HBox>
-      <columnConstraints>
-         <ColumnConstraints maxWidth="54.39998779296877" minWidth="0.0" prefWidth="0.0" />
-         <ColumnConstraints maxWidth="486.4" minWidth="431.20001220703125" prefWidth="486.4" />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints prefWidth="0"/>
+            <ColumnConstraints prefWidth="450"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
     </GridPane>
 
     <HBox alignment="CENTER" spacing="12">
-        <TextField fx:id="searchField" prefWidth="260" promptText="Cerca per nome, colore o varietà" styleClass="text-field" />
-        <ComboBox fx:id="colorFilterComboBox" prefHeight="20.0" prefWidth="160" styleClass="combo-box" />
-        <CheckBox fx:id="availableOnlyCheckBox" alignment="CENTER" styleClass="beige-button" text="Solo disponibili" />
+        <TextField fx:id="searchField"
+                   prefWidth="260"
+                   promptText="Cerca per nome, colore o varietà"/>
+
+        <ComboBox fx:id="colorFilterComboBox"
+                  prefWidth="160"/>
+
+        <CheckBox fx:id="availableOnlyCheckBox"
+                  text="Solo disponibili"/>
     </HBox>
 
-    <TableView fx:id="productTable" prefHeight="366.0" prefWidth="1460.0">
+    <TableView fx:id="productTable" prefHeight="366" prefWidth="1460">
         <columns>
-            <TableColumn fx:id="idColumn" prefWidth="187.20000839233398" text="ID" />
-            <TableColumn fx:id="nameColumn" prefWidth="286.40003967285156" text="Nome" />
-            <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="160.79998779296875" text="Prezzo" />
-            <TableColumn fx:id="colorColumn" minWidth="0.0" prefWidth="249.59991455078125" text="Colore" />
-            <TableColumn fx:id="varietyColumn" prefWidth="283.99993896484375" text="Varietà" />
-            <TableColumn fx:id="stockColumn" minWidth="0.0" prefWidth="288.7999267578125" text="Stock" />
+            <TableColumn fx:id="idColumn" text="ID"/>
+            <TableColumn fx:id="nameColumn" text="Nome"/>
+            <TableColumn fx:id="priceColumn" text="Prezzo"/>
+            <TableColumn fx:id="colorColumn" text="Colore"/>
+            <TableColumn fx:id="varietyColumn" text="Varietà"/>
+            <TableColumn fx:id="stockColumn" text="Stock"/>
         </columns>
     </TableView>
 
-    <Label fx:id="messageLabel" text="" />
+    <Label fx:id="messageLabel"/>
 </VBox>

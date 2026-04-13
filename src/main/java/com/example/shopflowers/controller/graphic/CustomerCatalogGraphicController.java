@@ -43,6 +43,9 @@ public class CustomerCatalogGraphicController {
     private TableView<FlowerProduct> productTable;
 
     @FXML
+    private TableColumn<FlowerProduct, String> imageColumn;
+
+    @FXML
     private TableColumn<FlowerProduct, Integer> idColumn;
 
     @FXML
@@ -238,7 +241,8 @@ public class CustomerCatalogGraphicController {
     }
 
     private void configureProductTable() {
-        ProductTableUtils.configureProductTable(
+        ProductTableUtils.configureProductTableWithImage(
+                imageColumn,
                 idColumn,
                 nameColumn,
                 priceColumn,

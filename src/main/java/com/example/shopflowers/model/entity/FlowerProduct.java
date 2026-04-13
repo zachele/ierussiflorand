@@ -8,25 +8,28 @@ public class FlowerProduct {
     private String color;
     private String variety;
     private int stockQuantity;
+    private String imageName;
 
     public FlowerProduct() {
     }
 
-    public FlowerProduct(int id, String name, double price, String color, String variety, int stockQuantity) {
+    public FlowerProduct(int id, String name, double price, String color, String variety, int stockQuantity, String imageName) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.color = color;
         this.variety = variety;
         this.stockQuantity = stockQuantity;
+        this.imageName = imageName;
     }
 
-    public FlowerProduct(String name, double price, String color, String variety, int stockQuantity) {
+    public FlowerProduct(String name, double price, String color, String variety, int stockQuantity, String imageName) {
         this.name = name;
         this.price = price;
         this.color = color;
         this.variety = variety;
         this.stockQuantity = stockQuantity;
+        this.imageName = imageName;
     }
 
     public int getId() {
@@ -77,6 +80,14 @@ public class FlowerProduct {
         this.stockQuantity = stockQuantity;
     }
 
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     @Override
     public String toString() {
         return "FlowerProduct{" +
@@ -86,6 +97,7 @@ public class FlowerProduct {
                 ", color='" + color + '\'' +
                 ", variety='" + variety + '\'' +
                 ", stockQuantity=" + stockQuantity +
+                ", imageName='" + imageName + '\'' +
                 '}';
     }
 }

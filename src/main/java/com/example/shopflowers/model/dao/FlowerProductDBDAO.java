@@ -14,7 +14,7 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
 
     @Override
     public void save(FlowerProduct product) throws SQLException {
-        String query = "INSERT INTO flower_product (name, price, color, variety, stock_quantity) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO flower_product (name, price, color, variety, stock_quantity, image_name) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -24,6 +24,7 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
             preparedStatement.setString(3, product.getColor());
             preparedStatement.setString(4, product.getVariety());
             preparedStatement.setInt(5, product.getStockQuantity());
+            preparedStatement.setString(6, product.getImageName());
 
             preparedStatement.executeUpdate();
         }
@@ -31,7 +32,7 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
 
     @Override
     public List<FlowerProduct> findAll() throws SQLException {
-        String query = "SELECT id, name, price, color, variety, stock_quantity FROM flower_product";
+        String query = "SELECT id, name, price, color, variety, stock_quantity, image_name FROM flower_product";
         List<FlowerProduct> products = new ArrayList<>();
 
         try (Connection connection = DBConnection.getConnection();
@@ -45,7 +46,8 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("color"),
                         resultSet.getString("variety"),
-                        resultSet.getInt("stock_quantity")
+                        resultSet.getInt("stock_quantity"),
+                        resultSet.getString("image_name")
                 );
 
                 products.add(product);
@@ -57,7 +59,7 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
 
     @Override
     public void update(FlowerProduct product) throws SQLException {
-        String query = "UPDATE flower_product SET name = ?, price = ?, color = ?, variety = ?, stock_quantity = ? WHERE id = ?";
+        String query = "UPDATE flower_product SET name = ?, price = ?, color = ?, variety = ?, stock_quantity = ?, image_name = ? WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -67,7 +69,8 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
             preparedStatement.setString(3, product.getColor());
             preparedStatement.setString(4, product.getVariety());
             preparedStatement.setInt(5, product.getStockQuantity());
-            preparedStatement.setInt(6, product.getId());
+            preparedStatement.setString(6, product.getImageName());
+            preparedStatement.setInt(7, product.getId());
 
             preparedStatement.executeUpdate();
         }
@@ -87,7 +90,7 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
 
     @Override
     public FlowerProduct findById(int id) throws SQLException {
-        String query = "SELECT id, name, price, color, variety, stock_quantity FROM flower_product WHERE id = ?";
+        String query = "SELECT id, name, price, color, variety, stock_quantity, image_name FROM flower_product WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -102,7 +105,8 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
                             resultSet.getDouble("price"),
                             resultSet.getString("color"),
                             resultSet.getString("variety"),
-                            resultSet.getInt("stock_quantity")
+                            resultSet.getInt("stock_quantity"),
+                            resultSet.getString("image_name")
                     );
                 }
             }
