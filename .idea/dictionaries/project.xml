@@ -35,6 +35,7 @@
       <w>Gialla</w>
       <w>Gigli</w>
       <w>Giorni</w>
+      <w>Immagine</w>
       <w>Impossibile</w>
       <w>Indirizzo</w>
       <w>Informazioni</w>
@@ -65,6 +66,7 @@
       <w>Questo</w>
       <w>Registrati</w>
       <w>Registrazione</w>
+      <w>Riepilogo</w>
       <w>Rimuovere</w>
       <w>Rimuovi</w>
       <w>Rosse</w>
@@ -192,6 +194,8 @@
       <w>gestione</w>
       <w>giglio</w>
       <w>ierussi</w>
+      <w>ignorata</w>
+      <w>immagine</w>
       <w>imprevisto</w>
       <w>inattività</w>
       <w>indietro</w>
@@ -281,6 +285,7 @@
       <w>richiesta</w>
       <w>richiesti</w>
       <w>riconosciuto</w>
+      <w>riga</w>
       <w>rimossi</w>
       <w>rimosso</w>
       <w>rimozione</w>
@@ -299,6 +304,7 @@
       <w>scrittura</w>
       <w>sede</w>
       <w>selezionando</w>
+      <w>selezionati</w>
       <w>selezionato</w>
       <w>sessione</w>
       <w>siamo</w>
@@ -329,6 +335,7 @@
       <w>valido</w>
       <w>valore</w>
       <w>valori</w>
+      <w>varieta</w>
       <w>varietà</w>
       <w>vaso</w>
       <w>vendita</w>

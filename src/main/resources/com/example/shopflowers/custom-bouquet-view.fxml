@@ -26,64 +26,83 @@
             <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
             <MenuItem onAction="#handleLogout" text="Logout" />
         </Menu>
+
+        <Menu text="🌸 Composizione corrente">
+            <MenuItem fx:id="currentBouquetSummaryItem" disable="true" text="Bouquet vuoto" />
+            <MenuItem onAction="#handleResetBouquet" text="Reset bouquet" />
+        </Menu>
     </MenuBar>
 
     <Label styleClass="title-label" text="Bouquet Personalizzato" />
 
     <VBox prefHeight="0.0" prefWidth="1460.0" spacing="4">
         <Label text="Prezzi extra bouquet: Dimensione media: +5€ | Dimensione grande: +10€ | Confezione premium: +7€ | Biglietto: +3€ | Vaso: +8€">
-         <styleClass>
-            <String fx:value="section-label" />
-            <String fx:value="text" />
-         </styleClass>
-         <font>
-            <Font size="10.0" />
-         </font></Label>
+            <styleClass>
+                <String fx:value="section-label" />
+                <String fx:value="text" />
+            </styleClass>
+            <font>
+                <Font size="10.0" />
+            </font>
+        </Label>
     </VBox>
-
-    <GridPane alignment="CENTER" hgap="12" prefHeight="216.0" prefWidth="1460.0" vgap="12">
-        <padding>
-            <Insets bottom="10" left="10" right="10" top="10" />
-        </padding>
-
-        <ComboBox fx:id="sizeComboBox" prefWidth="755" promptText="Dimensione:" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-        <ComboBox fx:id="packagingComboBox" prefWidth="755" promptText="Confezione:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-        <HBox alignment="CENTER_LEFT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <CheckBox fx:id="cardCheckBox" text="Biglietto" />
-            <CheckBox fx:id="vaseCheckBox" text="Vaso" />
-        </HBox>
-
-        <TextField fx:id="budgetField" prefWidth="160" promptText="Budget massimo (€):" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-        <TextField fx:id="quantityField" prefWidth="160" promptText="Quantità fiore:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-
-        <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
-            <Button onAction="#handleAddFlower" styleClass="beige-button" text="Aggiungi fiore al bouquet" />
-            <Button onAction="#handleRemoveFlower" styleClass="beige-button" text="Rimuovi fiore selezionato" />
-            <Button onAction="#handleResetBouquet" styleClass="beige-button" text="Reset bouquet" />
-            <Button onAction="#handleConfirmCustomBouquet" styleClass="beige-button" text="Conferma bouquet" />
-        </HBox>
-
-        <columnConstraints>
-            <ColumnConstraints prefWidth="0.0" />
-            <ColumnConstraints prefWidth="750.0" />
-        </columnConstraints>
-
-        <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-        </rowConstraints>
-    </GridPane>
+   <HBox prefHeight="42.0" prefWidth="244.0">
+      <children>
+      
+          <GridPane alignment="CENTER" hgap="12" prefHeight="216.0" prefWidth="774.0" vgap="12">
+              <padding>
+                  <Insets bottom="10" left="10" right="10" top="10" />
+              </padding>
+      
+              <ComboBox fx:id="sizeComboBox" prefWidth="755" promptText="Dimensione:" GridPane.columnIndex="1" />
+      
+              <ComboBox fx:id="packagingComboBox" prefWidth="755" promptText="Confezione:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      
+              <HBox alignment="CENTER_LEFT" spacing="12" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <CheckBox fx:id="cardCheckBox" text="Biglietto" />
+                  <CheckBox fx:id="vaseCheckBox" text="Vaso" />
+              </HBox>
+      
+              <TextField fx:id="budgetField" prefWidth="160" promptText="Budget massimo (€):" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      
+              <TextField fx:id="quantityField" prefWidth="160" promptText="Quantità fiore:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      
+              <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <Button onAction="#handleAddFlower" styleClass="beige-button" text="Aggiungi fiore al bouquet" />
+                  <Button onAction="#handleRemoveFlower" styleClass="beige-button" text="Rimuovi fiore selezionato" />
+                  <Button onAction="#handleResetBouquet" styleClass="beige-button" text="Reset bouquet" />
+                  <Button onAction="#handleConfirmCustomBouquet" styleClass="beige-button" text="Conferma bouquet" />
+              </HBox>
+      
+              <columnConstraints>
+                  <ColumnConstraints prefWidth="0.0" />
+                  <ColumnConstraints prefWidth="750.0" />
+              </columnConstraints>
+      
+              <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+              </rowConstraints>
+          </GridPane>
+      
+                                     <TableView fx:id="bouquetTable" prefHeight="282.0" prefWidth="737.0">
+              <columns>
+                  <TableColumn fx:id="bouquetNameColumn" prefWidth="268.00007343292236" text="Fiore" />
+                  <TableColumn fx:id="bouquetQuantityColumn" prefWidth="176.79998779296875" text="Quantità" />
+                  <TableColumn fx:id="bouquetUnitPriceColumn" prefWidth="141.60009765625" text="Prezzo unitario" />
+                  <TableColumn fx:id="bouquetSubtotalColumn" prefWidth="121.599853515625" text="Subtotale" />
+              </columns>
+          </TableView>
+      </children>
+   </HBox>
 
     <Label styleClass="section-label" text="Fiori disponibili:" />
 
-    <TableView fx:id="flowerTable" prefHeight="205.0" prefWidth="1460">
+    <TableView fx:id="flowerTable" prefHeight="283.0" prefWidth="1460">
         <columns>
             <TableColumn fx:id="flowerNameColumn" prefWidth="505.6" text="Nome" />
             <TableColumn fx:id="flowerPriceColumn" prefWidth="228.8" text="Prezzo" />
@@ -92,17 +111,9 @@
             <TableColumn fx:id="flowerStockColumn" prefWidth="280.8" text="Stock" />
         </columns>
     </TableView>
-
-    <Label styleClass="section-label" text="Composizione corrente:" />
-
-    <TableView fx:id="bouquetTable" prefHeight="121.0" prefWidth="1460">
-        <columns>
-            <TableColumn fx:id="bouquetNameColumn" prefWidth="381.6" text="Fiore" />
-            <TableColumn fx:id="bouquetQuantityColumn" prefWidth="372.8" text="Quantità" />
-            <TableColumn fx:id="bouquetUnitPriceColumn" prefWidth="394.4" text="Prezzo unitario" />
-            <TableColumn fx:id="bouquetSubtotalColumn" prefWidth="310.4" text="Subtotale" />
-        </columns>
-    </TableView>
-
-    <Label fx:id="totalLabel" styleClass="section-label" text="Totale bouquet: € 0.00" />
+    <Label fx:id="totalLabel" alignment="CENTER" prefHeight="39.0" prefWidth="240.0" text="Totale bouquet: € 0.00">
+      <styleClass>
+         <String fx:value="section-label" />
+         <String fx:value="text-field" />
+      </styleClass></Label>
 </VBox>

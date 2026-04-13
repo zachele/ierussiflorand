@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -83,6 +84,9 @@ public class CustomBouquetGraphicController {
 
     @FXML
     private TextField budgetField;
+
+    @FXML
+    private MenuItem currentBouquetSummaryItem;
 
     private final CustomBouquetController customBouquetController = new CustomBouquetController();
     private CustomerCartController customerCartController;
@@ -329,5 +333,28 @@ public class CustomBouquetGraphicController {
     private void refreshBouquetTable() {
         bouquetTable.setItems(FXCollections.observableArrayList(customBouquetController.getCurrentItems()));
         totalLabel.setText(String.format("Totale bouquet: € %.2f", customBouquetController.getCurrentTotal()));
+        updateCurrentBouquetSummary();
+    }
+
+    private void updateCurrentBouquetSummary() {
+        if (currentBouquetSummaryItem == null) {
+            return;
+        }
+
+        int totalFlowers = 0;
+        for (CustomBouquetItem item : customBouquetController.getCurrentItems()) {
+            totalFlowers += item.getQuantity();
+        }
+
+        if (customBouquetController.getCurrentItems().isEmpty()) {
+            currentBouquetSummaryItem.setText("Bouquet vuoto");
+            return;
+        }
+
+        currentBouquetSummaryItem.setText(String.format(
+                "%d fiori | Totale € %.2f",
+                totalFlowers,
+                customBouquetController.getCurrentTotal()
+        ));
     }
 }
