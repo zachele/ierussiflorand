@@ -11,17 +11,24 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
 public class RecommendationGraphicController {
+
+    private static final String PRODUCT_IMAGES_PATH = "/com/example/shopflowers/images/products/";
+    private static final String DEFAULT_IMAGE = "default_product.png";
 
     @FXML
     private ComboBox<String> occasionComboBox;
@@ -36,7 +43,13 @@ public class RecommendationGraphicController {
     private TextField budgetField;
 
     @FXML
+    private TextField quantityField;
+
+    @FXML
     private TableView<RecommendationResult> recommendationTable;
+
+    @FXML
+    private TableColumn<RecommendationResult, String> imageColumn;
 
     @FXML
     private TableColumn<RecommendationResult, String> nameColumn;
@@ -77,12 +90,7 @@ public class RecommendationGraphicController {
                 "ROSSO", "BIANCO", "ROSA", "GIALLO", "MISTO", "NESSUNA"
         ));
 
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("productPrice"));
-        colorColumn.setCellValueFactory(new PropertyValueFactory<>("productColor"));
-        varietyColumn.setCellValueFactory(new PropertyValueFactory<>("productVariety"));
-        budgetColumn.setCellValueFactory(new PropertyValueFactory<>("budgetCompatibility"));
-        reasonColumn.setCellValueFactory(new PropertyValueFactory<>("reason"));
+        configureRecommendationTable();
 
         recommendationTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
                 selectedRecommendation = newValue);
@@ -144,8 +152,21 @@ public class RecommendationGraphicController {
             return;
         }
 
+        int quantity;
         try {
-            boolean added = getCartController().addToCart(selectedRecommendation.getProduct(), 1);
+            quantity = Integer.parseInt(quantityField.getText());
+        } catch (NumberFormatException e) {
+            messageLabel.setText("Inserisci una quantità valida.");
+            return;
+        }
+
+        if (quantity <= 0) {
+            messageLabel.setText("La quantità deve essere maggiore di zero.");
+            return;
+        }
+
+        try {
+            boolean added = getCartController().addToCart(selectedRecommendation.getProduct(), quantity);
 
             if (!added) {
                 messageLabel.setText("Operazione non riuscita. Quantità richiesta non disponibile.");
@@ -153,6 +174,8 @@ public class RecommendationGraphicController {
             }
 
             messageLabel.setText("Prodotto consigliato aggiunto al carrello.");
+            quantityField.clear();
+
         } catch (InvalidQuantityException e) {
             messageLabel.setText(e.getMessage());
         }
@@ -180,6 +203,59 @@ public class RecommendationGraphicController {
         }
     }
 
+    private void configureRecommendationTable() {
+        imageColumn.setCellValueFactory(cellData ->
+                javafx.beans.binding.Bindings.createStringBinding(
+                        () -> cellData.getValue() != null
+                                && cellData.getValue().getProduct() != null
+                                ? cellData.getValue().getProduct().getImageName()
+                                : null
+                )
+        );
+
+        imageColumn.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            {
+                imageView.setFitWidth(80);
+                imageView.setFitHeight(80);
+                imageView.setPreserveRatio(true);
+                imageView.getStyleClass().add("product-image");
+
+                setOnMouseEntered(event -> {
+                    imageView.setScaleX(1.35);
+                    imageView.setScaleY(1.35);
+                    imageView.toFront();
+                });
+
+                setOnMouseExited(event -> {
+                    imageView.setScaleX(1.0);
+                    imageView.setScaleY(1.0);
+                });
+            }
+
+            @Override
+            protected void updateItem(String imageName, boolean empty) {
+                super.updateItem(imageName, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                imageView.setImage(loadProductImage(imageName));
+                setGraphic(imageView);
+            }
+        });
+
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("productPrice"));
+        colorColumn.setCellValueFactory(new PropertyValueFactory<>("productColor"));
+        varietyColumn.setCellValueFactory(new PropertyValueFactory<>("productVariety"));
+        budgetColumn.setCellValueFactory(new PropertyValueFactory<>("budgetCompatibility"));
+        reasonColumn.setCellValueFactory(new PropertyValueFactory<>("reason"));
+    }
+
     private CustomerCartController getCartController() {
         return CartSession.getCartController();
     }
@@ -196,5 +272,23 @@ public class RecommendationGraphicController {
         requestBean.setPreferredColor(color);
         requestBean.setMaxBudget(budget);
         return requestBean;
+    }
+
+    private Image loadProductImage(String imageName) {
+        String resolvedImageName = (imageName == null || imageName.isBlank())
+                ? DEFAULT_IMAGE
+                : imageName;
+
+        InputStream inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + resolvedImageName);
+
+        if (inputStream == null) {
+            inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + DEFAULT_IMAGE);
+        }
+
+        if (inputStream == null) {
+            return null;
+        }
+
+        return new Image(inputStream);
     }
 }
