@@ -13,56 +13,86 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerCatalogGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="16" style="-fx-padding: 20;" styleClass="login-root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerCatalogGraphicController">
 
-    <MenuBar>
+    <MenuBar styleClass="page-subtitle">
         <Menu text="Navigazione">
-            <MenuItem onAction="#handleRecommendationAssistant" text="Assistente bouquet" />
-            <MenuItem onAction="#handleCustomBouquet" text="Bouquet personalizzato" />
-            <MenuItem onAction="#handleMyOrders" text="I miei ordini" />
             <MenuItem onAction="#handleCompanyInfo" text="Info azienda" />
             <MenuItem onAction="#handleLogout" text="Logout" />
+         <graphic>
+            <HBox prefHeight="100.0" prefWidth="0.0" />
+         </graphic>
         </Menu>
+      <Menu mnemonicParsing="false">
+         <graphic>
+            <HBox prefHeight="30.0" prefWidth="728.0" />
+         </graphic>
+      </Menu>
+      <Menu mnemonicParsing="false" text="I miei ordini">
+        <items>
+               <MenuItem onAction="#handleMyOrders" text="I miei ordini" />
+        </items>
+         <graphic>
+            <HBox prefHeight="100.0" prefWidth="0.0" />
+         </graphic>
+      </Menu>
+      <Menu mnemonicParsing="false" text="Bouquet personalizzato">
+        <items>
+               <MenuItem onAction="#handleCustomBouquet" text="Bouquet personalizzato" />
+        </items>
+         <graphic>
+            <HBox prefHeight="100.0" prefWidth="14.0" />
+         </graphic>
+      </Menu>
+      <Menu mnemonicParsing="false" text="Assistente bouquet">
+        <items>
+               <MenuItem onAction="#handleRecommendationAssistant" text="Assistente bouquet" />
+        </items>
+         <graphic>
+            <HBox prefHeight="100.0" prefWidth="16.0" />
+         </graphic>
+      </Menu>
 
         <Menu text="🛒 Carrello">
             <MenuItem onAction="#handleGoToCart" text="Apri carrello" />
+         <graphic>
+            <HBox prefHeight="100.0" prefWidth="14.0" />
+         </graphic>
         </Menu>
     </MenuBar>
+     <Label styleClass="page-title" text="Catalogo Cliente" textFill="WHITE" />
+     <Label styleClass="page-subtitle" text="Consulta i prodotti, applica filtri e aggiungi articoli al carrello." textFill="#efe4e4" />
 
-    <Label styleClass="title-label" text="Catalogo Cliente" />
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="app-section-card">
+        <TextField fx:id="searchField" prefWidth="280" promptText="Cerca per nome, colore o varietà" />
+      <HBox prefHeight="46.0" prefWidth="783.0" />
 
-    <HBox alignment="CENTER" spacing="12">
-        <TextField fx:id="searchField" prefWidth="260" promptText="Cerca per nome, colore o varietà" />
-
-        <ComboBox fx:id="colorFilterComboBox" prefWidth="160" />
-
-        <CheckBox fx:id="availableOnlyCheckBox" text="Solo disponibili" />
+        <CheckBox fx:id="availableOnlyCheckBox" styleClass="login-subtitle" text="Solo disponibili" />
+   
+        <ComboBox fx:id="colorFilterComboBox" prefWidth="180" />
     </HBox>
+     <TableView fx:id="productTable" prefHeight="470" styleClass="login-mode-button">
+         <columns>
+             <TableColumn fx:id="imageColumn" prefWidth="120" text="Immagine" />
+             <TableColumn fx:id="idColumn" prefWidth="70" text="ID" />
+             <TableColumn fx:id="nameColumn" prefWidth="210" text="Nome" />
+             <TableColumn fx:id="priceColumn" prefWidth="130" text="Prezzo" />
+             <TableColumn fx:id="colorColumn" prefWidth="150" text="Colore" />
+             <TableColumn fx:id="varietyColumn" prefWidth="220" text="Varietà" />
+             <TableColumn fx:id="stockColumn" prefWidth="120" text="Stock" />
+         </columns>
+     </TableView>
 
-    <TableView fx:id="productTable" prefHeight="500">
-        <columns>
-            <TableColumn fx:id="imageColumn" prefWidth="444.0000057220459" text="Immagine" />
-            <TableColumn fx:id="idColumn" minWidth="7.20001220703125" prefWidth="83.19998168945312" text="ID" />
-            <TableColumn fx:id="nameColumn" prefWidth="140.00006103515625" text="Nome" />
-            <TableColumn fx:id="priceColumn" prefWidth="167.2000732421875" text="Prezzo" />
-            <TableColumn fx:id="colorColumn" prefWidth="164.800048828125" text="Colore" />
-            <TableColumn fx:id="varietyColumn" prefWidth="240.0" text="Varietà" />
-            <TableColumn fx:id="stockColumn" prefWidth="218.39996337890625" text="Stock" />
-        </columns>
-    </TableView>
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="app-section-card">
+        <Label fx:id="cartTimerLabel" prefHeight="16.0" prefWidth="514.0" styleClass="info-label" text="Timer carrello: 10:00" />
 
-    <HBox alignment="CENTER_LEFT" spacing="12">
-        <Label fx:id="cartTimerLabel" prefWidth="500.0" styleClass="info-label" text="Timer carrello: 10:00" />
-
-        <Label styleClass="section-label" text="Quantità:" />
-
-        <TextField fx:id="quantityField" prefWidth="100" />
+        <TextField fx:id="quantityField" prefWidth="100" promptText="QUANTITA'" />
 
         <Button onAction="#handleAddToCart" styleClass="beige-button" text="Aggiungi al carrello" />
 
-        <Button onAction="#handleGoToCheckout" styleClass="beige-button" text="Vai al checkout" />
+        <Button onAction="#handleGoToCheckout" styleClass="secondary-button" text="Vai al pagamento" />
     </HBox>
 
-    <Label fx:id="messageLabel" styleClass="message-label" />
+    <Label fx:id="messageLabel" styleClass="message-label" wrapText="true" />
 
 </VBox>

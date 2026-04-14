@@ -5,10 +5,12 @@
 .root {
     -fx-font-family: "Arial";
     -fx-background-color: #f8f5f0;
+    -fx-text-fill: #2f2a24;
 }
 
 .app-root {
-    -fx-background-color: #f8f5f0;
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 100% 100%, #f4ecf1 0%, #efe6ee 35%, #eee7e3 70%, #f7f3ee 100%);
 }
 
 .app-gradient-root {
@@ -38,13 +40,28 @@
 
 .info-label {
     -fx-font-size: 14px;
-    -fx-text-fill: #4b4339;
+    -fx-text-fill: #5a5249;
 }
 
 .subtitle-label {
     -fx-font-size: 14px;
-    -fx-text-fill: #6c6257;
+    -fx-text-fill: #6b6259;
 }
+
+.page-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #efe4e4;
+}
+
+/* =========================================================
+   MESSAGE LABELS
+   ========================================================= */
 
 .message-label {
     -fx-font-size: 14px;
@@ -52,25 +69,32 @@
     -fx-text-fill: white;
 }
 
+.form-message {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7a2e2e;
+}
+
 /* =========================================================
-   CONTAINERS / CARDS
+   GENERIC PANELS / CARDS
    ========================================================= */
 
 .app-card {
-    -fx-background-color: white;
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
-    -fx-border-color: #e1d7ca;
-    -fx-padding: 24 28 24 28;
-    -fx-effect: dropshadow(gaussian, rgba(40, 25, 20, 0.10), 20, 0.18, 0, 6);
+    -fx-background-color: rgba(255, 255, 255, 0.72);
+    -fx-background-radius: 26;
+    -fx-border-radius: 26;
+    -fx-border-color: rgba(123, 88, 120, 0.18);
+    -fx-padding: 22 24 22 24;
+    -fx-effect: dropshadow(gaussian, rgba(45, 22, 40, 0.12), 24, 0.18, 0, 8);
 }
 
 .app-section-card {
-    -fx-background-color: rgba(255, 255, 255, 0.92);
-    -fx-background-radius: 18;
-    -fx-border-radius: 18;
-    -fx-border-color: #e3d9cc;
-    -fx-padding: 18 20 18 20;
+    -fx-background-color: rgba(255, 255, 255, 0.58);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(125, 95, 116, 0.16);
+    -fx-padding: 16 18 16 18;
+    -fx-effect: dropshadow(gaussian, rgba(40, 20, 30, 0.08), 14, 0.12, 0, 4);
 }
 
 .app-soft-card {
@@ -81,16 +105,63 @@
     -fx-padding: 16 18 16 18;
 }
 
+.form-card {
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-border-color: #e4d9cc;
+    -fx-padding: 22 24 22 24;
+    -fx-effect: dropshadow(gaussian, rgba(40, 25, 20, 0.12), 18, 0.15, 0, 6);
+}
+
+.action-row {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
 /* =========================================================
    BUTTONS
    ========================================================= */
 
 .button {
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-cursor: hand;
-    -fx-padding: 8 14 8 14;
+    -fx-background-color: rgba(255, 255, 255, 0.80);
+    -fx-text-fill: #3a2f39;
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(125, 95, 116, 0.16);
+    -fx-cursor: hand;
+    -fx-padding: 9 16 9 16;
+}
+
+.button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+}
+
+
+.button:pressed {
+    -fx-background-color: #ece2d5;
+}
+
+.beige-button {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #7b2047 0%, #8f4a74 45%, #b89269 100%);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 9 18 9 18;
+}
+
+.beige-button:hover {
+    -fx-opacity: 0.94;
+}
+
+.beige-button:pressed {
+    -fx-opacity: 0.88;
 }
 
 .primary-button {
@@ -100,26 +171,27 @@
     -fx-font-weight: bold;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
+    -fx-border-color: transparent;
     -fx-cursor: hand;
 }
 
 .primary-button:hover {
-    -fx-opacity: 0.92;
+    -fx-opacity: 0.93;
 }
 
 .secondary-button {
-    -fx-background-color: #ffffff;
-    -fx-text-fill: #43372d;
+    -fx-background-color: rgba(255, 255, 255, 0.72);
+    -fx-text-fill: #4a3848;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-border-color: #d7ccbf;
+    -fx-border-color: rgba(125, 95, 116, 0.18);
     -fx-cursor: hand;
 }
 
 .secondary-button:hover {
-    -fx-background-color: #f5eee5;
+    -fx-background-color: rgba(255, 255, 255, 0.92);
 }
 
 .soft-button {
@@ -137,26 +209,6 @@
     -fx-background-color: #ece2d4;
 }
 
-.beige-button {
-    -fx-background-color: #bfa27a;
-    -fx-text-fill: black;
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-border-color: transparent;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-padding: 8 16 8 16;
-}
-
-.beige-button:hover {
-    -fx-background-color: #cbb08b;
-}
-
-.beige-button:pressed {
-    -fx-background-color: #a88c66;
-}
-
 /* =========================================================
    INPUTS
    ========================================================= */
@@ -165,20 +217,25 @@
 .password-field,
 .combo-box,
 .date-picker {
-    -fx-background-color: white;
-    -fx-border-color: #d6cec2;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
+    -fx-background-color: rgba(255, 255, 255, 0.90);
+    -fx-border-color: rgba(125, 95, 116, 0.18);
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
     -fx-padding: 10 12 10 12;
     -fx-font-size: 13px;
+    -fx-text-fill: #2f2a24;
 }
 
 .text-field:focused,
 .password-field:focused,
 .combo-box:focused,
 .date-picker:focused {
-    -fx-border-color: #bfa27a;
+    -fx-border-color: #8f4a74;
     -fx-background-color: white;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #2f2a24;
 }
 
 /* =========================================================
@@ -186,9 +243,12 @@
    ========================================================= */
 
 .menu-bar {
-    -fx-background-color: #f3ece2;
-    -fx-border-color: #ddd2c2;
+    -fx-background-color: rgba(255, 255, 255, 0.58);
+    -fx-border-color: rgba(125, 95, 116, 0.16);
     -fx-border-width: 0 0 1 0;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 4 6 4 6;
 }
 
 .menu-bar .label {
@@ -203,9 +263,9 @@
 
 .context-menu {
     -fx-background-color: white;
-    -fx-background-radius: 10;
+    -fx-background-radius: 12;
     -fx-border-color: #d6cec2;
-    -fx-border-radius: 10;
+    -fx-border-radius: 12;
 }
 
 .menu-item:focused,
@@ -218,16 +278,16 @@
    ========================================================= */
 
 .table-view {
-    -fx-background-color: white;
-    -fx-border-color: #ddd2c2;
-    -fx-border-radius: 14;
-    -fx-background-radius: 14;
-    -fx-padding: 4;
+    -fx-background-color: rgba(255, 255, 255, 0.82);
+    -fx-border-color: rgba(125, 95, 116, 0.16);
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 5;
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #efe5d7;
-    -fx-background-radius: 14 14 0 0;
+    -fx-background-color: rgba(239, 229, 215, 0.95);
+    -fx-background-radius: 18 18 0 0;
 }
 
 .table-view .column-header,
@@ -239,6 +299,8 @@
 .table-view .column-header .label {
     -fx-text-fill: #2f2a24;
     -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER;
 }
 
 .table-row-cell {
@@ -247,12 +309,31 @@
     -fx-cell-size: 92px;
 }
 
+.table-row-cell:hover {
+    -fx-background-color: #e8dccb;
+}
+
 .table-row-cell:selected {
     -fx-background-color: #e8dccb;
 }
 
 .table-row-cell:selected .text {
     -fx-fill: black;
+}
+
+.table-cell {
+    -fx-alignment: CENTER;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2f2a24;
+}
+
+.table-cell .text {
+    -fx-text-alignment: center;
+}
+
+.table-column {
+    -fx-alignment: CENTER;
 }
 
 /* =========================================================
@@ -269,23 +350,24 @@
 
 .check-box {
     -fx-font-size: 13px;
+    -fx-text-fill: #2f2a24;
 }
 
 /* =========================================================
-   HAMBURGER / ICONIC BUTTON
+   HAMBURGER / ICON BUTTON
    ========================================================= */
 
 .hamburger-menu-button {
-    -fx-background-color: #020817;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
+    -fx-background-color: #2f2036;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-border-color: transparent;
     -fx-padding: 6;
     -fx-cursor: hand;
 }
 
 .hamburger-menu-button:hover {
-    -fx-background-color: #0a1226;
+    -fx-background-color: #43304d;
 }
 
 .hamburger-menu-button .arrow-button {
@@ -303,7 +385,7 @@
 }
 
 /* =========================================================
-   LOGIN / AUTH PAGES
+   LOGIN / AUTH SPECIAL STYLE
    ========================================================= */
 
 .login-root {
@@ -358,6 +440,7 @@
     -fx-font-weight: bold;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
+    -fx-border-color: transparent;
     -fx-cursor: hand;
 }
 
@@ -440,44 +523,9 @@
 }
 
 .login-card .message-label {
-    -fx-text-fill: white;
+    -fx-text-fill: #ffe3e3;
     -fx-background-color: rgba(122, 46, 46, 0.28);
     -fx-background-radius: 12;
     -fx-padding: 10 12 10 12;
     -fx-alignment: center;
-}
-
-/* =========================================================
-   PAGE HELPERS
-   ========================================================= */
-
-.page-title {
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2f2a24;
-}
-
-.page-subtitle {
-    -fx-font-size: 14px;
-    -fx-text-fill: #5d5449;
-}
-
-.form-card {
-    -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
-    -fx-border-color: #e4d9cc;
-    -fx-padding: 22 24 22 24;
-    -fx-effect: dropshadow(gaussian, rgba(40, 25, 20, 0.12), 18, 0.15, 0, 6);
-}
-
-.action-row {
-    -fx-alignment: center;
-    -fx-spacing: 10;
-}
-
-.form-message {
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #7a2e2e;
 }

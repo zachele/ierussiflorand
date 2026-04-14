@@ -1,77 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.StatisticsGraphicController">
-
-    <HBox alignment="CENTER" spacing="15">
-        <Button onAction="#handleBackToAdmin" styleClass="beige-button" text="Torna indietro" />
-        <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" styleClass="title-label" text="Statistiche Vendite" />
-        <Button onAction="#handleLogout" styleClass="beige-button" text="Logout" />
-    </HBox>
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="login-root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.StatisticsGraphicController">
+   <MenuBar>
+     <menus>
+       <Menu mnemonicParsing="false">
+            <graphic>
+                 <Label prefHeight="39.0" prefWidth="1167.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" styleClass="title-label" text="Statistiche Vendite">
+                  <graphic>
+                  
+                      <HBox alignment="CENTER" spacing="15" />
+                  </graphic>
+               </Label>
+            </graphic>
+       </Menu>
+       <Menu mnemonicParsing="false">
+         <items>
+           <MenuItem mnemonicParsing="false" text="Close" />
+         </items>
+            <graphic>
+                 <Button onAction="#handleBackToAdmin" styleClass="beige-button" text="Torna indietro" />
+            </graphic>
+       </Menu>
+       <Menu mnemonicParsing="false">
+            <graphic>
+                 <Button onAction="#handleLogout" styleClass="beige-button" text="Logout" />
+            </graphic>
+       </Menu>
+     </menus>
+   </MenuBar>
    <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1460.0" spacing="15" />
 
     <HBox alignment="CENTER" prefHeight="562.0" prefWidth="1460.0" spacing="40">
 
         <!-- STATISTICHE TESTUALI -->
         <VBox alignment="TOP_CENTER" prefHeight="562.0" prefWidth="567.0" spacing="10">
-            <Label alignment="CENTER" prefHeight="45.0" prefWidth="409.0" text="Totale ordini:">
-            <styleClass>
-               <String fx:value="text-field" />
-               <String fx:value="text" />
-            </styleClass></Label>
-            <Label fx:id="totalOrdersLabel" alignment="TOP_CENTER" styleClass="text" />
+            <Label alignment="CENTER" prefHeight="46.0" prefWidth="390.0" styleClass="login-secondary-button" text="Totale ordini:" />
+            <Label fx:id="totalOrdersLabel" alignment="TOP_CENTER" styleClass="login-subtitle" />
 
-            <Label alignment="CENTER" prefHeight="34.0" prefWidth="423.0" text="Totale ricavi:">
-            <styleClass>
-               <String fx:value="text-field" />
-               <String fx:value="text" />
-            </styleClass></Label>
-            <Label fx:id="totalRevenueLabel" alignment="CENTER" styleClass="text" />
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="390.0" styleClass="login-secondary-button" text="Totale ricavi:" />
+            <Label fx:id="totalRevenueLabel" alignment="CENTER" styleClass="login-subtitle" />
 
-            <Label alignment="CENTER" prefHeight="34.0" prefWidth="442.0" text="Ordini consegnati:">
-            <styleClass>
-               <String fx:value="text-field" />
-               <String fx:value="text" />
-            </styleClass></Label>
-            <Label fx:id="deliveredOrdersLabel" styleClass="text" />
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="390.0" styleClass="login-secondary-button" text="Ordini consegnati:" />
+            <Label fx:id="deliveredOrdersLabel" styleClass="login-subtitle" />
 
-            <Label alignment="CENTER" prefHeight="34.0" prefWidth="417.0" text="Ordini attivi:">
-            <styleClass>
-               <String fx:value="text-field" />
-               <String fx:value="text" />
-            </styleClass></Label>
-            <Label fx:id="activeOrdersLabel" styleClass="text" />
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="390.0" styleClass="login-secondary-button" text="Ordini attivi:" />
+            <Label fx:id="activeOrdersLabel" styleClass="login-subtitle" />
 
-            <Label alignment="CENTER" prefHeight="34.0" prefWidth="414.0" text="Clienti registrati:">
-            <styleClass>
-               <String fx:value="text-field" />
-               <String fx:value="text" />
-            </styleClass></Label>
-            <Label fx:id="totalClientsLabel" styleClass="text" />
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="390.0" styleClass="login-secondary-button" text="Clienti registrati:" />
+            <Label fx:id="totalClientsLabel" styleClass="login-subtitle" />
 
-            <Label alignment="CENTER" prefHeight="34.0" prefWidth="424.0" text="Operatori registrati:">
-            <styleClass>
-               <String fx:value="text-field" />
-               <String fx:value="text" />
-            </styleClass></Label>
-            <Label fx:id="totalOperatorsLabel" styleClass="text" />
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="390.0" styleClass="login-secondary-button" text="Operatori registrati:" />
+            <Label fx:id="totalOperatorsLabel" styleClass="login-subtitle" />
 
-            <Label alignment="CENTER" prefHeight="34.0" prefWidth="422.0" text="Prodotto più venduto:">
-            <styleClass>
-               <String fx:value="text-field" />
-               <String fx:value="text" />
-            </styleClass></Label>
-            <Label fx:id="mostSoldProductLabel" />
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="391.0" styleClass="login-secondary-button" text="Prodotto più venduto:" />
+            <Label fx:id="mostSoldProductLabel" styleClass="login-subtitle" />
         </VBox>
 
         <!-- GRAFICO A TORTA -->
-        <PieChart fx:id="statisticsPieChart" prefHeight="588.0" prefWidth="1014.0" />
+        <PieChart fx:id="statisticsPieChart" prefHeight="588.0" prefWidth="1014.0" styleClass="login-mode-button" />
 
     </HBox>
 

@@ -19,8 +19,8 @@
     <VBox alignment="CENTER" spacing="20">
    
         <VBox alignment="CENTER" maxWidth="430" spacing="18" styleClass="login-card">
-         <ImageView fitHeight="204.0" fitWidth="231.0">
-               <Image url="@images/products/logo.png" />
+         <ImageView fitHeight="210.0" fitWidth="245.0">
+               <Image url="@images/logo.png" />
          </ImageView>
    
             <VBox alignment="CENTER" spacing="8">
@@ -28,7 +28,7 @@
                   <HBox alignment="CENTER_RIGHT" prefWidth="390">
                    <Region prefHeight="36.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
                    <Label alignment="CENTER" prefHeight="32.0" prefWidth="334.0" styleClass="login-title" text="IERUSSI FLOWERS" />
-                   <MenuButton fx:id="modeMenuButton" alignment="CENTER" contentDisplay="TEXT_ONLY" prefHeight="36" prefWidth="44" styleClass="login-mode-button" text="+*">
+                   <MenuButton fx:id="modeMenuButton" alignment="CENTER" contentDisplay="TEXT_ONLY" prefHeight="36" prefWidth="44" styleClass="login-mode-button">
                        <items>
                            <MenuItem onAction="#handleSetDemoMode" text="DEMO" />
                            <MenuItem onAction="#handleSetFileMode" text="FILE" />
@@ -63,10 +63,6 @@
             <Hyperlink onAction="#handleGoToChangePassword" styleClass="login-link" text="Cambia password" />
    
         </VBox>
-        <Label fx:id="messageLabel"
-               text=""
-               wrapText="true"
-               alignment="CENTER"
-               styleClass="message-label"/>
+        <Label fx:id="messageLabel" alignment="CENTER" styleClass="message-label" text="" wrapText="true" />
     </VBox>
 </StackPane>
