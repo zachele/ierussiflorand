@@ -17,7 +17,7 @@
         <VBox alignment="CENTER" maxWidth="430" spacing="18" styleClass="login-card">
 
             <ImageView fitHeight="180.0" fitWidth="210.0" preserveRatio="true">
-                <Image url="@images/logo.png" />
+                <Image url="@images/auth/logo.png" />
             </ImageView>
 
             <VBox alignment="CENTER" spacing="8">

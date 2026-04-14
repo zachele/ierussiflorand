@@ -64,9 +64,9 @@
    ========================================================= */
 
 .message-label {
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-text-fill: BLACK;
 }
 
 .form-message {
@@ -387,12 +387,6 @@
 /* =========================================================
    LOGIN / AUTH SPECIAL STYLE
    ========================================================= */
-
-.login-root {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 100% 100%, #2b1634 0%, #5a2337 38%, #7d5f74 70%, #d8d2d0 100%);
-}
-
 .login-card {
     -fx-background-color: rgba(248, 245, 240, 0.20);
     -fx-background-radius: 28;
@@ -528,4 +522,25 @@
     -fx-background-radius: 12;
     -fx-padding: 10 12 10 12;
     -fx-alignment: center;
+}
+
+/* =========================================================
+   AUTH ROOT
+   ========================================================= */
+
+.login-root {
+    -fx-background-image: url("/com/example/shopflowers/images/auth/auth-background.png");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+}
+
+.user-root {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 100% 100%, #f4ecf1 0%, #efe6ee 35%, #eee7e3 70%, #f7f3ee 100%);
+}
+
+.admin-root {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 100% 100%, #f4efe8 0%, #f1ebe4 45%, #ece4db 100%);
 }

@@ -11,63 +11,55 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.shopflowers.controller.graphic.CartGraphicController"
-      spacing="15"
-      prefWidth="1500"
-      prefHeight="800"
-      stylesheets="@../../../Style.css"
-      style="-fx-padding: 20;">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="app-root" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CartGraphicController">
 
     <MenuBar>
-        <Menu text="Navigazione">
-            <MenuItem text="Torna al catalogo" onAction="#handleBackToCatalog"/>
-            <MenuItem text="Logout" onAction="#handleLogout"/>
+        <Menu text="Torna al catalogo">
+            <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
         </Menu>
+      <Menu mnemonicParsing="false" text="Logout">
+        <items>
+               <MenuItem onAction="#handleLogout" text="Logout" />
+        </items>
+         <graphic>
+            <HBox prefHeight="17.0" prefWidth="1262.0" />
+         </graphic>
+      </Menu>
     </MenuBar>
 
     <VBox spacing="6">
-        <Label text="🛒 Carrello Cliente" styleClass="title-label"/>
-        <Label text="Riepilogo degli articoli selezionati prima del checkout"
-               styleClass="info-label"/>
+        <Label styleClass="title-label" text="🛒 Carrello Cliente" />
+        <Label styleClass="info-label" text="Riepilogo degli articoli selezionati prima del checkout" />
     </VBox>
 
     <Separator />
 
     <VBox spacing="8">
-        <Label text="Stato carrello" styleClass="section-label"/>
-        <Label fx:id="cartTimerLabel"
-               text="Vai al checkout per attivare o proseguire il timer carrello."
-               styleClass="info-label"/>
+        <Label styleClass="section-label" text="Stato carrello" />
+        <Label fx:id="cartTimerLabel" styleClass="info-label" text="Vai al checkout per attivare o proseguire il timer carrello." />
     </VBox>
 
-    <TableView fx:id="cartTable" prefHeight="300">
+    <TableView fx:id="cartTable" prefHeight="353.0" prefWidth="1460.0">
         <columns>
-            <TableColumn fx:id="cartImageColumn" text="Immagine" prefWidth="90"/>
-            <TableColumn fx:id="cartNameColumn" text="Prodotto" prefWidth="320"/>
-            <TableColumn fx:id="cartQuantityColumn" text="Quantità" prefWidth="150"/>
-            <TableColumn fx:id="cartTotalColumn" text="Totale" prefWidth="180"/>
+            <TableColumn fx:id="cartImageColumn" prefWidth="90" text="Immagine" />
+            <TableColumn fx:id="cartNameColumn" prefWidth="320" text="Prodotto" />
+            <TableColumn fx:id="cartQuantityColumn" prefWidth="150" text="Quantità" />
+            <TableColumn fx:id="cartTotalColumn" prefWidth="180" text="Totale" />
         </columns>
     </TableView>
 
     <VBox spacing="8">
-        <Label text="Bouquet personalizzato" styleClass="section-label"/>
-        <Label fx:id="bouquetInfoLabel"
-               text="Nessun bouquet personalizzato nel carrello."
-               wrapText="true"
-               styleClass="info-label"/>
+        <Label styleClass="section-label" text="Bouquet personalizzato" />
+        <Label fx:id="bouquetInfoLabel" styleClass="info-label" text="Nessun bouquet personalizzato nel carrello." wrapText="true" />
     </VBox>
 
-    <Label fx:id="totalLabel"
-           text="Totale carrello: € 0.00"
-           styleClass="section-label"/>
+    <Label fx:id="totalLabel" styleClass="section-label" text="Totale carrello: € 0.00" />
 
     <HBox spacing="10">
-        <Button text="Rimuovi selezionato" onAction="#handleRemoveSelected" styleClass="beige-button"/>
-        <Button text="Svuota carrello" onAction="#handleClearCart" styleClass="beige-button"/>
-        <Button text="Vai al checkout" onAction="#handleGoToCheckout" styleClass="beige-button"/>
+        <Button onAction="#handleRemoveSelected" styleClass="login-secondary-button" text="Rimuovi selezionato" />
+        <Button onAction="#handleClearCart" styleClass="login-secondary-button" text="Svuota carrello" />
+        <Button onAction="#handleGoToCheckout" styleClass="beige-button" text="Vai al pagamento" />
     </HBox>
 
-    <Label fx:id="messageLabel" styleClass="message-label"/>
+    <Label fx:id="messageLabel" styleClass="message-label" />
 </VBox>

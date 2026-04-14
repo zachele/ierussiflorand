@@ -18,13 +18,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="login-root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.AdminProductGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="app-root" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.AdminProductGraphicController">
 
-    <MenuBar nodeOrientation="RIGHT_TO_LEFT">
+    <MenuBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="23.0" prefWidth="1460.0">
       <Menu mnemonicParsing="false">
          <graphic>
       
-                          <ComboBox fx:id="colorFilterComboBox" prefHeight="7.0" prefWidth="160" promptText="Filtro" styleClass="combo-box" />
+                          <ComboBox fx:id="colorFilterComboBox" prefHeight="25.0" prefWidth="160" promptText="Filtro" styleClass="login-mode-button" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false">
@@ -32,12 +32,18 @@
               <TextField fx:id="searchField" alignment="CENTER" prefHeight="0.0" prefWidth="278.0" promptText="Cerca per nome, colore o varietà" styleClass="text-field" />
          </graphic>
       </Menu>
+      <Menu mnemonicParsing="false" text="Unspecified Menu">
+         <graphic>
+         
+                            <Label alignment="CENTER" prefHeight="46.0" prefWidth="412.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="login-title" text="GESTIONE PRODOTTI ADMIN" />
+         </graphic>
+      </Menu>
       <Menu mnemonicParsing="false" text="Nuovo operatore">
          <items>
                <MenuItem onAction="#handleGoToOperatorManagement" text="Nuovo operatore" />
          </items>
          <graphic>
-            <HBox prefHeight="100.0" prefWidth="568.0" />
+            <HBox prefHeight="100.0" prefWidth="31.0" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="Statistiche vendite">
@@ -56,12 +62,11 @@
          </graphic>
         </Menu>
     </MenuBar>
-
-    <Label alignment="CENTER" prefHeight="23.0" prefWidth="1478.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="login-title" text="GESTIONE PRODOTTI ADMIN" />
+   <HBox prefHeight="78.0" prefWidth="1460.0" />
    <HBox prefHeight="100.0" prefWidth="200.0">
       <children>
       
-          <GridPane alignment="CENTER" hgap="10" prefHeight="275.0" prefWidth="1460.0" vgap="10">
+          <GridPane alignment="CENTER" hgap="10" minHeight="150.0" prefHeight="138.0" prefWidth="1460.0" vgap="10">
               <padding>
                   <Insets bottom="10" left="10" right="10" top="10" />
               </padding>
@@ -72,15 +77,43 @@
       
               <TextField fx:id="colorField" prefHeight="38.0" prefWidth="574.0" promptText="COLORE" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       
-              <TextField fx:id="varietyField" prefHeight="38.0" prefWidth="602.0" promptText="VARIETA'" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+              <TextField fx:id="varietyField" prefHeight="38.0" prefWidth="602.0" promptText="VARIETA'" GridPane.columnIndex="2" />
       
-              <TextField fx:id="stockField" promptText="STOCK" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+              <TextField fx:id="stockField" promptText="STOCK" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       
-              <ComboBox fx:id="imageComboBox" prefHeight="0.0" prefWidth="450.0" promptText="Seleziona immagine prodotto" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+              <ComboBox fx:id="imageComboBox" prefHeight="0.0" prefWidth="450.0" promptText="Seleziona immagine prodotto" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+         
+                                                           <HBox alignment="CENTER" prefHeight="37.0" prefWidth="761.0" spacing="10" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         
+                             <CheckBox fx:id="availableOnlyCheckBox" styleClass="menu-bar" text="Solo disponibili" />
+         
+                                                                  <Button onAction="#handleDeleteProduct" prefHeight="33.0" prefWidth="158.0" styleClass="beige-button" text="Elimina prodotto">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Button>
+              </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                     <Button onAction="#handleAddProduct" prefHeight="37.0" prefWidth="175.0" styleClass="login-secondary-button" text="Aggiungi prodotto">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+                  <HBox prefHeight="37.0" prefWidth="30.0" />
+            
+                                                                              <Button onAction="#handleUpdateProduct" prefHeight="37.0" prefWidth="153.0" styleClass="login-secondary-button" text="Aggiorna prodotto">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
       
               <columnConstraints>
                   <ColumnConstraints maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
                   <ColumnConstraints maxWidth="450.4" minWidth="450.4" prefWidth="450.4" />
+               <ColumnConstraints maxWidth="450.4" minWidth="450.4" prefWidth="450.4" />
               </columnConstraints>
       
               <rowConstraints>
@@ -92,41 +125,20 @@
                   <RowConstraints />
                   <RowConstraints />
                <RowConstraints />
+               <RowConstraints />
               </rowConstraints>
           </GridPane>
       </children>
    </HBox>
 
-                                                  <HBox alignment="CENTER" prefHeight="37.0" prefWidth="761.0" spacing="10">
-         <Button onAction="#handleAddProduct" prefHeight="37.0" prefWidth="206.0" styleClass="login-secondary-button" text="Aggiungi prodotto">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Button>
-
-                                                                  <Button onAction="#handleUpdateProduct" prefHeight="37.0" prefWidth="192.0" styleClass="login-secondary-button" text="Aggiorna prodotto">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Button>
-
-                                                         <Button onAction="#handleDeleteProduct" prefHeight="33.0" prefWidth="158.0" styleClass="login-secondary-button" text="Elimina prodotto">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Button>
-
-                    <CheckBox fx:id="availableOnlyCheckBox" styleClass="menu-bar" text="Solo disponibili" />
-     </HBox>
-
-    <TableView fx:id="productTable" prefHeight="292.0" prefWidth="1460" styleClass="login-mode-button">
+    <TableView fx:id="productTable" prefHeight="432.0" prefWidth="1460" styleClass="login-mode-button">
         <columns>
-            <TableColumn fx:id="idColumn" text="ID" />
-            <TableColumn fx:id="nameColumn" text="Nome" />
-            <TableColumn fx:id="priceColumn" text="Prezzo" />
-            <TableColumn fx:id="colorColumn" text="Colore" />
-            <TableColumn fx:id="varietyColumn" text="Varietà" />
-            <TableColumn fx:id="stockColumn" text="Stock" />
+            <TableColumn fx:id="idColumn" prefWidth="156.00000381469727" text="ID" />
+            <TableColumn fx:id="nameColumn" prefWidth="264.8000030517578" text="Nome" />
+            <TableColumn fx:id="priceColumn" prefWidth="264.0000305175781" text="Prezzo" />
+            <TableColumn fx:id="colorColumn" prefWidth="240.0" text="Colore" />
+            <TableColumn fx:id="varietyColumn" prefWidth="263.9999694824219" text="Varietà" />
+            <TableColumn fx:id="stockColumn" prefWidth="266.39990234375" text="Stock" />
         </columns>
     </TableView>
 

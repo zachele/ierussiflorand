@@ -3,26 +3,44 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerOrdersGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerOrdersGraphicController">
+   <MenuBar>
+     <menus>
+       <Menu mnemonicParsing="false">
+            <graphic>
+                 <Label alignment="CENTER" prefHeight="42.0" prefWidth="167.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="I MIEI ORDINI" />
+            </graphic>
+       </Menu>
+         <Menu mnemonicParsing="false">
+            <graphic>
+               <Label prefHeight="15.0" prefWidth="745.0" />
+            </graphic>
+         </Menu>
+         <Menu mnemonicParsing="false">
+            <graphic>
+                 <ComboBox fx:id="statusFilterComboBox" prefHeight="42.0" prefWidth="177.0" promptText="Ordini effettuati:" styleClass="combo-box" />
+            </graphic>
+         </Menu>
+       <Menu mnemonicParsing="false">
+            <graphic>
+                 <Button onAction="#handleBackToCatalog" prefHeight="37.0" prefWidth="179.0" styleClass="beige-button" text="Torna al catalogo" />
+            </graphic>
+       </Menu>
+       <Menu mnemonicParsing="false">
+            <graphic>
+                 <Button onAction="#handleLogout" prefHeight="32.0" prefWidth="98.0" styleClass="beige-button" text="Logout" />
+            </graphic>
+       </Menu>
+     </menus>
+   </MenuBar>
 
-    <HBox alignment="CENTER" spacing="15">
-        <Button onAction="#handleBackToCatalog" styleClass="beige-button" text="Torna al catalogo" />
-        <Label alignment="CENTER" prefHeight="26.0" prefWidth="167.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="I MIEI ORDINI" />
-        <Button onAction="#handleLogout" prefHeight="32.0" prefWidth="98.0" styleClass="beige-button" text="Logout" />
-    </HBox>
-
-    <HBox spacing="12">
-   
-       <Label alignment="CENTER" prefHeight="42.0" prefWidth="226.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Ordini effettuati:" />
-        <ComboBox fx:id="statusFilterComboBox" prefHeight="42.0" prefWidth="177.0" styleClass="combo-box" />
-    </HBox>
-
-    <TableView fx:id="orderTable" prefHeight="260">
+    <TableView fx:id="orderTable" prefHeight="289.0" prefWidth="1460.0">
         <columns>
             <TableColumn fx:id="orderIdColumn" prefWidth="90" text="ID Ordine" />
             <TableColumn fx:id="deliveryColumn" prefWidth="120" text="Modalità" />
@@ -36,9 +54,9 @@
         </columns>
     </TableView>
 
-    <Label alignment="CENTER" prefHeight="22.0" prefWidth="1665.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Dettagli ordine selezionato" />
+    <Label alignment="CENTER" prefHeight="22.0" prefWidth="1665.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Dettagli ordine selezionato:" />
 
-    <TableView fx:id="orderItemsTable" prefHeight="220">
+    <TableView fx:id="orderItemsTable" prefHeight="264.0" prefWidth="1460.0">
         <columns>
             <TableColumn fx:id="productColumn" prefWidth="545.600025177002" text="Prodotto" />
             <TableColumn fx:id="quantityColumn" prefWidth="466.4000244140625" text="Quantità" />
@@ -46,7 +64,7 @@
         </columns>
     </TableView>
 
-    <Label fx:id="bouquetDetailsLabel" alignment="CENTER" prefHeight="16.0" prefWidth="1573.0" style="-fx-font-size: 14px;" styleClass="text-field" text="Questo ordine non contiene un bouquet personalizzato." wrapText="true" />
+    <Label fx:id="bouquetDetailsLabel" alignment="CENTER" prefHeight="17.0" prefWidth="1460.0" style="-fx-font-size: 14px;" styleClass="text-field" text="Questo ordine non contiene un bouquet personalizzato." wrapText="true" />
 
     <Label fx:id="messageLabel" text="" />
 

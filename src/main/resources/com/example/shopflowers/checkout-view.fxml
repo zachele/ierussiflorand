@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -13,9 +14,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CheckoutGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="app-root" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CheckoutGraphicController">
 
-    <MenuBar>
+    <MenuBar nodeOrientation="RIGHT_TO_LEFT">
         <Menu text="Impostazioni">
             <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
             <MenuItem onAction="#handleLogout" text="Logout" />
@@ -24,18 +25,24 @@
 
     <Label alignment="CENTER" prefHeight="27.0" prefWidth="1491.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="CHECKOUT CLIENTE" />
 
-    <TableView fx:id="checkoutTable" prefHeight="200">
+    <TableView fx:id="checkoutTable" prefHeight="318.0" prefWidth="1460.0">
         <columns>
             <TableColumn fx:id="productColumn" prefWidth="558.4000053405762" text="Prodotto" />
             <TableColumn fx:id="quantityColumn" prefWidth="501.59991455078125" text="Quantità" />
             <TableColumn fx:id="totalColumn" prefWidth="393.60003662109375" text="Totale" />
         </columns>
     </TableView>
-
-    <Label fx:id="bouquetInfoLabel" alignment="TOP_LEFT" prefHeight="26.0" prefWidth="524.0" style="-fx-font-size: 14px;" styleClass="text" text="Nessun bouquet personalizzato nel pagamento corrente." wrapText="true" />
-
-    <Label fx:id="totalLabel" alignment="CENTER" prefHeight="20.0" prefWidth="1474.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" styleClass="text-field" text="Totale ordine: € 0.0" />
-    <ComboBox fx:id="deliveryModeComboBox" prefHeight="42.0" prefWidth="238.0" promptText="MODALITA' DI CONSEGNA" />
+   <HBox prefHeight="0.0" prefWidth="1460.0">
+      <children>
+      
+          <Label fx:id="bouquetInfoLabel" alignment="CENTER" contentDisplay="BOTTOM" prefHeight="46.0" prefWidth="416.0" style="-fx-font-size: 14px;" styleClass="text" text="Nessun bouquet personalizzato nel pagamento corrente." wrapText="true" />
+         <HBox prefHeight="46.0" prefWidth="176.0" />
+      
+          <Label fx:id="totalLabel" alignment="CENTER" prefHeight="46.0" prefWidth="306.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Totale ordine: € 0.0" />
+         <HBox prefHeight="46.0" prefWidth="286.0" />
+          <ComboBox fx:id="deliveryModeComboBox" prefHeight="46.0" prefWidth="270.0" promptText="MODALITA' DI CONSEGNA" />
+      </children>
+   </HBox>
     <TextField fx:id="addressField" promptText="Indirizzo per la consegna" />
 
     <HBox alignment="CENTER" spacing="20">
@@ -44,13 +51,15 @@
     </HBox>
 
     <Label alignment="TOP_LEFT" prefHeight="45.0" prefWidth="312.0" styleClass="title-label" text="Metodo di pagamento:" />
-    <TextField fx:id="paymentField" prefHeight="64.0" prefWidth="1460.0" promptText="Es. Carta, PayPal, Contanti" />
+    <TextField fx:id="paymentField" prefHeight="26.0" prefWidth="1460.0" promptText="Es. Carta, PayPal, Contanti" />
 
     <HBox alignment="CENTER" spacing="12">
+        <Button onAction="#handleRemoveBouquet" text="Rimuovi bouquet">
+         <styleClass>
+            <String fx:value="beige-button" />
+            <String fx:value="login-secondary-button" />
+         </styleClass></Button>
         <Button onAction="#handleConfirmOrder" styleClass="beige-button" text="Conferma ordine" />
-        <Button onAction="#handleRemoveBouquet" styleClass="beige-button" text="Rimuovi bouquet" />
-        <Button onAction="#handleBackToCatalog" styleClass="beige-button" text="Torna al catalogo" />
-        <Button onAction="#handleLogout" styleClass="beige-button" text="Logout" />
     </HBox>
 
     <Label fx:id="messageLabel" text="" />

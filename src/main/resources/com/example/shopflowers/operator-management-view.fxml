@@ -16,18 +16,25 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.OperatorManagementGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.OperatorManagementGraphicController">
 
-    <MenuBar>
-        <Menu text="Navigazione">
+    <MenuBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="1460.0">
+        <Menu text="Impostazioni">
             <MenuItem onAction="#handleBackToAdmin" text="Torna ai prodotti" />
             <MenuItem onAction="#handleLogout" text="Logout" />
+         <graphic>
+            <HBox prefHeight="100.0" prefWidth="10.0" />
+         </graphic>
         </Menu>
+      <Menu mnemonicParsing="false">
+         <graphic>
+         
+             <Label alignment="TOP_RIGHT" prefHeight="27.0" prefWidth="1322.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Gestione Operatori" />
+         </graphic>
+      </Menu>
     </MenuBar>
 
-    <Label alignment="CENTER" prefHeight="27.0" prefWidth="1550.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Gestione Operatori" />
-
-    <GridPane alignment="CENTER" hgap="12" vgap="12">
+    <GridPane alignment="CENTER" hgap="12" prefHeight="196.0" prefWidth="1460.0" vgap="12">
         <padding>
             <Insets bottom="10" left="10" right="10" top="10" />
         </padding>
@@ -39,11 +46,11 @@
         <Label GridPane.columnIndex="0" GridPane.rowIndex="2" />
         <TextField fx:id="usernameField" promptText="Username:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <PasswordField fx:id="passwordField" promptText="Password:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <TextField fx:id="salaryField" promptText="Stipendio:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <TextField fx:id="contractYearField" promptText="Anno contratto:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <TextField fx:id="annualHoursField" promptText="Ore lavorative annuali:" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <TextField fx:id="salaryField" promptText="Stipendio:" GridPane.columnIndex="2" />
+        <TextField fx:id="contractYearField" promptText="Anno contratto:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <TextField fx:id="annualHoursField" promptText="Ore lavorative annuali:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
-        <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="7">
+        <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="2" GridPane.rowIndex="3">
             <Button onAction="#handleCreateOperator" styleClass="beige-button" text="Crea operatore" />
             <Button onAction="#handleUpdateOperator" styleClass="beige-button" text="Aggiorna selezionato" />
             <Button onAction="#handleDeleteOperator" styleClass="beige-button" text="Elimina selezionato" />
@@ -51,6 +58,7 @@
         </HBox>
       <columnConstraints>
          <ColumnConstraints maxWidth="115.20002441406251" minWidth="0.0" prefWidth="0.0" />
+         <ColumnConstraints maxWidth="684.8" minWidth="569.5999755859375" prefWidth="684.8" />
          <ColumnConstraints maxWidth="684.8" minWidth="569.5999755859375" prefWidth="684.8" />
       </columnConstraints>
       <rowConstraints>
@@ -65,11 +73,11 @@
       </rowConstraints>
     </GridPane>
 
-    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Operatori registrati" />
+       <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Operatori registrati:" />
 
     <TextField fx:id="searchField" prefWidth="280" promptText="Cerca per nome, cognome o username" />
 
-    <TableView fx:id="operatorTable" prefHeight="260">
+    <TableView fx:id="operatorTable" prefHeight="341.0" prefWidth="1460.0">
         <columns>
             <TableColumn fx:id="idColumn" prefWidth="70" text="ID" />
             <TableColumn fx:id="nameColumn" prefWidth="140" text="Nome" />

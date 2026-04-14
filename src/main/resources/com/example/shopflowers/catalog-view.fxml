@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="16" style="-fx-padding: 20;" styleClass="login-root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerCatalogGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="16" style="-fx-padding: 20;" styleClass="app-root" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerCatalogGraphicController">
 
     <MenuBar styleClass="page-subtitle">
         <Menu text="Navigazione">
@@ -23,9 +23,9 @@
             <HBox prefHeight="100.0" prefWidth="0.0" />
          </graphic>
         </Menu>
-      <Menu mnemonicParsing="false">
+      <Menu disable="true" mnemonicParsing="false">
          <graphic>
-            <HBox prefHeight="30.0" prefWidth="728.0" />
+            <Label prefHeight="16.0" prefWidth="720.0" visible="false" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="I miei ordini">
@@ -63,15 +63,15 @@
      <Label styleClass="page-title" text="Catalogo Cliente" textFill="WHITE" />
      <Label styleClass="page-subtitle" text="Consulta i prodotti, applica filtri e aggiungi articoli al carrello." textFill="#efe4e4" />
 
-    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="app-section-card">
+    <HBox alignment="CENTER_LEFT" spacing="12">
         <TextField fx:id="searchField" prefWidth="280" promptText="Cerca per nome, colore o varietà" />
       <HBox prefHeight="46.0" prefWidth="783.0" />
 
         <CheckBox fx:id="availableOnlyCheckBox" styleClass="login-subtitle" text="Solo disponibili" />
    
-        <ComboBox fx:id="colorFilterComboBox" prefWidth="180" />
+        <ComboBox fx:id="colorFilterComboBox" prefWidth="180" styleClass="login-mode-button" />
     </HBox>
-     <TableView fx:id="productTable" prefHeight="470" styleClass="login-mode-button">
+     <TableView fx:id="productTable" prefHeight="534.0" prefWidth="1460.0" styleClass="login-mode-button">
          <columns>
              <TableColumn fx:id="imageColumn" prefWidth="120" text="Immagine" />
              <TableColumn fx:id="idColumn" prefWidth="70" text="ID" />
@@ -84,13 +84,14 @@
      </TableView>
 
     <HBox alignment="CENTER_LEFT" spacing="12" styleClass="app-section-card">
-        <Label fx:id="cartTimerLabel" prefHeight="16.0" prefWidth="514.0" styleClass="info-label" text="Timer carrello: 10:00" />
 
         <TextField fx:id="quantityField" prefWidth="100" promptText="QUANTITA'" />
 
-        <Button onAction="#handleAddToCart" styleClass="beige-button" text="Aggiungi al carrello" />
+        <Button onAction="#handleAddToCart" prefHeight="38.0" prefWidth="170.0" styleClass="login-secondary-button" text="Aggiungi al carrello" />
 
-        <Button onAction="#handleGoToCheckout" styleClass="secondary-button" text="Vai al pagamento" />
+        <Button onAction="#handleGoToCheckout" prefHeight="37.0" prefWidth="157.0" styleClass="login-primary-button" text="Vai al pagamento" />
+      <HBox prefHeight="47.0" prefWidth="806.0" />
+        <Label fx:id="cartTimerLabel" alignment="CENTER" prefHeight="47.0" prefWidth="177.0" styleClass="root" text="Timer carrello: 10:00" />
     </HBox>
 
     <Label fx:id="messageLabel" styleClass="message-label" wrapText="true" />
