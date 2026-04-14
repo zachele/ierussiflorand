@@ -32,10 +32,9 @@
               <TextField fx:id="searchField" alignment="CENTER" prefHeight="0.0" prefWidth="278.0" promptText="Cerca per nome, colore o varietà" styleClass="text-field" />
          </graphic>
       </Menu>
-      <Menu mnemonicParsing="false" text="Unspecified Menu">
+      <Menu disable="true" mnemonicParsing="false">
          <graphic>
-         
-                            <Label alignment="CENTER" prefHeight="46.0" prefWidth="412.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="login-title" text="GESTIONE PRODOTTI ADMIN" />
+            <Label prefHeight="15.0" prefWidth="528.0" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="Nuovo operatore">
@@ -62,7 +61,11 @@
          </graphic>
         </Menu>
     </MenuBar>
-   <HBox prefHeight="78.0" prefWidth="1460.0" />
+   <HBox prefHeight="78.0" prefWidth="1460.0">
+      <children>
+      
+                            <Label alignment="CENTER" prefHeight="23.0" prefWidth="1583.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="login-title" text="GESTIONE PRODOTTI ADMIN" />
+      </children></HBox>
    <HBox prefHeight="100.0" prefWidth="200.0">
       <children>
       

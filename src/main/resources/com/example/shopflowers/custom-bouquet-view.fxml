@@ -22,18 +22,17 @@
 <VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomBouquetGraphicController">
 
     <MenuBar prefHeight="29.0" prefWidth="1460.0">
-      <Menu mnemonicParsing="false">
+      <Menu disable="true" mnemonicParsing="false">
          <graphic>
-         
-             <Label prefHeight="31.0" prefWidth="363.0" styleClass="title-label" text="Bouquet Personalizzato" />
+            <Label prefHeight="15.0" prefWidth="356.0" />
          </graphic>
       </Menu>
-      <Menu mnemonicParsing="false">
+      <Menu disable="true" mnemonicParsing="false">
          <graphic>
             <Label prefHeight="15.0" prefWidth="475.0" />
          </graphic>
       </Menu>
-        <Menu text="Navigazione">
+        <Menu text="Impostazioni">
             <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
             <MenuItem onAction="#handleLogout" text="Logout" />
          <graphic>
@@ -48,7 +47,7 @@
             <HBox prefHeight="46.0" prefWidth="0.0" />
          </graphic>
         </Menu>
-      <Menu mnemonicParsing="false">
+      <Menu disable="true" mnemonicParsing="false">
          <graphic>
             <Label prefHeight="15.0" prefWidth="27.0" />
          </graphic>
@@ -64,6 +63,8 @@
          </graphic>
       </Menu>
     </MenuBar>
+
+             <Label alignment="CENTER" prefHeight="31.0" prefWidth="1484.0" styleClass="title-label" text="Bouquet Personalizzato" />
 
     <VBox prefHeight="0.0" prefWidth="1460.0" spacing="4">
         <Label text="Prezzi extra bouquet: Dimensione media: +5€ | Dimensione grande: +10€ | Confezione premium: +7€ | Biglietto: +3€ | Vaso: +8€">

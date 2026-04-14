@@ -13,18 +13,11 @@
 
 <VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="app-root" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CartGraphicController">
 
-    <MenuBar>
-        <Menu text="Torna al catalogo">
+    <MenuBar nodeOrientation="RIGHT_TO_LEFT">
+        <Menu text="Impostazioni">
             <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
+            <MenuItem onAction="#handleLogout" text="Logout" />
         </Menu>
-      <Menu mnemonicParsing="false" text="Logout">
-        <items>
-               <MenuItem onAction="#handleLogout" text="Logout" />
-        </items>
-         <graphic>
-            <HBox prefHeight="17.0" prefWidth="1262.0" />
-         </graphic>
-      </Menu>
     </MenuBar>
 
     <VBox spacing="6">

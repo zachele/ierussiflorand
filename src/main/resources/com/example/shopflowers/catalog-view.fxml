@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -69,7 +70,11 @@
 
         <CheckBox fx:id="availableOnlyCheckBox" styleClass="login-subtitle" text="Solo disponibili" />
    
-        <ComboBox fx:id="colorFilterComboBox" prefWidth="180" styleClass="login-mode-button" />
+        <ComboBox fx:id="colorFilterComboBox" prefWidth="180">
+         <styleClass>
+            <String fx:value="login-mode-button" />
+            <String fx:value="text" />
+         </styleClass></ComboBox>
     </HBox>
      <TableView fx:id="productTable" prefHeight="534.0" prefWidth="1460.0" styleClass="login-mode-button">
          <columns>

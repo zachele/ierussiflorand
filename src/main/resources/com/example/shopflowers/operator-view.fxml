@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.OperatorGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.OperatorGraphicController">
 
     <MenuBar>
         <Menu text="Impostazioni">
@@ -26,7 +26,7 @@
 
     <HBox alignment="CENTER" spacing="12">
         <TextField fx:id="searchField" prefWidth="380" promptText="Cerca per nome, cognome, cliente, consegna, pagamento o stato" />
-        <ComboBox fx:id="statusFilterComboBox" prefWidth="180" />
+        <ComboBox fx:id="statusFilterComboBox" prefWidth="180" promptText="Filtro Stato " />
     </HBox>
 
     <TableView fx:id="orderTable" prefHeight="250">
@@ -45,10 +45,9 @@
 
     <HBox alignment="CENTER" spacing="10">
         <Label />
-        <ComboBox fx:id="statusComboBox" prefHeight="42.0" prefWidth="226.0" promptText="Stato ordine:" />
-        <Button onAction="#handleUpdateStatus" styleClass="beige-button" text="Aggiorna stato" />
-        <Button onAction="#handleShowActiveOrders" styleClass="beige-button" text="Ordini attivi" />
-        <Button onAction="#handleShowCompletedOrders" styleClass="beige-button" text="Ordini completati" />
+        <ComboBox fx:id="statusComboBox" prefHeight="42.0" prefWidth="226.0" promptText="Modifica stato" />
+        <Button onAction="#handleUpdateStatus" styleClass="login-secondary-button" text="Aggiorna stato" />
+        <Button onAction="#handleShowActiveOrders" styleClass="login-secondary-button" text="Ordini attivi" />
     </HBox>
 
     <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Dettagli ordine selezionato" />

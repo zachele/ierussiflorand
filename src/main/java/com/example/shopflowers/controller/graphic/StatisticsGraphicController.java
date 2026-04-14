@@ -2,16 +2,23 @@ package com.example.shopflowers.controller.graphic;
 
 import com.example.shopflowers.controller.application.StatisticsController;
 import com.example.shopflowers.util.SceneNavigator;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StatisticsGraphicController {
+
+    private static final int MAX_PRODUCTS_IN_CHART = 6;
+    private static final int MAX_LABEL_LENGTH = 18;
 
     @FXML
     private Label totalOrdersLabel;
@@ -44,16 +51,18 @@ public class StatisticsGraphicController {
 
     @FXML
     public void initialize() {
+        configurePieChart();
+
         try {
             Map<String, String> statistics = statisticsController.getStatistics();
 
-            totalOrdersLabel.setText(statistics.get("Totale ordini"));
-            totalRevenueLabel.setText(statistics.get("Totale ricavi"));
-            deliveredOrdersLabel.setText(statistics.get("Ordini consegnati"));
-            activeOrdersLabel.setText(statistics.get("Ordini attivi"));
-            totalClientsLabel.setText(statistics.get("Clienti registrati"));
-            totalOperatorsLabel.setText(statistics.get("Operatori registrati"));
-            mostSoldProductLabel.setText(statistics.get("Prodotto più venduto"));
+            totalOrdersLabel.setText(statistics.getOrDefault("Totale ordini", "0"));
+            totalRevenueLabel.setText(statistics.getOrDefault("Totale ricavi", "€ 0.00"));
+            deliveredOrdersLabel.setText(statistics.getOrDefault("Ordini consegnati", "0"));
+            activeOrdersLabel.setText(statistics.getOrDefault("Ordini attivi", "0"));
+            totalClientsLabel.setText(statistics.getOrDefault("Clienti registrati", "0"));
+            totalOperatorsLabel.setText(statistics.getOrDefault("Operatori registrati", "0"));
+            mostSoldProductLabel.setText(statistics.getOrDefault("Prodotto più venduto", "-"));
 
             loadSoldProductsPieChart();
 
@@ -62,23 +71,76 @@ public class StatisticsGraphicController {
         }
     }
 
+    private void configurePieChart() {
+        statisticsPieChart.setLegendVisible(true);
+        statisticsPieChart.setLabelsVisible(true);
+        statisticsPieChart.setClockwise(true);
+        statisticsPieChart.setStartAngle(90);
+    }
+
     private void loadSoldProductsPieChart() throws SQLException {
         Map<String, Integer> soldProducts = statisticsController.getSoldProductsDistribution();
 
         statisticsPieChart.getData().clear();
 
-        if (soldProducts.isEmpty()) {
+        if (soldProducts == null || soldProducts.isEmpty()) {
             statisticsPieChart.setTitle("Nessun prodotto venduto");
             return;
         }
 
         statisticsPieChart.setTitle("Distribuzione prodotti venduti");
 
-        for (Map.Entry<String, Integer> entry : soldProducts.entrySet()) {
-            statisticsPieChart.getData().add(
-                    new PieChart.Data(entry.getKey(), entry.getValue())
-            );
+        Map<String, Integer> sortedProducts = soldProducts.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue() != null && entry.getValue() > 0)
+                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()))
+                .limit(MAX_PRODUCTS_IN_CHART)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (first, second) -> first,
+                        java.util.LinkedHashMap::new
+                ));
+
+        if (sortedProducts.isEmpty()) {
+            statisticsPieChart.setTitle("Nessun prodotto venduto");
+            return;
         }
+
+        for (Map.Entry<String, Integer> entry : sortedProducts.entrySet()) {
+            String fullName = entry.getKey();
+            String chartLabel = abbreviateLabel(fullName);
+
+            PieChart.Data data = new PieChart.Data(chartLabel, entry.getValue());
+            statisticsPieChart.getData().add(data);
+
+            installTooltipWhenNodeIsReady(data, fullName, entry.getValue());
+        }
+    }
+
+    private void installTooltipWhenNodeIsReady(PieChart.Data data, String fullProductName, int soldQuantity) {
+        Platform.runLater(() -> {
+            if (data.getNode() == null) {
+                return;
+            }
+
+            Tooltip tooltip = new Tooltip(
+                    "Prodotto: " + fullProductName + "\nQuantità venduta: " + soldQuantity
+            );
+            Tooltip.install(data.getNode(), tooltip);
+        });
+    }
+
+    private String abbreviateLabel(String text) {
+        if (text == null || text.isBlank()) {
+            return "Prodotto";
+        }
+
+        if (text.length() <= MAX_LABEL_LENGTH) {
+            return text;
+        }
+
+        return text.substring(0, MAX_LABEL_LENGTH - 3) + "...";
     }
 
     @FXML

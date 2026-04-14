@@ -186,15 +186,50 @@
     -fx-background-color: black;
 }
 
+.combo-box {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+}
+
 .combo-box .list-cell {
-    -fx-text-fill: white
-;
+    -fx-text-fill: #f4efe8;
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #f4efe8;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #111827;
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: #111827;
+    -fx-text-fill: #f4efe8;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: rgba(96, 165, 250, 0.22);
+    -fx-text-fill: white;
 }
 
 /* =========================================================
    MENU BAR
    ========================================================= */
-
 .menu-bar {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-border-color: rgba(255, 255, 255, 0.10);
@@ -209,9 +244,14 @@
     -fx-font-weight: bold;
 }
 
-.menu-item .label {
-    -fx-font-weight: normal;
-    -fx-text-fill: #e8eaf0;
+.menu {
+    -fx-background-color: transparent;
+}
+
+.menu:hover,
+.menu:showing {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-background-radius: 10;
 }
 
 .context-menu {
@@ -221,8 +261,17 @@
     -fx-border-radius: 14;
 }
 
-.menu-item:focused,
-.menu-item:hover {
+.menu-item {
+    -fx-background-color: transparent;
+}
+
+.menu-item .label {
+    -fx-text-fill: #e8eaf0;
+    -fx-font-weight: normal;
+}
+
+.menu-item:hover,
+.menu-item:focused {
     -fx-background-color: rgba(255, 255, 255, 0.10);
 }
 
@@ -421,4 +470,111 @@
     -fx-background-radius: 12;
     -fx-padding: 10 12 10 12;
     -fx-alignment: center;
+}
+
+
+.date-picker {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+}
+
+.date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f4efe8;
+    -fx-prompt-text-fill: #a8b0bd;
+    -fx-border-color: transparent;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 16 16 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #f4efe8;
+}
+
+.date-picker-popup {
+    -fx-background-color: #111827;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #111827;
+}
+
+.date-picker-popup .label {
+    -fx-text-fill: #f4efe8;
+}
+
+.date-picker-popup .spinner .button {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f4efe8;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+}
+
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: rgba(96, 165, 250, 0.22);
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .today {
+    -fx-border-color: rgba(96, 165, 250, 0.50);
+    -fx-border-width: 1;
+}
+
+.chart {
+    -fx-background-color: transparent;
+}
+
+.chart-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #f4efe8;
+}
+
+.chart-legend-item-symbol {
+    -fx-background-radius: 6;
+}
+
+.default-color0.chart-pie { -fx-pie-color: #60a5fa; }
+.default-color1.chart-pie { -fx-pie-color: #22c55e; }
+.default-color2.chart-pie { -fx-pie-color: #f97316; }
+.default-color3.chart-pie { -fx-pie-color: #a855f7; }
+.default-color4.chart-pie { -fx-pie-color: #eab308; }
+.default-color5.chart-pie { -fx-pie-color: #ef4444; }
+
+.chart-pie-label {
+    -fx-fill: #f4efe8;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.statistics-label {
+    -fx-text-fill: #c7cdd8;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.statistics-value {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
 }

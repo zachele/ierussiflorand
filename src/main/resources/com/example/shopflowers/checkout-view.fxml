@@ -23,7 +23,7 @@
         </Menu>
     </MenuBar>
 
-    <Label alignment="CENTER" prefHeight="27.0" prefWidth="1491.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="CHECKOUT CLIENTE" />
+    <Label alignment="CENTER" prefHeight="27.0" prefWidth="1491.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Metodo di Pagamento " />
 
     <TableView fx:id="checkoutTable" prefHeight="318.0" prefWidth="1460.0">
         <columns>

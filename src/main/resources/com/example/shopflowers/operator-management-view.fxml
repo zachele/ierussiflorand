@@ -26,15 +26,11 @@
             <HBox prefHeight="100.0" prefWidth="10.0" />
          </graphic>
         </Menu>
-      <Menu mnemonicParsing="false">
-         <graphic>
-         
-             <Label alignment="TOP_RIGHT" prefHeight="27.0" prefWidth="1322.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Gestione Operatori" />
-         </graphic>
-      </Menu>
     </MenuBar>
 
-    <GridPane alignment="CENTER" hgap="12" prefHeight="196.0" prefWidth="1460.0" vgap="12">
+             <Label alignment="TOP_CENTER" prefHeight="27.0" prefWidth="1471.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Gestione Operatori" />
+
+    <GridPane alignment="CENTER" hgap="12" prefHeight="179.0" prefWidth="1460.0" vgap="12">
         <padding>
             <Insets bottom="10" left="10" right="10" top="10" />
         </padding>
@@ -72,12 +68,17 @@
          <RowConstraints />
       </rowConstraints>
     </GridPane>
+   <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+      <children>
+      
+             <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Operatori registrati:" />
+         <Label prefHeight="15.0" prefWidth="329.0" />
+      
+          <TextField fx:id="searchField" alignment="CENTER" prefHeight="38.0" prefWidth="434.0" promptText="Cerca per nome, cognome o username" />
+      </children>
+   </HBox>
 
-       <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Operatori registrati:" />
-
-    <TextField fx:id="searchField" prefWidth="280" promptText="Cerca per nome, cognome o username" />
-
-    <TableView fx:id="operatorTable" prefHeight="341.0" prefWidth="1460.0">
+    <TableView fx:id="operatorTable" prefHeight="499.0" prefWidth="1460.0">
         <columns>
             <TableColumn fx:id="idColumn" prefWidth="70" text="ID" />
             <TableColumn fx:id="nameColumn" prefWidth="140" text="Nome" />

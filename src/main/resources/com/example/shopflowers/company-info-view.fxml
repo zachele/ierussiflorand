@@ -33,7 +33,7 @@
          <Cursor fx:constant="TEXT" />
       </cursor></Label>
 
-    <Button onAction="#handleBackToCatalog" styleClass="beige-button" text="Torna al catalogo" />
+    <Button onAction="#handleBackToCatalog" styleClass="title-label" text="Torna al catalogo" />
 
     <Label fx:id="messageLabel" text="" />
 </VBox>

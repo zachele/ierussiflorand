@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="800" prefWidth="1500" styleClass="login-root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.RegisterGraphicController">
+<StackPane prefHeight="800" prefWidth="1500" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.RegisterGraphicController">
 
     <VBox alignment="CENTER" spacing="20">
 

@@ -16,10 +16,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.RecommendationGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.RecommendationGraphicController">
 
-    <MenuBar>
-        <Menu text="Navigazione">
+    <MenuBar nodeOrientation="RIGHT_TO_LEFT">
+        <Menu text="Impostazioni">
             <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
             <MenuItem onAction="#handleLogout" text="Logout" />
         </Menu>
@@ -39,7 +39,7 @@
         <TextField fx:id="quantityField" prefHeight="34.0" prefWidth="349.0" promptText="Quantità da aggiungere al carrello:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
         <HBox alignment="TOP_CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
-            <Button onAction="#handleFindRecommendations" styleClass="beige-button" text="Trova proposte" />
+            <Button onAction="#handleFindRecommendations" styleClass="login-secondary-button" text="Trova proposte" />
             <Button onAction="#handleAddRecommendedToCart" styleClass="beige-button" text="Aggiungi selezionato al carrello" />
         </HBox>
 
