@@ -140,7 +140,7 @@ public class CartGraphicController {
             CartTimerManager.startOrResetTimer();
             SceneNavigator.goTo(
                     (Stage) cartTable.getScene().getWindow(),
-                    "/com/example/shopflowers/checkout-view.fxml",
+                    "/com/example/shopflowers/view/checkout-view.fxml",
                     "Shop Flowers - Checkout"
             );
         } catch (IOException e) {
@@ -153,7 +153,7 @@ public class CartGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) cartTable.getScene().getWindow(),
-                    "/com/example/shopflowers/catalog-view.fxml",
+                    "/com/example/shopflowers/view/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {

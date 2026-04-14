@@ -16,6 +16,9 @@ import java.util.Locale;
 public class FlowerProductFileDAO implements FlowerProductDAO {
 
     private static final String FILE_PATH = "data/flower_products.csv";
+    private static final String HEADER = "id;name;price;color;variety;stockQuantity;imageName";
+    private static final int MIN_REQUIRED_COLUMNS = 6;
+    private static final int IMAGE_NAME_INDEX = 6;
 
     @Override
     public void save(FlowerProduct product) throws SQLException {
@@ -39,37 +42,13 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
             while ((line = reader.readLine()) != null) {
                 if (firstLine) {
                     firstLine = false;
-                    continue;
-                }
-
-                if (line.isBlank()) {
-                    continue;
-                }
-
-                String[] parts = line.split(";", -1);
-                if (parts.length < 6) {
-                    continue;
-                }
-
-                try {
-                    String imageName = parts.length >= 7 ? parts[6].trim() : null;
-
-                    FlowerProduct product = new FlowerProduct(
-                            Integer.parseInt(parts[0].trim()),
-                            parts[1].trim(),
-                            Double.parseDouble(parts[2].trim().replace(',', '.')),
-                            parts[3].trim(),
-                            parts[4].trim(),
-                            Integer.parseInt(parts[5].trim()),
-                            imageName
-                    );
-
-                    products.add(product);
-                } catch (NumberFormatException e) {
-                    // riga non valida: ignorata
+                } else if (!line.isBlank()) {
+                    FlowerProduct product = parseProduct(line);
+                    if (product != null) {
+                        products.add(product);
+                    }
                 }
             }
-
         } catch (IOException e) {
             throw new SQLException("Errore nella lettura dei prodotti da file.", e);
         }
@@ -123,15 +102,44 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
         }
     }
 
+    private FlowerProduct parseProduct(String line) {
+        String[] parts = line.split(";", -1);
+
+        if (parts.length < MIN_REQUIRED_COLUMNS) {
+            return null;
+        }
+
+        try {
+            return buildProduct(parts);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private FlowerProduct buildProduct(String[] parts) {
+        String imageName = parts.length > IMAGE_NAME_INDEX ? parts[IMAGE_NAME_INDEX].trim() : null;
+
+        return new FlowerProduct(
+                Integer.parseInt(parts[0].trim()),
+                parts[1].trim(),
+                Double.parseDouble(parts[2].trim().replace(',', '.')),
+                parts[3].trim(),
+                parts[4].trim(),
+                Integer.parseInt(parts[5].trim()),
+                imageName
+        );
+    }
+
     private void writeAll(List<FlowerProduct> products) throws SQLException {
         ensureFileExists();
 
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(FILE_PATH))) {
-            writer.write("id;name;price;color;variety;stockQuantity;imageName");
+            writer.write(HEADER);
             writer.newLine();
 
             for (FlowerProduct product : products) {
-                writer.write(String.format(Locale.US,
+                writer.write(String.format(
+                        Locale.US,
                         "%d;%s;%.2f;%s;%s;%d;%s",
                         product.getId(),
                         escape(product.getName()),
@@ -143,7 +151,6 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
                 ));
                 writer.newLine();
             }
-
         } catch (IOException e) {
             throw new SQLException("Errore nella scrittura dei prodotti su file.", e);
         }
@@ -159,13 +166,17 @@ public class FlowerProductFileDAO implements FlowerProductDAO {
             }
 
             if (Files.notExists(filePath)) {
-                try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                    writer.write("id;name;price;color;variety;stockQuantity;imageName");
-                    writer.newLine();
-                }
+                createFileWithHeader(filePath);
             }
         } catch (IOException e) {
             throw new SQLException("Errore nella creazione del file prodotti.", e);
+        }
+    }
+
+    private void createFileWithHeader(Path filePath) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
+            writer.write(HEADER);
+            writer.newLine();
         }
     }
 

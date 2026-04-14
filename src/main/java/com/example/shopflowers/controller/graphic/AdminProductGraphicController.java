@@ -291,7 +291,7 @@ public class AdminProductGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
-                    "/com/example/shopflowers/operator-management-view.fxml",
+                    "/com/example/shopflowers/view/operator-management-view.fxml",
                     "Shop Flowers - Gestione Operatori"
             );
         } catch (IOException e) {
@@ -304,7 +304,7 @@ public class AdminProductGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
-                    "/com/example/shopflowers/statistics-view.fxml",
+                    "/com/example/shopflowers/view/statistics-view.fxml",
                     "Shop Flowers - Statistiche Vendite"
             );
         } catch (IOException e) {

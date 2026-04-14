@@ -90,12 +90,12 @@ public class LoginGraphicController {
             Session.getInstance().setSession(user.getUsername(), user.getRole());
 
             switch (user.getRole()) {
-                case "ADMIN" -> openView("/com/example/shopflowers/admin-product-view.fxml", "Shop Flowers - Admin");
+                case "ADMIN" -> openView("/com/example/shopflowers/view/admin-product-view.fxml", "Shop Flowers - Admin");
                 case "CUSTOMER" -> {
-                    openView("/com/example/shopflowers/catalog-view.fxml", "Shop Flowers - Catalogo");
+                    openView("/com/example/shopflowers/view/catalog-view.fxml", "Shop Flowers - Catalogo");
                     checkOrderStatusNotifications(user.getUsername());
                 }
-                case "OPERATOR" -> openView("/com/example/shopflowers/operator-view.fxml", "Shop Flowers - Operatore");
+                case "OPERATOR" -> openView("/com/example/shopflowers/view/operator-view.fxml", "Shop Flowers - Operatore");
                 default -> messageLabel.setText("Accesso non riuscito. Ruolo utente non riconosciuto.");
             }
 
@@ -113,7 +113,7 @@ public class LoginGraphicController {
         try {
             Session.getInstance().clearSession();
             Session.getInstance().setSession("guest", "GUEST");
-            openView("/com/example/shopflowers/catalog-view.fxml", "Shop Flowers - Catalogo Ospite");
+            openView("/com/example/shopflowers/view/catalog-view.fxml", "Shop Flowers - Catalogo Ospite");
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante l'accesso come ospite.");
         }
@@ -179,7 +179,7 @@ public class LoginGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) usernameField.getScene().getWindow(),
-                    "/com/example/shopflowers/register-view.fxml",
+                    "/com/example/shopflowers/view/register-view.fxml",
                     "Shop Flowers - Registrazione"
             );
         } catch (IOException e) {
@@ -192,7 +192,7 @@ public class LoginGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) usernameField.getScene().getWindow(),
-                    "/com/example/shopflowers/change-password-view.fxml",
+                    "/com/example/shopflowers/view/change-password-view.fxml",
                     "Shop Flowers - Cambio Password"
             );
         } catch (IOException e) {

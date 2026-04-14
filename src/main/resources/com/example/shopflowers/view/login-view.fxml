@@ -14,13 +14,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="800" prefWidth="1500" styleClass="login-root" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController">
+<StackPane prefHeight="800" prefWidth="1500" styleClass="app-root" stylesheets="@../../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.LoginGraphicController">
 
-    <VBox alignment="CENTER" spacing="20" styleClass="app-root">
+    <VBox alignment="CENTER" spacing="20">
    
-        <VBox alignment="CENTER" maxWidth="430" spacing="18" styleClass="login-card">
+        <VBox alignment="CENTER" maxWidth="430" spacing="18" styleClass="app-card">
          <ImageView fitHeight="226.0" fitWidth="244.0">
-               <Image url="@images/auth/logo.png" />
+               <Image url="@../images/auth/logo.png" />
          </ImageView>
    
             <VBox alignment="CENTER" spacing="8">

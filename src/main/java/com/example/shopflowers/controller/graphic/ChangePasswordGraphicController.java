@@ -64,7 +64,7 @@ public class ChangePasswordGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) messageLabel.getScene().getWindow(),
-                    "/com/example/shopflowers/login-view.fxml",
+                    "/com/example/shopflowers/view/login-view.fxml",
                     "Shop Flowers - Login"
             );
         } catch (IOException e) {

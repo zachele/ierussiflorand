@@ -186,7 +186,7 @@ public class RecommendationGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) messageLabel.getScene().getWindow(),
-                    "/com/example/shopflowers/catalog-view.fxml",
+                    "/com/example/shopflowers/view/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {

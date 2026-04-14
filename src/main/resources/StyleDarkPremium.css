@@ -10,7 +10,7 @@
 
 .app-root {
     -fx-background-color:
-            linear-gradient(from 0% 0% to 100% 100%, #0a0d16 0%, #111827 35%, #161d2b 70%, #0b0f18 100%);
+            radial-gradient(center 30% 20%, radius 120%, #1a2235 0%, #111827 35%, #0b0f18 75%, #070b12 100%);
 }
 
 /* =========================================================
@@ -23,9 +23,10 @@
 
 .title-label,
 .page-title {
-    -fx-font-size: 26px;
+    -fx-font-size: 30px;
     -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(96,165,250,0.18), 10, 0.18, 0, 0);
 }
 
 .section-label {
@@ -48,25 +49,30 @@
     -fx-text-fill: #ffb4b4;
 }
 
+.highlight-card {
+    -fx-border-color: rgba(96,165,250,0.55);
+    -fx-border-width: 1.4;
+    -fx-effect: dropshadow(gaussian, rgba(96,165,250,0.22), 18, 0.18, 0, 0);
+}
 /* =========================================================
    PANELS / CARDS
    ========================================================= */
-
 .app-card {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-background-radius: 28;
-    -fx-border-radius: 28;
-    -fx-border-color: rgba(255, 255, 255, 0.10);
-    -fx-padding: 22 24 22 24;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 24, 0.18, 0, 10);
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-border-color: rgba(255, 255, 255, 0.60);
+    -fx-padding: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.78), 75, 0.60, 0, 48);
 }
 
 .app-section-card {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-color: rgba(255, 255, 255, 0.09);
     -fx-background-radius: 22;
     -fx-border-radius: 22;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-padding: 16 18 16 18;
+    -fx-border-color: rgba(255, 255, 255, 0.60);
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.34), 26, 0.18, 0, 8);
 }
 
 .app-soft-card,
@@ -109,15 +115,9 @@
 
 .primary-button,
 .beige-button {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0f172a 0%, #1d4ed8 50%, #22c55e 100%);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0f172a 0%, #2563eb 42%, #38bdf8 68%, #22c55e 100%);
     -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-border-color: transparent;
-    -fx-cursor: hand;
-    -fx-padding: 9 18 9 18;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.30), 18, 0.22, 0, 4);
 }
 
 .primary-button:hover,
@@ -472,6 +472,10 @@
     -fx-alignment: center;
 }
 
+/* =========================================================
+   DATE
+   ========================================================= */
+
 
 .date-picker {
     -fx-background-color: rgba(255, 255, 255, 0.08);
@@ -532,6 +536,11 @@
     -fx-border-width: 1;
 }
 
+
+/* =========================================================
+   SPECIAL STATISTIC ADMIN
+   ========================================================= */
+
 .chart {
     -fx-background-color: transparent;
 }
@@ -577,4 +586,49 @@
     -fx-text-fill: #ffffff;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
+}
+
+/* =========================================================
+   PERCEZIONE
+   ========================================================= */
+
+.button,
+.beige-button,
+.primary-button,
+.secondary-button,
+.soft-button,
+.login-primary-button,
+.login-secondary-button {
+    -fx-cursor: hand;
+}
+
+.button:hover,
+.beige-button:hover,
+.primary-button:hover,
+.secondary-button:hover,
+.soft-button:hover,
+.login-primary-button:hover,
+.login-secondary-button:hover {
+    -fx-opacity: 0.94;
+}
+
+.button:pressed,
+.beige-button:pressed,
+.primary-button:pressed,
+.secondary-button:pressed,
+.soft-button:pressed,
+.login-primary-button:pressed,
+.login-secondary-button:pressed {
+    -fx-opacity: 0.86;
+}
+
+.text-field:focused,
+.password-field:focused,
+.combo-box:focused,
+.date-picker:focused {
+    -fx-effect: dropshadow(gaussian, rgba(96, 165, 250, 0.18), 10, 0.20, 0, 0);
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(255,255,255,0.08);
 }

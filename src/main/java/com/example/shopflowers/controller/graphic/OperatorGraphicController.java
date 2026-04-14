@@ -127,8 +127,7 @@ public class OperatorGraphicController {
         statusFilterComboBox.setItems(FXCollections.observableArrayList(
                 "Tutti",
                 "IN_PREPARAZIONE",
-                "PRONTO",
-                "CONSEGNATO"
+                "PRONTO"
         ));
         statusFilterComboBox.setValue("Tutti");
 

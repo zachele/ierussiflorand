@@ -14,7 +14,7 @@ public class ShopFlowersApplication extends Application {
         AppConfig.setMode(AppMode.DEMO); // cambia in DEMO o FILE per testare le altre modalità
 
         FXMLLoader fxmlLoader = new FXMLLoader(
-                ShopFlowersApplication.class.getResource("/com/example/shopflowers/login-view.fxml")
+                ShopFlowersApplication.class.getResource("/com/example/shopflowers/view/login-view.fxml")
         );
 
         Scene scene = new Scene(fxmlLoader.load(), 1500, 800);

@@ -285,7 +285,7 @@ public class CustomBouquetGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) flowerTable.getScene().getWindow(),
-                    "/com/example/shopflowers/catalog-view.fxml",
+                    "/com/example/shopflowers/view/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {

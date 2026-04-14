@@ -86,7 +86,7 @@ public class RegisterGraphicController {
     private void goToLogin() throws IOException {
         SceneNavigator.goTo(
                 (Stage) nameField.getScene().getWindow(),
-                "/com/example/shopflowers/login-view.fxml",
+                "/com/example/shopflowers/view/login-view.fxml",
                 "Shop Flowers - Login"
         );
     }

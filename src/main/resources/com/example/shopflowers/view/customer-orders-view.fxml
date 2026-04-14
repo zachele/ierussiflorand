@@ -9,9 +9,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerOrdersGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomerOrdersGraphicController">
    <MenuBar prefHeight="0.0" prefWidth="1460.0">
-     <menus>
        <Menu disable="true" mnemonicParsing="false">
             <graphic>
                <Label prefHeight="15.0" prefWidth="152.0" />
@@ -37,7 +36,6 @@
                  <Button onAction="#handleLogout" prefHeight="32.0" prefWidth="98.0" styleClass="beige-button" text="Logout" />
             </graphic>
        </Menu>
-     </menus>
    </MenuBar>
      <Label alignment="CENTER" prefHeight="26.0" prefWidth="1518.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="I MIEI ORDINI" />
 

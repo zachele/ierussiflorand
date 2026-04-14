@@ -150,7 +150,7 @@ public class CustomerCatalogGraphicController {
             CartTimerManager.startOrResetTimer();
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
-                    "/com/example/shopflowers/checkout-view.fxml",
+                    "/com/example/shopflowers/view/checkout-view.fxml",
                     "Shop Flowers - Checkout"
             );
         } catch (IOException e) {
@@ -166,7 +166,7 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/customer-orders-view.fxml",
+                "/com/example/shopflowers/view/customer-orders-view.fxml",
                 "Shop Flowers - I miei ordini",
                 "Si è verificato un errore durante l'apertura dello storico ordini."
         );
@@ -175,7 +175,7 @@ public class CustomerCatalogGraphicController {
     @FXML
     private void handleCompanyInfo() {
         goToScene(
-                "/com/example/shopflowers/company-info-view.fxml",
+                "/com/example/shopflowers/view/company-info-view.fxml",
                 "Shop Flowers - Informazioni Azienda",
                 "Si è verificato un errore durante l'apertura della pagina aziendale."
         );
@@ -189,7 +189,7 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/recommendation-view.fxml",
+                "/com/example/shopflowers/view/recommendation-view.fxml",
                 "Shop Flowers - Assistente Bouquet",
                 "Si è verificato un errore durante l'apertura dell'assistente bouquet."
         );
@@ -203,7 +203,7 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/custom-bouquet-view.fxml",
+                "/com/example/shopflowers/view/custom-bouquet-view.fxml",
                 "Shop Flowers - Bouquet Personalizzato",
                 "Si è verificato un errore durante l'apertura della schermata bouquet personalizzato."
         );
@@ -217,7 +217,7 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/cart-view.fxml",
+                "/com/example/shopflowers/view/cart-view.fxml",
                 "Shop Flowers - Carrello",
                 "Si è verificato un errore durante l'apertura del carrello."
         );

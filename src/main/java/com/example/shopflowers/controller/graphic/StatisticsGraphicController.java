@@ -148,7 +148,7 @@ public class StatisticsGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) messageLabel.getScene().getWindow(),
-                    "/com/example/shopflowers/admin-product-view.fxml",
+                    "/com/example/shopflowers/view/admin-product-view.fxml",
                     "Shop Flowers - Gestione Prodotti"
             );
         } catch (IOException e) {

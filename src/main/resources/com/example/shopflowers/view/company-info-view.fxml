@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="login-root" stylesheets="@../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CompanyInfoGraphicController">
+<VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" styleClass="login-root" stylesheets="@../../../../Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CompanyInfoGraphicController">
 
     <Label alignment="CENTER" prefHeight="27.0" prefWidth="1538.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Ierussi Flowers - Informazioni Azienda" />
    <HBox prefHeight="94.0" prefWidth="1460.0" />

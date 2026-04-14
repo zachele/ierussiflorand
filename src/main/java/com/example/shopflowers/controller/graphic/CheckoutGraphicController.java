@@ -120,7 +120,7 @@ public class CheckoutGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) checkoutTable.getScene().getWindow(),
-                    "/com/example/shopflowers/catalog-view.fxml",
+                    "/com/example/shopflowers/view/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {

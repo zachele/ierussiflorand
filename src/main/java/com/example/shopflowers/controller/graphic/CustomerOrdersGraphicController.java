@@ -107,8 +107,7 @@ public class CustomerOrdersGraphicController {
         statusFilterComboBox.setItems(FXCollections.observableArrayList(
                 "Tutti",
                 "IN_PREPARAZIONE",
-                "PRONTO",
-                "CONSEGNATO"
+                "PRONTO"
         ));
         statusFilterComboBox.setValue("Tutti");
         statusFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
@@ -286,7 +285,7 @@ public class CustomerOrdersGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) orderTable.getScene().getWindow(),
-                    "/com/example/shopflowers/catalog-view.fxml",
+                    "/com/example/shopflowers/view/catalog-view.fxml",
                     "Shop Flowers - Catalogo Cliente"
             );
         } catch (IOException e) {
