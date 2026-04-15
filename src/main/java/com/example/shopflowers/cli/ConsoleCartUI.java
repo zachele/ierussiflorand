@@ -66,17 +66,7 @@ public class ConsoleCartUI {
 
             ConsolePrinter.println();
             ConsolePrinter.println("--------------- PRODOTTI ---------------");
-
-            for (FlowerProduct product : products) {
-                ConsolePrinter.println(
-                        "ID: " + product.getId()
-                                + " | Nome: " + product.getName()
-                                + " | Prezzo: € " + String.format("%.2f", product.getPrice())
-                                + " | Colore: " + product.getColor()
-                                + " | Varietà: " + product.getVariety()
-                                + " | Stock: " + product.getStockQuantity()
-                );
-            }
+            ConsolePrinter.printProducts(products);
 
         } catch (SQLException e) {
             ConsolePrinter.println("Errore durante il caricamento del catalogo.");
