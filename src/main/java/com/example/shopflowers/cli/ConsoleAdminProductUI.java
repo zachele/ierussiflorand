@@ -61,20 +61,16 @@ public class ConsoleAdminProductUI {
 
             ConsolePrinter.println();
             ConsolePrinter.println("--------------- PRODOTTI ---------------");
-
-            for (FlowerProduct product : products) {
-                ConsolePrinter.println(
-                        "ID: " + product.getId()
-                                + " | Nome: " + product.getName()
-                                + " | Prezzo: € " + String.format("%.2f", product.getPrice())
-                                + " | Colore: " + product.getColor()
-                                + " | Varietà: " + product.getVariety()
-                                + " | Stock: " + product.getStockQuantity()
-                );
-            }
+            printProducts(products);
 
         } catch (SQLException e) {
             ConsolePrinter.println("Errore durante il caricamento del catalogo.");
+        }
+    }
+
+    private void printProducts(List<FlowerProduct> products) {
+        for (FlowerProduct product : products) {
+            ConsolePrinter.printProduct(product);
         }
     }
 
