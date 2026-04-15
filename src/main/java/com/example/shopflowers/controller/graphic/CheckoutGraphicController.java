@@ -259,7 +259,7 @@ public class CheckoutGraphicController {
 
     private CheckoutBean buildCheckoutBean() {
         CheckoutBean checkoutBean = new CheckoutBean();
-        checkoutBean.setUsername(Session.getInstance().getLoggedUsername());
+        checkoutBean.setUsername(Session.getLoggedUsername());
         checkoutBean.setDeliveryMode(deliveryModeComboBox.getValue());
         checkoutBean.setPaymentMethod(paymentField.getText());
         checkoutBean.setDeliveryAddress(addressField.getText());

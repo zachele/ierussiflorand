@@ -65,7 +65,7 @@ public class ConsoleApplication {
 
     private void applyMode(AppMode mode) {
         AppConfig.setMode(mode);
-        Session.getInstance().clearSession();
+        Session.clearSession();
         ConsolePrinter.println("Modalità applicata: " + mode.name());
     }
 
@@ -77,7 +77,7 @@ public class ConsoleApplication {
             return;
         }
 
-        String role = Session.getInstance().getLoggedRole();
+        String role = Session.getLoggedRole();
 
         if ("CUSTOMER".equalsIgnoreCase(role)) {
             openCustomerArea();
@@ -89,7 +89,7 @@ public class ConsoleApplication {
             ConsolePrinter.println("Ruolo non riconosciuto.");
         }
 
-        Session.getInstance().clearSession();
+        Session.clearSession();
     }
 
     private void handleRegister() {
@@ -98,13 +98,13 @@ public class ConsoleApplication {
     }
 
     private void handleGuestAccess() {
-        Session.getInstance().setSession("guest", "GUEST");
+        Session.setSession("guest", "GUEST");
         ConsolePrinter.println("Accesso come ospite effettuato.");
 
         ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
         consoleCatalogUI.start();
 
-        Session.getInstance().clearSession();
+        Session.clearSession();
     }
 
     private void openCustomerArea() {

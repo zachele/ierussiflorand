@@ -38,7 +38,7 @@ public class ConsoleAuthUI {
             LoginController loginController = new LoginController();
             User user = loginController.login(loginBean);
 
-            Session.getInstance().setSession(user.getUsername(), user.getRole());
+            Session.setSession(user.getUsername(), user.getRole());
 
             ConsolePrinter.println("Login effettuato con successo come " + user.getRole() + ".");
             return true;

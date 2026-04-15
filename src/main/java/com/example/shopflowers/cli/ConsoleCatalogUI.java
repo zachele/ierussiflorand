@@ -74,8 +74,8 @@ public class ConsoleCatalogUI {
     }
 
     private void showSessionInfo() {
-        String username = Session.getInstance().getLoggedUsername();
-        String role = Session.getInstance().getLoggedRole();
+        String username = Session.getLoggedUsername();
+        String role = Session.getLoggedRole();
 
         if (username == null || role == null) {
             ConsolePrinter.println("Nessuna sessione attiva.");

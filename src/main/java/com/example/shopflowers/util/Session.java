@@ -1,34 +1,29 @@
 package com.example.shopflowers.util;
 
-public class Session {
+public final class Session {
 
-    private static final Session INSTANCE = new Session();
-
-    private String loggedUsername;
-    private String loggedRole;
+    private static String loggedUsername;
+    private static String loggedRole;
 
     private Session() {
+        throw new UnsupportedOperationException("Utility class");
     }
 
-    public static Session getInstance() {
-        return INSTANCE;
+    public static void setSession(String username, String role) {
+        loggedUsername = username;
+        loggedRole = role;
     }
 
-    public void setSession(String username, String role) {
-        this.loggedUsername = username;
-        this.loggedRole = role;
-    }
-
-    public String getLoggedUsername() {
+    public static String getLoggedUsername() {
         return loggedUsername;
     }
 
-    public String getLoggedRole() {
+    public static String getLoggedRole() {
         return loggedRole;
     }
 
-    public void clearSession() {
-        this.loggedUsername = null;
-        this.loggedRole = null;
+    public static void clearSession() {
+        loggedUsername = null;
+        loggedRole = null;
     }
 }

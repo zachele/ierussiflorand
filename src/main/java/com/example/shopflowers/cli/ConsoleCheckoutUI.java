@@ -65,7 +65,7 @@ public class ConsoleCheckoutUI {
     private CheckoutBean buildCheckoutBean() {
         CheckoutBean checkoutBean = new CheckoutBean();
 
-        checkoutBean.setUsername(Session.getInstance().getLoggedUsername());
+        checkoutBean.setUsername(Session.getLoggedUsername());
 
         ConsolePrinter.print("Metodo di consegna (CONSEGNA / RITIRO): ");
         String deliveryMode = scanner.nextLine().trim().toUpperCase();

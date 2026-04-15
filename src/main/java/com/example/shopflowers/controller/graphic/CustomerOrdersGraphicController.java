@@ -200,7 +200,7 @@ public class CustomerOrdersGraphicController {
     private void loadOrders() {
         try {
             List<OrderSummary> orders =
-                    customerOrdersController.getOrdersByUsername(Session.getInstance().getLoggedUsername());
+                    customerOrdersController.getOrdersByUsername(Session.getLoggedUsername());
 
             masterOrderList = FXCollections.observableArrayList(orders);
             filteredOrders = new FilteredList<>(masterOrderList, order -> true);

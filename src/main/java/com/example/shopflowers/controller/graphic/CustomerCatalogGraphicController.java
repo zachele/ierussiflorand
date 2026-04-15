@@ -305,7 +305,7 @@ public class CustomerCatalogGraphicController {
     }
 
     private boolean isGuestUser() {
-        String role = Session.getInstance().getLoggedRole();
+        String role = Session.getLoggedRole();
         return "GUEST".equalsIgnoreCase(role);
     }
 

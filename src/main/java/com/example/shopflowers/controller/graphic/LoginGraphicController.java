@@ -69,7 +69,7 @@ public class LoginGraphicController {
 
     private void applyMode(AppMode mode) {
         AppConfig.setMode(mode);
-        Session.getInstance().clearSession();
+        Session.clearSession();
         updateModeLabel();
         messageLabel.setText("Modalità applicata: " + mode.name());
     }
@@ -87,7 +87,7 @@ public class LoginGraphicController {
         try {
             User user = loginController.login(loginBean);
 
-            Session.getInstance().setSession(user.getUsername(), user.getRole());
+            Session.setSession(user.getUsername(), user.getRole());
 
             switch (user.getRole()) {
                 case "ADMIN" -> openView("/com/example/shopflowers/view/admin-product-view.fxml", "Shop Flowers - Admin");
@@ -111,8 +111,8 @@ public class LoginGraphicController {
     @FXML
     private void handleGuestAccess() {
         try {
-            Session.getInstance().clearSession();
-            Session.getInstance().setSession("guest", "GUEST");
+            Session.clearSession();
+            Session.setSession("guest", "GUEST");
             openView("/com/example/shopflowers/view/catalog-view.fxml", "Shop Flowers - Catalogo Ospite");
         } catch (IOException e) {
             messageLabel.setText("Si è verificato un errore durante l'accesso come ospite.");
