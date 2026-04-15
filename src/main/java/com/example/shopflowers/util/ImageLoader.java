@@ -11,21 +11,28 @@ public final class ImageLoader {
         throw new UnsupportedOperationException("Utility class");
     }
 
+    @SuppressWarnings("java:S1075")
     public static Image loadProductImage(String imageName) {
-        String resolvedImageName = (imageName == null || imageName.isBlank())
-                ? ResourcePaths.DEFAULT_PRODUCT_IMAGE
-                : imageName;
+        String resolvedImageName = resolveImageName(imageName);
 
-        InputStream inputStream = ImageLoader.class.getResourceAsStream(
-                ResourcePaths.PRODUCT_IMAGES_DIRECTORY + resolvedImageName
-        );
+        InputStream inputStream = openImageStream(resolvedImageName);
 
         if (inputStream == null) {
-            inputStream = ImageLoader.class.getResourceAsStream(
-                    ResourcePaths.PRODUCT_IMAGES_DIRECTORY + ResourcePaths.DEFAULT_PRODUCT_IMAGE
-            );
+            inputStream = openImageStream(ResourcePaths.DEFAULT_PRODUCT_IMAGE);
         }
 
         return inputStream != null ? new Image(inputStream) : null;
+    }
+
+    private static String resolveImageName(String imageName) {
+        return (imageName == null || imageName.isBlank())
+                ? ResourcePaths.DEFAULT_PRODUCT_IMAGE
+                : imageName;
+    }
+
+    private static InputStream openImageStream(String fileName) {
+        return ImageLoader.class.getResourceAsStream(
+                ResourcePaths.PRODUCT_IMAGES_DIRECTORY + fileName
+        );
     }
 }

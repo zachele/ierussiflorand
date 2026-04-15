@@ -1,5 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.UiTitles;
+import com.example.shopflowers.config.ViewPaths;
 import com.example.shopflowers.controller.application.CheckoutController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.exception.EmptyCartException;
@@ -35,6 +37,9 @@ import java.util.Optional;
 public class CheckoutGraphicController {
 
     private static final String NO_BOUQUET_MESSAGE = "Nessun bouquet personalizzato nel pagamento corrente.";
+    private static final String CHECKOUT_ERROR_MESSAGE = "Si è verificato un errore durante la conferma dell'ordine.";
+    private static final String BACK_TO_CATALOG_ERROR_MESSAGE =
+            "Si è verificato un errore durante il ritorno al catalogo.";
 
     @FXML
     private TableView<CartItem> checkoutTable;
@@ -99,45 +104,27 @@ public class CheckoutGraphicController {
             );
 
             checkoutController.confirmOrder(order);
-
             clearCheckoutAfterSuccess();
+
             AlertUtils.showInfo(
                     "Ordine confermato",
                     "Ordine confermato con successo."
             );
 
-        } catch (EmptyCartException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (InsufficientStockException e) {
+        } catch (EmptyCartException | InsufficientStockException e) {
             messageLabel.setText(e.getMessage());
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante la conferma dell'ordine.");
+            messageLabel.setText(CHECKOUT_ERROR_MESSAGE);
         }
     }
 
     @FXML
     private void handleBackToCatalog() {
-        try {
-            SceneNavigator.goTo(
-                    (Stage) checkoutTable.getScene().getWindow(),
-                    "/com/example/shopflowers/view/catalog-view.fxml",
-                    "Shop Flowers - Catalogo Cliente"
-            );
-        } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
-        }
-    }
-
-    @FXML
-    private void handleLogout() {
-        try {
-            CartTimerManager.stopTimer();
-            CartSession.resetCart();
-            CustomBouquetSession.clear();
-            SceneNavigator.logoutToLogin((Stage) checkoutTable.getScene().getWindow());
-        } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
-        }
+        navigateTo(
+                ViewPaths.CATALOG_VIEW,
+                UiTitles.CATALOG_CUSTOMER,
+                BACK_TO_CATALOG_ERROR_MESSAGE
+        );
     }
 
     @FXML
@@ -161,15 +148,7 @@ public class CheckoutGraphicController {
         CustomBouquetSession.clear();
         bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
 
-        double total = 0.0;
-        if (getCartController() != null) {
-            try {
-                total = getCartController().getCartTotal();
-            } catch (EmptyCartException ignored) {
-                total = 0.0;
-            }
-        }
-
+        double total = getSafeCartTotal();
         totalLabel.setText(String.format("Totale ordine: € %.2f", total));
         messageLabel.setText("Bouquet rimosso dal pagamento corrente con successo.");
     }
@@ -221,27 +200,8 @@ public class CheckoutGraphicController {
 
         checkoutTable.setItems(FXCollections.observableArrayList(getCartController().getCartItems()));
 
-        double total;
-        try {
-            total = getCartController().getCartTotal();
-        } catch (EmptyCartException e) {
-            total = 0.0;
-        }
-
-        if (CustomBouquetSession.hasBouquet()) {
-            CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
-            bouquetInfoLabel.setText(
-                    String.format(
-                            "Bouquet personalizzato: %s | Totale bouquet: € %.2f",
-                            bouquet.getDescription(),
-                            bouquet.getTotalPrice()
-                    )
-            );
-            total += bouquet.getTotalPrice();
-        } else {
-            CustomBouquetSession.clear();
-            bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
-        }
+        double total = getSafeCartTotal();
+        total += updateBouquetInfoAndGetTotal();
 
         totalLabel.setText(String.format("Totale ordine: € %.2f", total));
     }
@@ -327,5 +287,48 @@ public class CheckoutGraphicController {
         pickupDatePicker.setValue(null);
         pickupTimeComboBox.setValue(null);
         paymentField.clear();
+    }
+
+    private double getSafeCartTotal() {
+        if (getCartController() == null) {
+            return 0.0;
+        }
+
+        try {
+            return getCartController().getCartTotal();
+        } catch (EmptyCartException e) {
+            return 0.0;
+        }
+    }
+
+    private double updateBouquetInfoAndGetTotal() {
+        if (!CustomBouquetSession.hasBouquet()) {
+            CustomBouquetSession.clear();
+            bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
+            return 0.0;
+        }
+
+        CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
+        bouquetInfoLabel.setText(
+                String.format(
+                        "Bouquet personalizzato: %s | Totale bouquet: € %.2f",
+                        bouquet.getDescription(),
+                        bouquet.getTotalPrice()
+                )
+        );
+
+        return bouquet.getTotalPrice();
+    }
+
+    private void navigateTo(String fxmlPath, String title, String errorMessage) {
+        try {
+            SceneNavigator.goTo(getCurrentStage(), fxmlPath, title);
+        } catch (IOException e) {
+            messageLabel.setText(errorMessage);
+        }
+    }
+
+    private Stage getCurrentStage() {
+        return (Stage) checkoutTable.getScene().getWindow();
     }
 }
