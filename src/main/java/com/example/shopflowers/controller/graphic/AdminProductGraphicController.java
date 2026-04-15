@@ -278,15 +278,6 @@ public class AdminProductGraphicController {
     }
 
     @FXML
-    private void handleLogout() {
-        try {
-            SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
-        } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
-        }
-    }
-
-    @FXML
     private void handleGoToOperatorManagement() {
         try {
             SceneNavigator.goTo(
