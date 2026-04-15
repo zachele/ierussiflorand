@@ -11,17 +11,15 @@ import com.example.shopflowers.util.AlertUtils;
 import com.example.shopflowers.util.CartSession;
 import com.example.shopflowers.util.CartTimerManager;
 import com.example.shopflowers.util.CustomBouquetSession;
-import com.example.shopflowers.util.ImageLoader;
+import com.example.shopflowers.util.ProductTableImageCellFactory;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,6 +27,10 @@ import java.io.IOException;
 public class CartGraphicController {
 
     private static final String NO_BOUQUET_MESSAGE = "Nessun bouquet personalizzato nel carrello.";
+    private static final String CHECKOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'apertura del checkout.";
+    private static final String BACK_TO_CATALOG_ERROR_MESSAGE =
+            "Si è verificato un errore durante il ritorno al catalogo.";
 
     @FXML
     private TableView<CartItem> cartTable;
@@ -131,20 +133,29 @@ public class CartGraphicController {
         }
 
         CartTimerManager.startOrResetTimer();
-        navigateTo(
-                ViewPaths.CHECKOUT_VIEW,
-                UiTitles.CHECKOUT,
-                "Si è verificato un errore durante l'apertura del checkout."
-        );
+
+        try {
+            SceneNavigator.goTo(
+                    (javafx.stage.Stage) cartTable.getScene().getWindow(),
+                    ViewPaths.CHECKOUT_VIEW,
+                    UiTitles.CHECKOUT
+            );
+        } catch (IOException e) {
+            messageLabel.setText(CHECKOUT_ERROR_MESSAGE);
+        }
     }
 
     @FXML
     private void handleBackToCatalog() {
-        navigateTo(
-                ViewPaths.CATALOG_VIEW,
-                UiTitles.CATALOG_CUSTOMER,
-                "Si è verificato un errore durante il ritorno al catalogo."
-        );
+        try {
+            SceneNavigator.goTo(
+                    (javafx.stage.Stage) cartTable.getScene().getWindow(),
+                    ViewPaths.CATALOG_VIEW,
+                    UiTitles.CATALOG_CUSTOMER
+            );
+        } catch (IOException e) {
+            messageLabel.setText(BACK_TO_CATALOG_ERROR_MESSAGE);
+        }
     }
 
     private CustomerCartController getCartController() {
@@ -155,51 +166,11 @@ public class CartGraphicController {
         cartImageColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getProduct().getImageName())
         );
-        cartImageColumn.setCellFactory(column -> createImageCell());
+        cartImageColumn.setCellFactory(ProductTableImageCellFactory.create());
 
         cartNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         cartQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         cartTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
-    }
-
-    private TableCell<CartItem, String> createImageCell() {
-        return new TableCell<>() {
-            private final ImageView imageView = createConfiguredImageView();
-
-            @Override
-            protected void updateItem(String imageName, boolean empty) {
-                super.updateItem(imageName, empty);
-
-                if (empty) {
-                    setGraphic(null);
-                    return;
-                }
-
-                imageView.setImage(ImageLoader.loadProductImage(imageName));
-                setGraphic(imageView);
-            }
-        };
-    }
-
-    private ImageView createConfiguredImageView() {
-        ImageView imageView = new ImageView();
-        imageView.setFitWidth(80);
-        imageView.setFitHeight(80);
-        imageView.setPreserveRatio(true);
-        imageView.getStyleClass().add("product-image");
-
-        imageView.setOnMouseEntered(event -> {
-            imageView.setScaleX(1.35);
-            imageView.setScaleY(1.35);
-            imageView.toFront();
-        });
-
-        imageView.setOnMouseExited(event -> {
-            imageView.setScaleX(1.0);
-            imageView.setScaleY(1.0);
-        });
-
-        return imageView;
     }
 
     private void configureSelectionListener() {
@@ -254,16 +225,16 @@ public class CartGraphicController {
         selectedCartItem = null;
         CartTimerManager.stopTimer();
     }
-
-    private void navigateTo(String fxmlPath, String title, String errorMessage) {
+    @FXML
+    @SuppressWarnings("unused")
+    private void handleLogout() {
         try {
-            SceneNavigator.goTo(getCurrentStage(), fxmlPath, title);
+            CartTimerManager.stopTimer();
+            CartSession.resetCart();
+            CustomBouquetSession.clear();
+            SceneNavigator.logoutToLogin((Stage) cartTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText(errorMessage);
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
-    }
-
-    private Stage getCurrentStage() {
-        return (Stage) cartTable.getScene().getWindow();
     }
 }

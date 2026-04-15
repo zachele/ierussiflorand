@@ -1,28 +1,23 @@
 package com.example.shopflowers.util;
 
 import com.example.shopflowers.model.entity.FlowerProduct;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-import java.io.InputStream;
 import java.util.List;
 
 public final class ProductTableUtils {
 
-    private static final String PRODUCT_IMAGES_PATH = "/com/example/shopflowers/images/products/";
-    private static final String DEFAULT_IMAGE = "default_product.png";
-
     private ProductTableUtils() {
+        throw new UnsupportedOperationException("Utility class");
     }
 
-    public static void configureProductTable(
+    public static void configureProductColumns(
             TableColumn<FlowerProduct, Integer> idColumn,
             TableColumn<FlowerProduct, String> nameColumn,
             TableColumn<FlowerProduct, Double> priceColumn,
@@ -30,12 +25,29 @@ public final class ProductTableUtils {
             TableColumn<FlowerProduct, String> varietyColumn,
             TableColumn<FlowerProduct, Integer> stockColumn
     ) {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        colorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
-        varietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
-        stockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+        if (idColumn != null) {
+            idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        }
+
+        if (nameColumn != null) {
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        }
+
+        if (priceColumn != null) {
+            priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        }
+
+        if (colorColumn != null) {
+            colorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
+        }
+
+        if (varietyColumn != null) {
+            varietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
+        }
+
+        if (stockColumn != null) {
+            stockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+        }
     }
 
     public static void configureProductTableWithImage(
@@ -47,7 +59,14 @@ public final class ProductTableUtils {
             TableColumn<FlowerProduct, String> varietyColumn,
             TableColumn<FlowerProduct, Integer> stockColumn
     ) {
-        configureProductTable(
+        if (imageColumn != null) {
+            imageColumn.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getImageName())
+            );
+            imageColumn.setCellFactory(ProductTableImageCellFactory.create());
+        }
+
+        configureProductColumns(
                 idColumn,
                 nameColumn,
                 priceColumn,
@@ -55,78 +74,19 @@ public final class ProductTableUtils {
                 varietyColumn,
                 stockColumn
         );
-
-        imageColumn.setCellValueFactory(new PropertyValueFactory<>("imageName"));
-        imageColumn.setCellFactory(column -> new TableCell<>() {
-            private final ImageView imageView = new ImageView();
-
-            {
-                imageView.setFitWidth(100);
-                imageView.setFitHeight(100);
-                imageView.setPreserveRatio(true);
-                imageView.getStyleClass().add("product-image");
-
-                setOnMouseEntered(event -> {
-                    imageView.setScaleX(1.35);
-                    imageView.setScaleY(1.35);
-                    imageView.toFront();
-                });
-
-                setOnMouseExited(event -> {
-                    imageView.setScaleX(1.0);
-                    imageView.setScaleY(1.0);
-                });
-            }
-
-            @Override
-            protected void updateItem(String imageName, boolean empty) {
-                super.updateItem(imageName, empty);
-
-                if (empty) {
-                    setGraphic(null);
-                    return;
-                }
-
-                Image image = loadProductImage(imageName);
-                imageView.setImage(image);
-                setGraphic(imageView);
-            }
-        });
     }
 
     public static FilteredList<FlowerProduct> loadProductsIntoTable(
             TableView<FlowerProduct> table,
             List<FlowerProduct> products
     ) {
-        FilteredList<FlowerProduct> filtered =
-                new FilteredList<>(FXCollections.observableArrayList(products), p -> true);
+        FilteredList<FlowerProduct> filteredProducts =
+                new FilteredList<>(FXCollections.observableArrayList(products), product -> true);
 
-        SortedList<FlowerProduct> sorted = new SortedList<>(filtered);
-        sorted.comparatorProperty().bind(table.comparatorProperty());
+        SortedList<FlowerProduct> sortedProducts = new SortedList<>(filteredProducts);
+        sortedProducts.comparatorProperty().bind(table.comparatorProperty());
 
-        table.setItems(sorted);
-        return filtered;
-    }
-
-    private static Image loadProductImage(String imageName) {
-        String resolvedImageName = (imageName == null || imageName.isBlank())
-                ? DEFAULT_IMAGE
-                : imageName;
-
-        InputStream inputStream = ProductTableUtils.class.getResourceAsStream(
-                PRODUCT_IMAGES_PATH + resolvedImageName
-        );
-
-        if (inputStream == null) {
-            inputStream = ProductTableUtils.class.getResourceAsStream(
-                    PRODUCT_IMAGES_PATH + DEFAULT_IMAGE
-            );
-        }
-
-        if (inputStream == null) {
-            return null;
-        }
-
-        return new Image(inputStream);
+        table.setItems(sortedProducts);
+        return filteredProducts;
     }
 }

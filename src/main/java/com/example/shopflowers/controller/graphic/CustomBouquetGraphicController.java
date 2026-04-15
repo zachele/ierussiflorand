@@ -1,12 +1,13 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.UiTitles;
+import com.example.shopflowers.config.ViewPaths;
 import com.example.shopflowers.controller.application.CustomBouquetController;
-import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.model.entity.CustomBouquet;
 import com.example.shopflowers.model.entity.CustomBouquetItem;
 import com.example.shopflowers.model.entity.FlowerProduct;
-import com.example.shopflowers.util.CartSession;
 import com.example.shopflowers.util.CustomBouquetSession;
+import com.example.shopflowers.util.ProductTableImageCellFactory;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -16,24 +17,24 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import com.example.shopflowers.util.ProductTableUtils;
 
 public class CustomBouquetGraphicController {
 
-    private static final String PRODUCT_IMAGES_PATH = "/com/example/shopflowers/images/products/";
-    private static final String DEFAULT_IMAGE = "default_product.png";
+    private static final String EMPTY_BOUQUET_MESSAGE = "Bouquet vuoto";
+    private static final String BACK_TO_CATALOG_ERROR_MESSAGE =
+            "Si è verificato un errore durante il ritorno al catalogo.";
+    private static final String LOGOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante il logout.";
 
     @FXML
     private ComboBox<String> sizeComboBox;
@@ -99,7 +100,6 @@ public class CustomBouquetGraphicController {
     private MenuItem currentBouquetSummaryItem;
 
     private final CustomBouquetController customBouquetController = new CustomBouquetController();
-    private CustomerCartController customerCartController;
 
     private FlowerProduct selectedFlower;
     private CustomBouquetItem selectedBouquetItem;
@@ -107,20 +107,9 @@ public class CustomBouquetGraphicController {
     @FXML
     public void initialize() {
         try {
-            customerCartController = CartSession.getCartController();
-
-            sizeComboBox.setItems(FXCollections.observableArrayList("PICCOLO", "MEDIO", "GRANDE"));
-            packagingComboBox.setItems(FXCollections.observableArrayList("STANDARD", "PREMIUM"));
-
+            configureSelections();
             configureFlowerTable();
             configureBouquetTable();
-
-            flowerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-                    selectedFlower = newSelection);
-
-            bouquetTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-                    selectedBouquetItem = newSelection);
-
             loadFlowers();
             refreshBouquetTable();
         } catch (Exception e) {
@@ -145,13 +134,8 @@ public class CustomBouquetGraphicController {
             return;
         }
 
-        if (budgetField.getText() != null && !budgetField.getText().isBlank()) {
-            try {
-                Double.parseDouble(budgetField.getText());
-            } catch (NumberFormatException e) {
-                messageLabel.setText("Inserisci un budget valido.");
-                return;
-            }
+        if (hasInvalidBudgetField()) {
+            return;
         }
 
         applyBouquetConfiguration();
@@ -224,12 +208,7 @@ public class CustomBouquetGraphicController {
 
         customBouquetController.resetBouquet();
         selectedBouquetItem = null;
-        sizeComboBox.setValue(null);
-        packagingComboBox.setValue(null);
-        cardCheckBox.setSelected(false);
-        vaseCheckBox.setSelected(false);
-        quantityField.clear();
-        budgetField.clear();
+        resetConfigurationFields();
         refreshBouquetTable();
         messageLabel.setText("Composizione azzerata con successo.");
     }
@@ -246,13 +225,8 @@ public class CustomBouquetGraphicController {
             return;
         }
 
-        if (budgetField.getText() != null && !budgetField.getText().isBlank()) {
-            try {
-                Double.parseDouble(budgetField.getText());
-            } catch (NumberFormatException e) {
-                messageLabel.setText("Inserisci un budget valido.");
-                return;
-            }
+        if (hasInvalidBudgetField()) {
+            return;
         }
 
         applyBouquetConfiguration();
@@ -270,12 +244,8 @@ public class CustomBouquetGraphicController {
 
         customBouquetController.resetBouquet();
         selectedBouquetItem = null;
+        resetConfigurationFields();
         refreshBouquetTable();
-        sizeComboBox.setValue(null);
-        packagingComboBox.setValue(null);
-        cardCheckBox.setSelected(false);
-        vaseCheckBox.setSelected(false);
-        budgetField.clear();
         totalLabel.setText(String.format("Totale bouquet: € %.2f", 0.0));
         messageLabel.setText("Bouquet personalizzato salvato. Procedi al checkout per completare l'ordine.");
     }
@@ -285,65 +255,47 @@ public class CustomBouquetGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) flowerTable.getScene().getWindow(),
-                    "/com/example/shopflowers/view/catalog-view.fxml",
-                    "Shop Flowers - Catalogo Cliente"
+                    ViewPaths.CATALOG_VIEW,
+                    UiTitles.CATALOG_CUSTOMER
             );
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
+            messageLabel.setText(BACK_TO_CATALOG_ERROR_MESSAGE);
         }
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleLogout() {
         try {
             SceneNavigator.logoutToLogin((Stage) flowerTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
+            messageLabel.setText(LOGOUT_ERROR_MESSAGE);
         }
+    }
+
+    private void configureSelections() {
+        sizeComboBox.setItems(FXCollections.observableArrayList("PICCOLO", "MEDIO", "GRANDE"));
+        packagingComboBox.setItems(FXCollections.observableArrayList("STANDARD", "PREMIUM"));
+
+        flowerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+                selectedFlower = newSelection);
+
+        bouquetTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+                selectedBouquetItem = newSelection);
     }
 
     private void configureFlowerTable() {
         flowerImageColumn.setCellValueFactory(new PropertyValueFactory<>("imageName"));
-        flowerImageColumn.setCellFactory(column -> new TableCell<>() {
-            private final ImageView imageView = new ImageView();
+        flowerImageColumn.setCellFactory(ProductTableImageCellFactory.create());
 
-            {
-                imageView.setFitWidth(80);
-                imageView.setFitHeight(80);
-                imageView.setPreserveRatio(true);
-                imageView.getStyleClass().add("product-image");
-
-                setOnMouseEntered(event -> {
-                    imageView.setScaleX(1.35);
-                    imageView.setScaleY(1.35);
-                    imageView.toFront();
-                });
-
-                setOnMouseExited(event -> {
-                    imageView.setScaleX(1.0);
-                    imageView.setScaleY(1.0);
-                });
-            }
-
-            @Override
-            protected void updateItem(String imageName, boolean empty) {
-                super.updateItem(imageName, empty);
-
-                if (empty) {
-                    setGraphic(null);
-                    return;
-                }
-
-                imageView.setImage(loadProductImage(imageName));
-                setGraphic(imageView);
-            }
-        });
-
-        flowerNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        flowerPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        flowerColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
-        flowerVarietyColumn.setCellValueFactory(new PropertyValueFactory<>("variety"));
-        flowerStockColumn.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+        ProductTableUtils.configureProductColumns(
+                null,
+                flowerNameColumn,
+                flowerPriceColumn,
+                flowerColorColumn,
+                flowerVarietyColumn,
+                flowerStockColumn
+        );
     }
 
     private void configureBouquetTable() {
@@ -354,24 +306,35 @@ public class CustomBouquetGraphicController {
     }
 
     private void applyBouquetConfiguration() {
-        Double budget = null;
-
-        if (budgetField.getText() != null && !budgetField.getText().isBlank()) {
-            try {
-                budget = Double.parseDouble(budgetField.getText());
-            } catch (NumberFormatException e) {
-                messageLabel.setText("Inserisci un budget valido.");
-                return;
-            }
-        }
-
         customBouquetController.configureBouquet(
                 sizeComboBox.getValue(),
                 packagingComboBox.getValue(),
                 cardCheckBox.isSelected(),
                 vaseCheckBox.isSelected(),
-                budget
+                getParsedBudget()
         );
+    }
+
+    private boolean hasInvalidBudgetField() {
+        if (budgetField.getText() == null || budgetField.getText().isBlank()) {
+            return false;
+        }
+
+        try {
+            Double.parseDouble(budgetField.getText());
+            return false;
+        } catch (NumberFormatException e) {
+            messageLabel.setText("Inserisci un budget valido.");
+            return true;
+        }
+    }
+
+    private Double getParsedBudget() {
+        if (budgetField.getText() == null || budgetField.getText().isBlank()) {
+            return null;
+        }
+
+        return Double.parseDouble(budgetField.getText());
     }
 
     private void loadFlowers() {
@@ -400,7 +363,7 @@ public class CustomBouquetGraphicController {
         }
 
         if (customBouquetController.getCurrentItems().isEmpty()) {
-            currentBouquetSummaryItem.setText("Bouquet vuoto");
+            currentBouquetSummaryItem.setText(EMPTY_BOUQUET_MESSAGE);
             return;
         }
 
@@ -411,21 +374,12 @@ public class CustomBouquetGraphicController {
         ));
     }
 
-    private Image loadProductImage(String imageName) {
-        String resolvedImageName = (imageName == null || imageName.isBlank())
-                ? DEFAULT_IMAGE
-                : imageName;
-
-        InputStream inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + resolvedImageName);
-
-        if (inputStream == null) {
-            inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + DEFAULT_IMAGE);
-        }
-
-        if (inputStream == null) {
-            return null;
-        }
-
-        return new Image(inputStream);
+    private void resetConfigurationFields() {
+        sizeComboBox.setValue(null);
+        packagingComboBox.setValue(null);
+        cardCheckBox.setSelected(false);
+        vaseCheckBox.setSelected(false);
+        quantityField.clear();
+        budgetField.clear();
     }
 }

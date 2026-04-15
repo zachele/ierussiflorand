@@ -120,11 +120,15 @@ public class CheckoutGraphicController {
 
     @FXML
     private void handleBackToCatalog() {
-        navigateTo(
-                ViewPaths.CATALOG_VIEW,
-                UiTitles.CATALOG_CUSTOMER,
-                BACK_TO_CATALOG_ERROR_MESSAGE
-        );
+        try {
+            SceneNavigator.goTo(
+                    (Stage) checkoutTable.getScene().getWindow(),
+                    ViewPaths.CATALOG_VIEW,
+                    UiTitles.CATALOG_CUSTOMER
+            );
+        } catch (IOException e) {
+            messageLabel.setText(BACK_TO_CATALOG_ERROR_MESSAGE);
+        }
     }
 
     @FXML
@@ -319,16 +323,16 @@ public class CheckoutGraphicController {
 
         return bouquet.getTotalPrice();
     }
-
-    private void navigateTo(String fxmlPath, String title, String errorMessage) {
+    @FXML
+    @SuppressWarnings("unused")
+    private void handleLogout() {
         try {
-            SceneNavigator.goTo(getCurrentStage(), fxmlPath, title);
+            CartTimerManager.stopTimer();
+            CartSession.resetCart();
+            CustomBouquetSession.clear();
+            SceneNavigator.logoutToLogin((Stage) checkoutTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText(errorMessage);
+            messageLabel.setText("Si è verificato un errore durante il logout.");
         }
-    }
-
-    private Stage getCurrentStage() {
-        return (Stage) checkoutTable.getScene().getWindow();
     }
 }

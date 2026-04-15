@@ -115,7 +115,7 @@ public class AdminProductGraphicController {
 
     @FXML
     public void initialize() {
-        ProductTableUtils.configureProductTable(
+        ProductTableUtils.configureProductColumns(
                 idColumn,
                 nameColumn,
                 priceColumn,

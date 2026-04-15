@@ -1,5 +1,7 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.UiTitles;
+import com.example.shopflowers.config.ViewPaths;
 import com.example.shopflowers.controller.application.BrowseCatalogController;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.exception.EmptyCartException;
@@ -38,6 +40,21 @@ public class CustomerCatalogGraphicController {
             "Quantità non valida. Inserisci un valore maggiore di zero.";
     private static final String GUEST_ONLY_BROWSE_MESSAGE =
             "L'ospite può solo consultare il catalogo. Effettua il login o registrati per continuare.";
+
+    private static final String CHECKOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'apertura del checkout.";
+    private static final String MY_ORDERS_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'apertura dello storico ordini.";
+    private static final String COMPANY_INFO_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'apertura della pagina aziendale.";
+    private static final String RECOMMENDATION_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'apertura dell'assistente bouquet.";
+    private static final String CUSTOM_BOUQUET_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'apertura della schermata bouquet personalizzato.";
+    private static final String CART_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'apertura del carrello.";
+    private static final String LOGOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante il logout.";
 
     @FXML
     private TableView<FlowerProduct> productTable;
@@ -121,7 +138,7 @@ public class CustomerCatalogGraphicController {
                 return;
             }
 
-            completeCartOperation("Articolo aggiunto al carrello con successo.");
+            completeCartOperation();
             quantityField.clear();
 
         } catch (NumberFormatException e) {
@@ -150,11 +167,11 @@ public class CustomerCatalogGraphicController {
             CartTimerManager.startOrResetTimer();
             SceneNavigator.goTo(
                     (Stage) productTable.getScene().getWindow(),
-                    "/com/example/shopflowers/view/checkout-view.fxml",
-                    "Shop Flowers - Checkout"
+                    ViewPaths.CHECKOUT_VIEW,
+                    UiTitles.CHECKOUT
             );
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante l'apertura del checkout.");
+            messageLabel.setText(CHECKOUT_ERROR_MESSAGE);
         }
     }
 
@@ -166,18 +183,18 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/view/customer-orders-view.fxml",
-                "Shop Flowers - I miei ordini",
-                "Si è verificato un errore durante l'apertura dello storico ordini."
+                ViewPaths.CUSTOMER_ORDERS_VIEW,
+                UiTitles.CUSTOMER_ORDERS,
+                MY_ORDERS_ERROR_MESSAGE
         );
     }
 
     @FXML
     private void handleCompanyInfo() {
         goToScene(
-                "/com/example/shopflowers/view/company-info-view.fxml",
-                "Shop Flowers - Informazioni Azienda",
-                "Si è verificato un errore durante l'apertura della pagina aziendale."
+                ViewPaths.COMPANY_INFO_VIEW,
+                UiTitles.COMPANY_INFO,
+                COMPANY_INFO_ERROR_MESSAGE
         );
     }
 
@@ -189,9 +206,9 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/view/recommendation-view.fxml",
-                "Shop Flowers - Assistente Bouquet",
-                "Si è verificato un errore durante l'apertura dell'assistente bouquet."
+                ViewPaths.RECOMMENDATION_VIEW,
+                UiTitles.RECOMMENDATION_ASSISTANT,
+                RECOMMENDATION_ERROR_MESSAGE
         );
     }
 
@@ -203,9 +220,9 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/view/custom-bouquet-view.fxml",
-                "Shop Flowers - Bouquet Personalizzato",
-                "Si è verificato un errore durante l'apertura della schermata bouquet personalizzato."
+                ViewPaths.CUSTOM_BOUQUET_VIEW,
+                UiTitles.CUSTOM_BOUQUET,
+                CUSTOM_BOUQUET_ERROR_MESSAGE
         );
     }
 
@@ -217,13 +234,14 @@ public class CustomerCatalogGraphicController {
         }
 
         goToScene(
-                "/com/example/shopflowers/view/cart-view.fxml",
-                "Shop Flowers - Carrello",
-                "Si è verificato un errore durante l'apertura del carrello."
+                ViewPaths.CART_VIEW,
+                UiTitles.CART,
+                CART_ERROR_MESSAGE
         );
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleLogout() {
         try {
             CartTimerManager.stopTimer();
@@ -232,7 +250,7 @@ public class CustomerCatalogGraphicController {
             CustomBouquetSession.clear();
             SceneNavigator.logoutToLogin((Stage) productTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
+            messageLabel.setText(LOGOUT_ERROR_MESSAGE);
         }
     }
 
@@ -328,9 +346,9 @@ public class CustomerCatalogGraphicController {
         );
     }
 
-    private void completeCartOperation(String successMessage) {
+    private void completeCartOperation() {
         CartTimerManager.startOrResetTimer();
-        messageLabel.setText(successMessage);
+        messageLabel.setText("Articolo aggiunto al carrello con successo.");
     }
 
     private void stopAndResetCartTimer() {
