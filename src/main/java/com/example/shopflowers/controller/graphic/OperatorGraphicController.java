@@ -8,9 +8,7 @@ import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
 import com.example.shopflowers.util.SceneNavigator;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -23,8 +21,22 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import com.example.shopflowers.util.TableDataUtils;
 
 public class OperatorGraphicController {
+
+    private static final String NO_BOUQUET_MESSAGE =
+            "Questo ordine non contiene un bouquet personalizzato.";
+    private static final String LOAD_ORDERS_ERROR_MESSAGE =
+            "Si è verificato un errore durante il caricamento degli ordini.";
+    private static final String LOAD_ORDER_ITEMS_ERROR_MESSAGE =
+            "Si è verificato un errore durante il caricamento dei dettagli dell'ordine.";
+    private static final String LOAD_BOUQUET_ERROR_MESSAGE =
+            "Si è verificato un errore durante il caricamento dei dettagli del bouquet.";
+    private static final String UPDATE_STATUS_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'aggiornamento dello stato dell'ordine.";
+    private static final String LOGOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante il logout.";
 
     @FXML
     private TableView<OrderSummary> orderTable;
@@ -86,9 +98,7 @@ public class OperatorGraphicController {
     private final OperatorOrdersController operatorOrdersController;
     private final CustomBouquetOrderDAO customBouquetOrderDAO;
 
-    private ObservableList<OrderSummary> masterOrderList = FXCollections.observableArrayList();
     private FilteredList<OrderSummary> filteredOrders;
-
     private OrderSummary selectedOrder;
     private boolean showingCompletedOrders = false;
 
@@ -104,6 +114,15 @@ public class OperatorGraphicController {
 
     @FXML
     public void initialize() {
+        configureOrderTable();
+        configureOrderItemsTable();
+        configureStatusBoxes();
+        configureFilters();
+        configureSelectionListener();
+        loadOrders();
+    }
+
+    private void configureOrderTable() {
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
@@ -113,11 +132,15 @@ public class OperatorGraphicController {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+    }
 
+    private void configureOrderItemsTable() {
         productColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         unitPriceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+    }
 
+    private void configureStatusBoxes() {
         statusComboBox.setItems(FXCollections.observableArrayList(
                 "IN_PREPARAZIONE",
                 "PRONTO",
@@ -130,52 +153,45 @@ public class OperatorGraphicController {
                 "PRONTO"
         ));
         statusFilterComboBox.setValue("Tutti");
+    }
 
+    private void configureFilters() {
         searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
         statusFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+    }
 
+    private void configureSelectionListener() {
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedOrder = newSelection;
 
-            if (newSelection != null) {
-                statusComboBox.setValue(newSelection.getStatus());
-                loadOrderItems(newSelection.getId());
-                loadBouquetDetails(newSelection.getId());
-                messageLabel.setText("Ordine selezionato: stato attuale = " + newSelection.getStatus());
-            } else {
-                statusComboBox.setValue(null);
-                orderItemsTable.getItems().clear();
-                bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
-                messageLabel.setText("");
+            if (newSelection == null) {
+                clearOrderDetails();
+                return;
             }
-        });
 
-        loadOrders();
+            statusComboBox.setValue(newSelection.getStatus());
+            loadOrderItems(newSelection.getId());
+            loadBouquetDetails(newSelection.getId());
+            messageLabel.setText("Ordine selezionato: stato attuale = " + newSelection.getStatus());
+        });
     }
 
     private void loadOrders() {
         try {
-            List<OrderSummary> orders = showingCompletedOrders
-                    ? operatorOrdersController.getCompletedOrders()
-                    : operatorOrdersController.getActiveOrders();
-
-            masterOrderList = FXCollections.observableArrayList(orders);
-            filteredOrders = new FilteredList<>(masterOrderList, order -> true);
-
-            SortedList<OrderSummary> sortedOrders = new SortedList<>(filteredOrders);
-            sortedOrders.comparatorProperty().bind(orderTable.comparatorProperty());
-
-            orderTable.setItems(sortedOrders);
+            List<OrderSummary> orders = getOrdersForCurrentView();
+            filteredOrders = TableDataUtils.bindFilteredSortedTable(orderTable, orders);
             applyFilters();
-
-            orderItemsTable.getItems().clear();
-            bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
-            statusComboBox.setValue(null);
-            selectedOrder = null;
+            clearOrderDetails();
 
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante il caricamento degli ordini.");
+            messageLabel.setText(LOAD_ORDERS_ERROR_MESSAGE);
         }
+    }
+
+    private List<OrderSummary> getOrdersForCurrentView() throws SQLException {
+        return showingCompletedOrders
+                ? operatorOrdersController.getCompletedOrders()
+                : operatorOrdersController.getActiveOrders();
     }
 
     private void applyFilters() {
@@ -183,67 +199,77 @@ public class OperatorGraphicController {
             return;
         }
 
-        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+        String searchText = searchField.getText() == null
+                ? ""
+                : searchField.getText().trim().toLowerCase();
         String selectedStatus = statusFilterComboBox.getValue();
 
-        filteredOrders.setPredicate(order -> {
-            if (order == null) {
-                return false;
-            }
-
-            boolean matchesSearch = searchText.isBlank()
-                    || safe(order.getName()).contains(searchText)
-                    || safe(order.getSurname()).contains(searchText)
-                    || safe(order.getUsername()).contains(searchText)
-                    || safe(order.getDeliveryMode()).contains(searchText)
-                    || safe(order.getPaymentMethod()).contains(searchText)
-                    || safe(order.getStatus()).contains(searchText);
-
-            boolean matchesStatus = selectedStatus == null
-                    || selectedStatus.equalsIgnoreCase("Tutti")
-                    || safe(order.getStatus()).equals(selectedStatus.toLowerCase());
-
-            return matchesSearch && matchesStatus;
-        });
+        filteredOrders.setPredicate(order ->
+                order != null
+                        && matchesSearch(order, searchText)
+                        && matchesStatus(order, selectedStatus)
+        );
     }
 
-    private String safe(String value) {
-        return value == null ? "" : value.toLowerCase();
+    private boolean matchesSearch(OrderSummary order, String searchText) {
+        return searchText.isBlank()
+                || safe(order.getName()).contains(searchText)
+                || safe(order.getSurname()).contains(searchText)
+                || safe(order.getUsername()).contains(searchText)
+                || safe(order.getDeliveryMode()).contains(searchText)
+                || safe(order.getPaymentMethod()).contains(searchText)
+                || safe(order.getStatus()).contains(searchText);
+    }
+
+    private boolean matchesStatus(OrderSummary order, String selectedStatus) {
+        return selectedStatus == null
+                || selectedStatus.equalsIgnoreCase("Tutti")
+                || safe(order.getStatus()).equals(selectedStatus.toLowerCase());
     }
 
     private void loadOrderItems(int orderId) {
         try {
             List<OrderItemSummary> items = operatorOrdersController.getItemsByOrderId(orderId);
-            ObservableList<OrderItemSummary> observableItems = FXCollections.observableArrayList(items);
-            orderItemsTable.setItems(observableItems);
+            orderItemsTable.setItems(FXCollections.observableArrayList(items));
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante il caricamento dei dettagli dell'ordine.");
+            messageLabel.setText(LOAD_ORDER_ITEMS_ERROR_MESSAGE);
         }
     }
 
     private void loadBouquetDetails(int orderId) {
         try {
             CustomBouquetOrderSummary bouquet = customBouquetOrderDAO.findByOrderId(orderId);
-
-            if (bouquet == null) {
-                bouquetDetailsLabel.setText("Questo ordine non contiene un bouquet personalizzato.");
-                return;
-            }
-
-            String details = String.format(
-                    "Bouquet personalizzato | Dimensione: %s | Confezione: %s | Biglietto: %s | Vaso: %s | Totale: € %.2f",
-                    bouquet.getSize(),
-                    bouquet.getPackaging(),
-                    bouquet.isCardIncluded() ? "Sì" : "No",
-                    bouquet.isVaseIncluded() ? "Sì" : "No",
-                    bouquet.getTotalPrice()
-            );
-
-            bouquetDetailsLabel.setText(details);
-
+            bouquetDetailsLabel.setText(buildBouquetDetailsText(bouquet));
         } catch (SQLException e) {
-            bouquetDetailsLabel.setText("Si è verificato un errore durante il caricamento dei dettagli del bouquet.");
+            bouquetDetailsLabel.setText(LOAD_BOUQUET_ERROR_MESSAGE);
         }
+    }
+
+    private String buildBouquetDetailsText(CustomBouquetOrderSummary bouquet) {
+        if (bouquet == null) {
+            return NO_BOUQUET_MESSAGE;
+        }
+
+        return String.format(
+                "Bouquet personalizzato | Dimensione: %s | Confezione: %s | Biglietto: %s | Vaso: %s | Totale: € %.2f",
+                bouquet.getSize(),
+                bouquet.getPackaging(),
+                bouquet.isCardIncluded() ? "Sì" : "No",
+                bouquet.isVaseIncluded() ? "Sì" : "No",
+                bouquet.getTotalPrice()
+        );
+    }
+
+    private void clearOrderDetails() {
+        orderItemsTable.getItems().clear();
+        bouquetDetailsLabel.setText(NO_BOUQUET_MESSAGE);
+        statusComboBox.setValue(null);
+        selectedOrder = null;
+        messageLabel.setText("");
+    }
+
+    private String safe(String value) {
+        return value == null ? "" : value.toLowerCase();
     }
 
     @FXML
@@ -269,30 +295,33 @@ public class OperatorGraphicController {
             messageLabel.setText("Lo stato dell’ordine è stato aggiornato con successo.");
             loadOrders();
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante l'aggiornamento dello stato dell'ordine.");
+            messageLabel.setText(UPDATE_STATUS_ERROR_MESSAGE);
         }
     }
 
     @FXML
     private void handleShowActiveOrders() {
-        showingCompletedOrders = false;
-        messageLabel.setText("");
-        loadOrders();
+        showOrders(false);
     }
 
     @FXML
     private void handleShowCompletedOrders() {
-        showingCompletedOrders = true;
+        showOrders(true);
+    }
+
+    private void showOrders(boolean completed) {
+        showingCompletedOrders = completed;
         messageLabel.setText("");
         loadOrders();
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleLogout() {
         try {
             SceneNavigator.logoutToLogin((Stage) orderTable.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
+            messageLabel.setText(LOGOUT_ERROR_MESSAGE);
         }
     }
 }
