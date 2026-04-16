@@ -1,15 +1,15 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.UiTitles;
+import com.example.shopflowers.config.ViewPaths;
 import com.example.shopflowers.controller.application.ManageOperatorController;
 import com.example.shopflowers.exception.InvalidOperatorDataException;
 import com.example.shopflowers.exception.UserAlreadyExistsException;
 import com.example.shopflowers.model.bean.OperatorBean;
 import com.example.shopflowers.model.entity.OperatorFullData;
 import com.example.shopflowers.util.SceneNavigator;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.example.shopflowers.util.TableDataUtils;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -27,6 +27,19 @@ import java.util.List;
 import java.util.Optional;
 
 public class OperatorManagementGraphicController {
+
+    private static final String LOAD_OPERATORS_ERROR_MESSAGE =
+            "Si è verificato un errore durante il caricamento degli operatori.";
+    private static final String CREATE_OPERATOR_ERROR_MESSAGE =
+            "Errore durante la creazione dell'operatore.";
+    private static final String UPDATE_OPERATOR_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'aggiornamento dell'operatore.";
+    private static final String DELETE_OPERATOR_ERROR_MESSAGE =
+            "Si è verificato un errore durante l'eliminazione dell'operatore.";
+    private static final String BACK_TO_ADMIN_ERROR_MESSAGE =
+            "Si è verificato un errore durante il ritorno all'area amministratore.";
+    private static final String LOGOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante il logout.";
 
     @FXML
     private TextField nameField;
@@ -81,33 +94,14 @@ public class OperatorManagementGraphicController {
 
     private final ManageOperatorController manageOperatorController = new ManageOperatorController();
 
-    private ObservableList<OperatorFullData> masterOperatorList = FXCollections.observableArrayList();
     private FilteredList<OperatorFullData> filteredOperators;
-
     private OperatorFullData selectedOperator;
 
     @FXML
     public void initialize() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        salaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
-        contractYearColumn.setCellValueFactory(new PropertyValueFactory<>("contractYear"));
-        annualHoursColumn.setCellValueFactory(new PropertyValueFactory<>("annualHours"));
-
-        searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
-
-        operatorTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            selectedOperator = newSelection;
-
-            if (newSelection != null) {
-                populateFields(newSelection);
-                usernameField.setDisable(true);
-                passwordField.setDisable(true);
-            }
-        });
-
+        configureOperatorTable();
+        configureSearchFilter();
+        configureSelectionListener();
         loadOperators();
     }
 
@@ -122,16 +116,14 @@ public class OperatorManagementGraphicController {
                 return;
             }
 
-            clearFields();
-            usernameField.setDisable(false);
-            passwordField.setDisable(false);
+            resetFormAfterCreateOrDelete();
             loadOperators();
             messageLabel.setText("Operatore creato con successo.");
 
         } catch (UserAlreadyExistsException | InvalidOperatorDataException e) {
             messageLabel.setText(e.getMessage());
         } catch (SQLException e) {
-            messageLabel.setText("Errore durante la creazione dell'operatore.");
+            messageLabel.setText(CREATE_OPERATOR_ERROR_MESSAGE);
         }
     }
 
@@ -157,7 +149,7 @@ public class OperatorManagementGraphicController {
         } catch (InvalidOperatorDataException e) {
             messageLabel.setText(e.getMessage());
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante l'aggiornamento dell'operatore.");
+            messageLabel.setText(UPDATE_OPERATOR_ERROR_MESSAGE);
         }
     }
 
@@ -182,13 +174,11 @@ public class OperatorManagementGraphicController {
         try {
             manageOperatorController.deleteOperator(selectedOperator.getUserId());
             selectedOperator = null;
-            clearFields();
-            usernameField.setDisable(false);
-            passwordField.setDisable(false);
+            resetFormAfterCreateOrDelete();
             loadOperators();
             messageLabel.setText("Operatore eliminato con successo.");
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante l'eliminazione dell'operatore.");
+            messageLabel.setText(DELETE_OPERATOR_ERROR_MESSAGE);
         }
     }
 
@@ -197,21 +187,50 @@ public class OperatorManagementGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) messageLabel.getScene().getWindow(),
-                    "/com/example/shopflowers/view/admin-product-view.fxml",
-                    "Shop Flowers - Gestione Prodotti"
+                    ViewPaths.ADMIN_PRODUCT_VIEW,
+                    UiTitles.ADMIN_PRODUCTS
             );
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il ritorno all'area amministratore.");
+            messageLabel.setText(BACK_TO_ADMIN_ERROR_MESSAGE);
         }
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleLogout() {
         try {
             SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
+            messageLabel.setText(LOGOUT_ERROR_MESSAGE);
         }
+    }
+
+    private void configureOperatorTable() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        salaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        contractYearColumn.setCellValueFactory(new PropertyValueFactory<>("contractYear"));
+        annualHoursColumn.setCellValueFactory(new PropertyValueFactory<>("annualHours"));
+    }
+
+    private void configureSearchFilter() {
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
+    }
+
+    private void configureSelectionListener() {
+        operatorTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            selectedOperator = newSelection;
+
+            if (newSelection == null) {
+                return;
+            }
+
+            populateFields(newSelection);
+            usernameField.setDisable(true);
+            passwordField.setDisable(true);
+        });
     }
 
     private OperatorBean buildCreateOperatorBean() {
@@ -250,18 +269,11 @@ public class OperatorManagementGraphicController {
     private void loadOperators() {
         try {
             List<OperatorFullData> operators = manageOperatorController.getAllOperators();
-            masterOperatorList = FXCollections.observableArrayList(operators);
-            filteredOperators = new FilteredList<>(masterOperatorList, operator -> true);
-
-            SortedList<OperatorFullData> sortedOperators = new SortedList<>(filteredOperators);
-            sortedOperators.comparatorProperty().bind(operatorTable.comparatorProperty());
-
-            operatorTable.setItems(sortedOperators);
+            filteredOperators = TableDataUtils.bindFilteredSortedTable(operatorTable, operators);
             applyFilters();
             operatorTable.refresh();
-
         } catch (SQLException e) {
-            messageLabel.setText("Si è verificato un errore durante il caricamento degli operatori.");
+            messageLabel.setText(LOAD_OPERATORS_ERROR_MESSAGE);
         }
     }
 
@@ -270,22 +282,30 @@ public class OperatorManagementGraphicController {
             return;
         }
 
-        String searchText = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+        String searchText = searchField.getText() == null
+                ? ""
+                : searchField.getText().trim().toLowerCase();
 
-        filteredOperators.setPredicate(operator -> {
-            if (operator == null) {
-                return false;
-            }
+        filteredOperators.setPredicate(operator ->
+                operator != null && matchesSearch(operator, searchText)
+        );
+    }
 
-            return searchText.isBlank()
-                    || safe(operator.getName()).contains(searchText)
-                    || safe(operator.getSurname()).contains(searchText)
-                    || safe(operator.getUsername()).contains(searchText);
-        });
+    private boolean matchesSearch(OperatorFullData operator, String searchText) {
+        return searchText.isBlank()
+                || safe(operator.getName()).contains(searchText)
+                || safe(operator.getSurname()).contains(searchText)
+                || safe(operator.getUsername()).contains(searchText);
     }
 
     private String safe(String value) {
         return value == null ? "" : value.toLowerCase();
+    }
+
+    private void resetFormAfterCreateOrDelete() {
+        clearFields();
+        usernameField.setDisable(false);
+        passwordField.setDisable(false);
     }
 
     private void clearFields() {

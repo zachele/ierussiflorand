@@ -1,34 +1,38 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.UiTitles;
+import com.example.shopflowers.config.ViewPaths;
 import com.example.shopflowers.controller.application.CustomerCartController;
 import com.example.shopflowers.controller.application.RecommendationController;
 import com.example.shopflowers.exception.InvalidQuantityException;
 import com.example.shopflowers.model.bean.RecommendationRequestBean;
 import com.example.shopflowers.model.entity.RecommendationResult;
 import com.example.shopflowers.util.CartSession;
+import com.example.shopflowers.util.ProductTableImageCellFactory;
 import com.example.shopflowers.util.SceneNavigator;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
 public class RecommendationGraphicController {
 
-    private static final String PRODUCT_IMAGES_PATH = "/com/example/shopflowers/images/products/";
-    private static final String DEFAULT_IMAGE = "default_product.png";
+    private static final String LOAD_RECOMMENDATIONS_ERROR_MESSAGE =
+            "Errore nel caricamento delle proposte.";
+    private static final String BACK_TO_CATALOG_ERROR_MESSAGE =
+            "Si è verificato un errore durante il ritorno al catalogo.";
+    private static final String LOGOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante il logout.";
 
     @FXML
     private ComboBox<String> occasionComboBox;
@@ -78,70 +82,33 @@ public class RecommendationGraphicController {
 
     @FXML
     public void initialize() {
-        occasionComboBox.setItems(FXCollections.observableArrayList(
-                "COMPLEANNO", "ANNIVERSARIO", "LAUREA", "RINGRAZIAMENTO", "CONDOGLIANZE", "ROMANTICO"
-        ));
-
-        styleComboBox.setItems(FXCollections.observableArrayList(
-                "ROMANTICO", "ELEGANTE", "ALLEGRO", "SEMPLICE", "RAFFINATO"
-        ));
-
-        colorComboBox.setItems(FXCollections.observableArrayList(
-                "ROSSO", "BIANCO", "ROSA", "GIALLO", "MISTO", "NESSUNA"
-        ));
-
+        configureComboBoxes();
         configureRecommendationTable();
-
-        recommendationTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
-                selectedRecommendation = newValue);
+        configureSelectionListener();
     }
 
     @FXML
     private void handleFindRecommendations() {
-        String occasion = occasionComboBox.getValue();
-        String style = styleComboBox.getValue();
-        String color = colorComboBox.getValue();
-        String budgetText = budgetField.getText();
-
-        if (occasion == null || style == null || color == null || budgetText == null || budgetText.isBlank()) {
-            messageLabel.setText("Compila tutti i campi dell'assistente.");
-            return;
-        }
-
-        double budget;
-        try {
-            budget = Double.parseDouble(budgetText);
-        } catch (NumberFormatException e) {
-            messageLabel.setText("Inserisci un budget valido.");
+        if (!areRecommendationInputsValid()) {
             return;
         }
 
         try {
             RecommendationRequestBean requestBean = buildRecommendationRequestBean(
-                    occasion,
-                    style,
-                    color,
-                    budget
+                    occasionComboBox.getValue(),
+                    styleComboBox.getValue(),
+                    colorComboBox.getValue(),
+                    Double.parseDouble(budgetField.getText())
             );
 
             List<RecommendationResult> results = recommendationController.getRecommendations(requestBean);
             recommendationTable.setItems(FXCollections.observableArrayList(results));
+            updateRecommendationMessage(results);
 
-            if (results.isEmpty()) {
-                messageLabel.setText("Nessuna proposta disponibile con questi criteri.");
-                return;
-            }
-
-            boolean allWithinBudget = results.stream().allMatch(RecommendationResult::isWithinBudget);
-
-            if (allWithinBudget) {
-                messageLabel.setText("Mostrate le migliori proposte compatibili con il budget.");
-            } else {
-                messageLabel.setText("Nessuna proposta perfettamente entro budget: mostrate le alternative più vicine.");
-            }
-
+        } catch (NumberFormatException e) {
+            messageLabel.setText("Inserisci un budget valido.");
         } catch (SQLException e) {
-            messageLabel.setText("Errore nel caricamento delle proposte.");
+            messageLabel.setText(LOAD_RECOMMENDATIONS_ERROR_MESSAGE);
         }
     }
 
@@ -186,67 +153,61 @@ public class RecommendationGraphicController {
         try {
             SceneNavigator.goTo(
                     (Stage) messageLabel.getScene().getWindow(),
-                    "/com/example/shopflowers/view/catalog-view.fxml",
-                    "Shop Flowers - Catalogo Cliente"
+                    ViewPaths.CATALOG_VIEW,
+                    UiTitles.CATALOG_CUSTOMER
             );
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il ritorno al catalogo.");
+            messageLabel.setText(BACK_TO_CATALOG_ERROR_MESSAGE);
         }
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleLogout() {
         try {
             SceneNavigator.logoutToLogin((Stage) messageLabel.getScene().getWindow());
         } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
+            messageLabel.setText(LOGOUT_ERROR_MESSAGE);
         }
+    }
+
+    private void configureComboBoxes() {
+        occasionComboBox.setItems(FXCollections.observableArrayList(
+                "COMPLEANNO",
+                "ANNIVERSARIO",
+                "LAUREA",
+                "RINGRAZIAMENTO",
+                "CONDOGLIANZE",
+                "ROMANTICO"
+        ));
+
+        styleComboBox.setItems(FXCollections.observableArrayList(
+                "ROMANTICO",
+                "ELEGANTE",
+                "ALLEGRO",
+                "SEMPLICE",
+                "RAFFINATO"
+        ));
+
+        colorComboBox.setItems(FXCollections.observableArrayList(
+                "ROSSO",
+                "BIANCO",
+                "ROSA",
+                "GIALLO",
+                "MISTO",
+                "NESSUNA"
+        ));
     }
 
     private void configureRecommendationTable() {
         imageColumn.setCellValueFactory(cellData ->
-                javafx.beans.binding.Bindings.createStringBinding(
-                        () -> cellData.getValue() != null
-                                && cellData.getValue().getProduct() != null
+                new SimpleStringProperty(
+                        cellData.getValue() != null && cellData.getValue().getProduct() != null
                                 ? cellData.getValue().getProduct().getImageName()
                                 : null
                 )
         );
-
-        imageColumn.setCellFactory(column -> new TableCell<>() {
-            private final ImageView imageView = new ImageView();
-
-            {
-                imageView.setFitWidth(80);
-                imageView.setFitHeight(80);
-                imageView.setPreserveRatio(true);
-                imageView.getStyleClass().add("product-image");
-
-                setOnMouseEntered(event -> {
-                    imageView.setScaleX(1.35);
-                    imageView.setScaleY(1.35);
-                    imageView.toFront();
-                });
-
-                setOnMouseExited(event -> {
-                    imageView.setScaleX(1.0);
-                    imageView.setScaleY(1.0);
-                });
-            }
-
-            @Override
-            protected void updateItem(String imageName, boolean empty) {
-                super.updateItem(imageName, empty);
-
-                if (empty) {
-                    setGraphic(null);
-                    return;
-                }
-
-                imageView.setImage(loadProductImage(imageName));
-                setGraphic(imageView);
-            }
-        });
+        imageColumn.setCellFactory(ProductTableImageCellFactory.create());
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("productPrice"));
@@ -254,6 +215,46 @@ public class RecommendationGraphicController {
         varietyColumn.setCellValueFactory(new PropertyValueFactory<>("productVariety"));
         budgetColumn.setCellValueFactory(new PropertyValueFactory<>("budgetCompatibility"));
         reasonColumn.setCellValueFactory(new PropertyValueFactory<>("reason"));
+    }
+
+    private void configureSelectionListener() {
+        recommendationTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
+                selectedRecommendation = newValue);
+    }
+
+    private boolean areRecommendationInputsValid() {
+        String occasion = occasionComboBox.getValue();
+        String style = styleComboBox.getValue();
+        String color = colorComboBox.getValue();
+        String budgetText = budgetField.getText();
+
+        if (occasion == null || style == null || color == null || budgetText == null || budgetText.isBlank()) {
+            messageLabel.setText("Compila tutti i campi dell'assistente.");
+            return false;
+        }
+
+        try {
+            Double.parseDouble(budgetText);
+            return true;
+        } catch (NumberFormatException e) {
+            messageLabel.setText("Inserisci un budget valido.");
+            return false;
+        }
+    }
+
+    private void updateRecommendationMessage(List<RecommendationResult> results) {
+        if (results.isEmpty()) {
+            messageLabel.setText("Nessuna proposta disponibile con questi criteri.");
+            return;
+        }
+
+        boolean allWithinBudget = results.stream().allMatch(RecommendationResult::isWithinBudget);
+
+        if (allWithinBudget) {
+            messageLabel.setText("Mostrate le migliori proposte compatibili con il budget.");
+        } else {
+            messageLabel.setText("Nessuna proposta perfettamente entro budget: mostrate le alternative più vicine.");
+        }
     }
 
     private CustomerCartController getCartController() {
@@ -272,23 +273,5 @@ public class RecommendationGraphicController {
         requestBean.setPreferredColor(color);
         requestBean.setMaxBudget(budget);
         return requestBean;
-    }
-
-    private Image loadProductImage(String imageName) {
-        String resolvedImageName = (imageName == null || imageName.isBlank())
-                ? DEFAULT_IMAGE
-                : imageName;
-
-        InputStream inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + resolvedImageName);
-
-        if (inputStream == null) {
-            inputStream = getClass().getResourceAsStream(PRODUCT_IMAGES_PATH + DEFAULT_IMAGE);
-        }
-
-        if (inputStream == null) {
-            return null;
-        }
-
-        return new Image(inputStream);
     }
 }
