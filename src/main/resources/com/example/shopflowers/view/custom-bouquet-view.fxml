@@ -22,16 +22,6 @@
 <VBox prefHeight="800" prefWidth="1500" spacing="15" style="-fx-padding: 20;" stylesheets="@../../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.CustomBouquetGraphicController">
 
     <MenuBar prefHeight="29.0" prefWidth="1460.0">
-      <Menu disable="true" mnemonicParsing="false">
-         <graphic>
-            <Label prefHeight="15.0" prefWidth="356.0" />
-         </graphic>
-      </Menu>
-      <Menu disable="true" mnemonicParsing="false">
-         <graphic>
-            <Label prefHeight="15.0" prefWidth="475.0" />
-         </graphic>
-      </Menu>
         <Menu text="Impostazioni">
             <MenuItem onAction="#handleBackToCatalog" text="Torna al catalogo" />
             <MenuItem onAction="#handleLogout" text="Logout" />
@@ -49,7 +39,7 @@
         </Menu>
       <Menu disable="true" mnemonicParsing="false">
          <graphic>
-            <Label prefHeight="15.0" prefWidth="27.0" />
+            <Label prefHeight="15.0" prefWidth="891.0" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false">
@@ -131,12 +121,12 @@
               </rowConstraints>
           </GridPane>
       
-                                     <TableView fx:id="bouquetTable" prefHeight="282.0" prefWidth="737.0">
+                                                 <TableView fx:id="bouquetTable" prefHeight="305.0" prefWidth="632.0" tableMenuButtonVisible="true">
               <columns>
-                  <TableColumn fx:id="bouquetNameColumn" prefWidth="189.59997272491455" text="Fiore" />
-                  <TableColumn fx:id="bouquetQuantityColumn" minWidth="0.0" prefWidth="81.59999084472656" text="Quantità" />
-                  <TableColumn fx:id="bouquetUnitPriceColumn" minWidth="0.0" prefWidth="167.2000732421875" text="Prezzo unitario" />
-                  <TableColumn fx:id="bouquetSubtotalColumn" prefWidth="286.4000244140625" text="Subtotale" />
+                  <TableColumn fx:id="bouquetNameColumn" prefWidth="210.4000244140625" text="Fiore" />
+                  <TableColumn fx:id="bouquetQuantityColumn" minWidth="0.0" prefWidth="139.2000732421875" text="Quantità" />
+                  <TableColumn fx:id="bouquetUnitPriceColumn" minWidth="0.0" prefWidth="119.199951171875" text="Prezzo unitario" />
+                  <TableColumn fx:id="bouquetSubtotalColumn" prefWidth="123.2000732421875" text="Subtotale" />
               </columns>
           </TableView>
    </HBox>

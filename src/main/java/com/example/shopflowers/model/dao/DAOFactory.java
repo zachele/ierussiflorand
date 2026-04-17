@@ -13,68 +13,50 @@ public final class DAOFactory {
     public static FlowerProductDAO getFlowerProductDAO() throws SQLException {
         AppMode mode = AppConfig.getMode();
 
-        switch (mode) {
-            case DEMO:
-                return new FlowerProductMemoryDAO();
-            case FILE:
-                return new FlowerProductFileDAO();
-            case FULL:
-            default:
-                return new FlowerProductDBDAO();
-        }
+        return switch (mode) {
+            case DEMO -> new FlowerProductMemoryDAO();
+            case FILE -> new FlowerProductFileDAO();
+            case FULL -> new FlowerProductDBDAO();
+        };
     }
 
-    public static OrderDAO getOrderDAO() throws SQLException {
+    public static OrderDAO getOrderDAO() {
         AppMode mode = AppConfig.getMode();
 
-        switch (mode) {
-            case DEMO:
-                return new OrderMemoryDAO();
-            case FILE:
-                return new OrderFileDAO();
-            case FULL:
-            default:
-                return new OrderDBDAO();
-        }
+        return switch (mode) {
+            case DEMO -> new OrderMemoryDAO();
+            case FILE -> new OrderFileDAO();
+            case FULL -> new OrderDBDAO();
+        };
     }
 
-    public static UserDAO getUserDAO() throws SQLException {
+    public static UserDAO getUserDAO() {
         AppMode mode = AppConfig.getMode();
 
-        switch (mode) {
-            case DEMO:
-                return new UserMemoryDAO();
-            case FILE:
-                return new UserFileDAO();
-            case FULL:
-            default:
-                return new UserDBDAO();
-        }
+        return switch (mode) {
+            case DEMO -> new UserMemoryDAO();
+            case FILE -> new UserFileDAO();
+            case FULL -> new UserDBDAO();
+        };
     }
+
     public static OperatorDetailsDAO getOperatorDetailsDAO() throws SQLException {
         AppMode mode = AppConfig.getMode();
 
-        switch (mode) {
-            case DEMO:
-                return new OperatorDetailsMemoryDAO();
-            case FILE:
-                return new OperatorDetailsFileDAO();
-            case FULL:
-            default:
-                return new OperatorDetailsDBDAO();
-        }
+        return switch (mode) {
+            case DEMO -> new OperatorDetailsMemoryDAO();
+            case FILE -> new OperatorDetailsFileDAO();
+            case FULL -> new OperatorDetailsDBDAO();
+        };
     }
-    public static CustomBouquetOrderDAO getCustomBouquetOrderDAO() throws SQLException {
+
+    public static CustomBouquetOrderDAO getCustomBouquetOrderDAO() {
         AppMode mode = AppConfig.getMode();
 
-        switch (mode) {
-            case DEMO:
-                return new CustomBouquetOrderMemoryDAO();
-            case FILE:
-                return new CustomBouquetOrderFileDAO();
-            case FULL:
-            default:
-                return new CustomBouquetOrderDBDAO();
-        }
+        return switch (mode) {
+            case DEMO -> new CustomBouquetOrderMemoryDAO();
+            case FILE -> new CustomBouquetOrderFileDAO();
+            case FULL -> new CustomBouquetOrderDBDAO();
+        };
     }
 }

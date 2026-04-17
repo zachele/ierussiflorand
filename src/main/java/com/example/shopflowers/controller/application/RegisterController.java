@@ -13,11 +13,7 @@ public class RegisterController {
     private final UserDAO userDAO;
 
     public RegisterController() {
-        try {
             this.userDAO = DAOFactory.getUserDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO degli utenti.", e);
-        }
     }
 
     public boolean registerCustomer(RegisterUserBean registerUserBean)

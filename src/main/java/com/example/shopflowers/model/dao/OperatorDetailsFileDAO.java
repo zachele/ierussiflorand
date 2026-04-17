@@ -17,10 +17,12 @@ import java.util.List;
 public class OperatorDetailsFileDAO implements OperatorDetailsDAO {
 
     private static final String FILE_PATH = "data/operator_details.csv";
+    private static final String FILE_HEADER = "userId;salary;contractYear;annualHours";
+    private static final int EXPECTED_PARTS = 4;
 
     private final UserDAO userDAO;
 
-    public OperatorDetailsFileDAO() throws SQLException {
+    public OperatorDetailsFileDAO() {
         this.userDAO = new UserFileDAO();
     }
 
@@ -58,19 +60,18 @@ public class OperatorDetailsFileDAO implements OperatorDetailsDAO {
         List<User> operators = userDAO.findAllOperators();
 
         for (User user : operators) {
-            for (OperatorDetails details : detailsList) {
-                if (details.getUserId() == user.getId()) {
-                    result.add(new OperatorFullData(
-                            user.getId(),
-                            user.getName(),
-                            user.getSurname(),
-                            user.getUsername(),
-                            details.getSalary(),
-                            details.getContractYear(),
-                            details.getAnnualHours()
-                    ));
-                    break;
-                }
+            OperatorDetails matchingDetails = findDetailsByUserId(detailsList, user.getId());
+
+            if (matchingDetails != null) {
+                result.add(new OperatorFullData(
+                        user.getId(),
+                        user.getName(),
+                        user.getSurname(),
+                        user.getUsername(),
+                        matchingDetails.getSalary(),
+                        matchingDetails.getContractYear(),
+                        matchingDetails.getAnnualHours()
+                ));
             }
         }
 
@@ -83,30 +84,19 @@ public class OperatorDetailsFileDAO implements OperatorDetailsDAO {
         List<OperatorDetails> detailsList = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(FILE_PATH))) {
+            String header = reader.readLine();
+
+            if (header == null) {
+                return detailsList;
+            }
+
             String line;
-            boolean firstLine = true;
-
             while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
+                OperatorDetails details = parseOperatorDetails(line);
 
-                if (line.isBlank()) {
-                    continue;
+                if (details != null) {
+                    detailsList.add(details);
                 }
-
-                String[] parts = line.split(";", -1);
-                if (parts.length != 4) {
-                    continue;
-                }
-
-                detailsList.add(new OperatorDetails(
-                        Integer.parseInt(parts[0]),
-                        Double.parseDouble(parts[1]),
-                        Integer.parseInt(parts[2]),
-                        Integer.parseInt(parts[3])
-                ));
             }
 
         } catch (IOException e) {
@@ -120,7 +110,7 @@ public class OperatorDetailsFileDAO implements OperatorDetailsDAO {
         ensureFileExists();
 
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(FILE_PATH))) {
-            writer.write("userId;salary;contractYear;annualHours");
+            writer.write(FILE_HEADER);
             writer.newLine();
 
             for (OperatorDetails details : detailsList) {
@@ -150,7 +140,7 @@ public class OperatorDetailsFileDAO implements OperatorDetailsDAO {
 
             if (Files.notExists(filePath)) {
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                    writer.write("userId;salary;contractYear;annualHours");
+                    writer.write(FILE_HEADER);
                     writer.newLine();
                     writer.write("3;1450.00;2022;1600");
                     writer.newLine();
@@ -159,6 +149,39 @@ public class OperatorDetailsFileDAO implements OperatorDetailsDAO {
         } catch (IOException e) {
             throw new SQLException("Errore nella creazione del file dettagli operatori.", e);
         }
+    }
+
+    private OperatorDetails parseOperatorDetails(String line) {
+        if (line == null || line.isBlank()) {
+            return null;
+        }
+
+        String[] parts = line.split(";", -1);
+
+        if (parts.length != EXPECTED_PARTS) {
+            return null;
+        }
+
+        try {
+            return new OperatorDetails(
+                    Integer.parseInt(parts[0]),
+                    Double.parseDouble(parts[1]),
+                    Integer.parseInt(parts[2]),
+                    Integer.parseInt(parts[3])
+            );
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private OperatorDetails findDetailsByUserId(List<OperatorDetails> detailsList, int userId) {
+        for (OperatorDetails details : detailsList) {
+            if (details.getUserId() == userId) {
+                return details;
+            }
+        }
+
+        return null;
     }
 
     private OperatorDetails copyOperatorDetails(OperatorDetails details) {

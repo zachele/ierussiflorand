@@ -11,9 +11,6 @@ public class OperatorBean {
     private String contractYear;
     private String annualHours;
 
-    public OperatorBean() {
-    }
-
     public int getUserId() {
         return userId;
     }

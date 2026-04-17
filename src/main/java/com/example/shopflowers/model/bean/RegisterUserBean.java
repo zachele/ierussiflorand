@@ -7,9 +7,6 @@ public class RegisterUserBean {
     private String username;
     private String password;
 
-    public RegisterUserBean() {
-    }
-
     public String getName() {
         return name;
     }

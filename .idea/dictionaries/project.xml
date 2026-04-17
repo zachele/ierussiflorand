@@ -36,6 +36,7 @@
       <w>Gialla</w>
       <w>Gigli</w>
       <w>Giorni</w>
+      <w>Guidato</w>
       <w>Immagine</w>
       <w>Impossibile</w>
       <w>Indirizzo</w>
@@ -45,6 +46,7 @@
       <w>Lunedì</w>
       <w>Margherite</w>
       <w>Metodo</w>
+      <w>Migliara</w>
       <w>Miste</w>
       <w>Misto</w>
       <w>Modalità</w>
@@ -54,11 +56,13 @@
       <w>Nessun</w>
       <w>Nessuno</w>
       <w>Nuovo</w>
+      <w>Occasione</w>
       <w>Operatori</w>
       <w>Orari</w>
       <w>Ordini</w>
       <w>Originale</w>
       <w>Pagamento</w>
+      <w>Panoramica</w>
       <w>Peonia</w>
       <w>Posizione</w>
       <w>Prezzi</w>
@@ -84,6 +88,7 @@
       <w>Subtotale</w>
       <w>Svuota</w>
       <w>Telefono</w>
+      <w>Terracina</w>
       <w>Torna</w>
       <w>Totale</w>
       <w>Tulipani</w>
@@ -97,6 +102,7 @@
       <w>aggiornamenti</w>
       <w>aggiornata</w>
       <w>aggiornato</w>
+      <w>aggiungere</w>
       <w>aggiungi</w>
       <w>aggiunto</w>
       <w>all'area</w>
@@ -129,6 +135,8 @@
       <w>azzerata</w>
       <w>bianco</w>
       <w>biglietto</w>
+      <w>blocco</w>
+      <w>bottoni</w>
       <w>cambia</w>
       <w>caricamento</w>
       <w>cliente</w>
@@ -148,6 +156,7 @@
       <w>configurazione</w>
       <w>consegnati</w>
       <w>consegnato</w>
+      <w>consigliate</w>
       <w>consigliato</w>
       <w>consultare</w>
       <w>contanti</w>
@@ -162,6 +171,7 @@
       <w>creare</w>
       <w>creato</w>
       <w>creazione</w>
+      <w>credenziali</w>
       <w>criteri</w>
       <w>cura</w>
       <w>dalla</w>
@@ -184,6 +194,7 @@
       <w>disponibile</w>
       <w>disponibili</w>
       <w>disponibilità</w>
+      <w>distribuzione</w>
       <w>diverso</w>
       <w>economici</w>
       <w>effettuato</w>
@@ -203,8 +214,10 @@
       <w>filtri</w>
       <w>fiore</w>
       <w>fiori</w>
+      <w>generale</w>
       <w>gestione</w>
       <w>giglio</w>
+      <w>grafico</w>
       <w>ierussi</w>
       <w>ierussiflorand</w>
       <w>ignorata</w>
@@ -241,10 +254,13 @@
       <w>margherita</w>
       <w>mario</w>
       <w>massimo</w>
+      <w>messaggi</w>
       <w>mezzi</w>
       <w>miei</w>
       <w>migliori</w>
+      <w>minuti</w>
       <w>misto</w>
+      <w>modalita</w>
       <w>modalità</w>
       <w>modifica</w>
       <w>modificare</w>
@@ -275,6 +291,7 @@
       <w>percezione</w>
       <w>personalizzata</w>
       <w>preferenza</w>
+      <w>preferito</w>
       <w>preparazione</w>
       <w>presente</w>
       <w>prezzo</w>
@@ -287,6 +304,7 @@
       <w>pubblici</w>
       <w>puoi</w>
       <w>qualità</w>
+      <w>quantita</w>
       <w>quantità</w>
       <w>questi</w>
       <w>questo</w>
@@ -324,6 +342,7 @@
       <w>selezionato</w>
       <w>sessione</w>
       <w>siamo</w>
+      <w>sintetica</w>
       <w>sistema</w>
       <w>sobrio</w>
       <w>sono</w>
@@ -337,6 +356,7 @@
       <w>svuotamento</w>
       <w>svuotato</w>
       <w>testare</w>
+      <w>titolo</w>
       <w>tramite</w>
       <w>trova</w>
       <w>trovato</w>

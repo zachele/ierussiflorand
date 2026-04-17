@@ -9,9 +9,6 @@ public class CheckoutBean {
     private String pickupTime;
     private String paymentMethod;
 
-    public CheckoutBean() {
-    }
-
     public String getUsername() {
         return username;
     }

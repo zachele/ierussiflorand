@@ -13,11 +13,7 @@ public class LoginController {
     private final UserDAO userDAO;
 
     public LoginController() {
-        try {
-            this.userDAO = DAOFactory.getUserDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO degli utenti.", e);
-        }
+        this.userDAO = DAOFactory.getUserDAO();
     }
 
     public User login(LoginBean loginBean) throws SQLException, InvalidCredentialsException {

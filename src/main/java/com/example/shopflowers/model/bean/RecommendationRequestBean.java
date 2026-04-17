@@ -7,9 +7,6 @@ public class RecommendationRequestBean {
     private double maxBudget;
     private String preferredColor;
 
-    public RecommendationRequestBean() {
-    }
-
     public String getOccasion() {
         return occasion;
     }

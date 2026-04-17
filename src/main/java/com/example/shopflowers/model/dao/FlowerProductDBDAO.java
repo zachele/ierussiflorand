@@ -12,45 +12,60 @@ import java.util.List;
 
 public class FlowerProductDBDAO implements FlowerProductDAO {
 
+    private static final String INSERT_PRODUCT = """
+            INSERT INTO flower_product
+            (name, price, color, variety, stock_quantity, image_name)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """;
+
+    private static final String SELECT_ALL_PRODUCTS = """
+            SELECT id, name, price, color, variety, stock_quantity, image_name
+            FROM flower_product
+            """;
+
+    private static final String UPDATE_PRODUCT = """
+            UPDATE flower_product
+            SET name = ?, price = ?, color = ?, variety = ?, stock_quantity = ?, image_name = ?
+            WHERE id = ?
+            """;
+
+    private static final String DELETE_PRODUCT_BY_ID = """
+            DELETE FROM flower_product
+            WHERE id = ?
+            """;
+
+    private static final String SELECT_PRODUCT_BY_ID = """
+            SELECT id, name, price, color, variety, stock_quantity, image_name
+            FROM flower_product
+            WHERE id = ?
+            """;
+
+    private static final String UPDATE_PRODUCT_STOCK = """
+            UPDATE flower_product
+            SET stock_quantity = ?
+            WHERE id = ?
+            """;
+
     @Override
     public void save(FlowerProduct product) throws SQLException {
-        String query = "INSERT INTO flower_product (name, price, color, variety, stock_quantity, image_name) VALUES (?, ?, ?, ?, ?, ?)";
-
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCT)) {
 
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setDouble(2, product.getPrice());
-            preparedStatement.setString(3, product.getColor());
-            preparedStatement.setString(4, product.getVariety());
-            preparedStatement.setInt(5, product.getStockQuantity());
-            preparedStatement.setString(6, product.getImageName());
-
+            bindProductFields(preparedStatement, product);
             preparedStatement.executeUpdate();
         }
     }
 
     @Override
     public List<FlowerProduct> findAll() throws SQLException {
-        String query = "SELECT id, name, price, color, variety, stock_quantity, image_name FROM flower_product";
         List<FlowerProduct> products = new ArrayList<>();
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PRODUCTS);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                FlowerProduct product = new FlowerProduct(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("color"),
-                        resultSet.getString("variety"),
-                        resultSet.getInt("stock_quantity"),
-                        resultSet.getString("image_name")
-                );
-
-                products.add(product);
+                products.add(mapFlowerProduct(resultSet));
             }
         }
 
@@ -59,29 +74,19 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
 
     @Override
     public void update(FlowerProduct product) throws SQLException {
-        String query = "UPDATE flower_product SET name = ?, price = ?, color = ?, variety = ?, stock_quantity = ?, image_name = ? WHERE id = ?";
-
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT)) {
 
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setDouble(2, product.getPrice());
-            preparedStatement.setString(3, product.getColor());
-            preparedStatement.setString(4, product.getVariety());
-            preparedStatement.setInt(5, product.getStockQuantity());
-            preparedStatement.setString(6, product.getImageName());
+            bindProductFields(preparedStatement, product);
             preparedStatement.setInt(7, product.getId());
-
             preparedStatement.executeUpdate();
         }
     }
 
     @Override
     public void deleteById(int id) throws SQLException {
-        String query = "DELETE FROM flower_product WHERE id = ?";
-
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCT_BY_ID)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
@@ -90,41 +95,50 @@ public class FlowerProductDBDAO implements FlowerProductDAO {
 
     @Override
     public FlowerProduct findById(int id) throws SQLException {
-        String query = "SELECT id, name, price, color, variety, stock_quantity, image_name FROM flower_product WHERE id = ?";
-
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCT_BY_ID)) {
 
             preparedStatement.setInt(1, id);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return new FlowerProduct(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name"),
-                            resultSet.getDouble("price"),
-                            resultSet.getString("color"),
-                            resultSet.getString("variety"),
-                            resultSet.getInt("stock_quantity"),
-                            resultSet.getString("image_name")
-                    );
+                if (!resultSet.next()) {
+                    return null;
                 }
+
+                return mapFlowerProduct(resultSet);
             }
         }
-
-        return null;
     }
 
     @Override
     public void updateStock(int productId, int newStock) throws SQLException {
-        String query = "UPDATE flower_product SET stock_quantity = ? WHERE id = ?";
-
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_STOCK)) {
 
             preparedStatement.setInt(1, newStock);
             preparedStatement.setInt(2, productId);
             preparedStatement.executeUpdate();
         }
+    }
+
+    private void bindProductFields(PreparedStatement preparedStatement, FlowerProduct product) throws SQLException {
+        preparedStatement.setString(1, product.getName());
+        preparedStatement.setDouble(2, product.getPrice());
+        preparedStatement.setString(3, product.getColor());
+        preparedStatement.setString(4, product.getVariety());
+        preparedStatement.setInt(5, product.getStockQuantity());
+        preparedStatement.setString(6, product.getImageName());
+    }
+
+    private FlowerProduct mapFlowerProduct(ResultSet resultSet) throws SQLException {
+        return new FlowerProduct(
+                resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getDouble("price"),
+                resultSet.getString("color"),
+                resultSet.getString("variety"),
+                resultSet.getInt("stock_quantity"),
+                resultSet.getString("image_name")
+        );
     }
 }

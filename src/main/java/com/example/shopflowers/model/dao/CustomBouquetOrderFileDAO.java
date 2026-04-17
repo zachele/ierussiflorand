@@ -14,6 +14,9 @@ import java.sql.SQLException;
 public class CustomBouquetOrderFileDAO implements CustomBouquetOrderDAO {
 
     private static final String FILE_PATH = "data/custom_bouquet_orders.csv";
+    private static final String FILE_HEADER =
+            "orderId;size;packaging;cardIncluded;vaseIncluded;totalPrice";
+    private static final int EXPECTED_PARTS = 6;
 
     @Override
     public void save(CustomBouquetOrderData bouquetData) throws SQLException {
@@ -44,30 +47,18 @@ public class CustomBouquetOrderFileDAO implements CustomBouquetOrderDAO {
         ensureFileExists();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(FILE_PATH))) {
+            String header = reader.readLine();
+
+            if (header == null) {
+                return null;
+            }
+
             String line;
-            boolean firstLine = true;
-
             while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
+                CustomBouquetOrderSummary summary = parseSummaryIfMatching(line, orderId);
 
-                String[] parts = line.split(";", -1);
-                if (parts.length != 6) {
-                    continue;
-                }
-
-                int id = Integer.parseInt(parts[0]);
-
-                if (id == orderId) {
-                    return new CustomBouquetOrderSummary(
-                            parts[1],
-                            parts[2],
-                            Boolean.parseBoolean(parts[3]),
-                            Boolean.parseBoolean(parts[4]),
-                            Double.parseDouble(parts[5])
-                    );
+                if (summary != null) {
+                    return summary;
                 }
             }
 
@@ -76,6 +67,32 @@ public class CustomBouquetOrderFileDAO implements CustomBouquetOrderDAO {
         }
 
         return null;
+    }
+
+    private CustomBouquetOrderSummary parseSummaryIfMatching(String line, int orderId) {
+        String[] parts = line.split(";", -1);
+
+        if (parts.length != EXPECTED_PARTS) {
+            return null;
+        }
+
+        try {
+            int currentOrderId = Integer.parseInt(parts[0]);
+
+            if (currentOrderId != orderId) {
+                return null;
+            }
+
+            return new CustomBouquetOrderSummary(
+                    parts[1],
+                    parts[2],
+                    Boolean.parseBoolean(parts[3]),
+                    Boolean.parseBoolean(parts[4]),
+                    Double.parseDouble(parts[5])
+            );
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     private void ensureFileExists() throws SQLException {
@@ -89,7 +106,7 @@ public class CustomBouquetOrderFileDAO implements CustomBouquetOrderDAO {
 
             if (Files.notExists(filePath)) {
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                    writer.write("orderId;size;packaging;cardIncluded;vaseIncluded;totalPrice");
+                    writer.write(FILE_HEADER);
                     writer.newLine();
                 }
             }

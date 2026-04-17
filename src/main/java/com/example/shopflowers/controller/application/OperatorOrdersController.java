@@ -13,11 +13,7 @@ public class OperatorOrdersController {
     private final OrderDAO orderDAO;
 
     public OperatorOrdersController() {
-        try {
-            this.orderDAO = DAOFactory.getOrderDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO degli ordini.", e);
-        }
+        this.orderDAO = DAOFactory.getOrderDAO();
     }
 
     public List<OrderItemSummary> getItemsByOrderId(int orderId) throws SQLException {

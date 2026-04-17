@@ -7,9 +7,6 @@ public class ChangePasswordBean {
     private String newPassword;
     private String confirmPassword;
 
-    public ChangePasswordBean() {
-    }
-
     public String getUsername() {
         return username;
     }

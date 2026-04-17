@@ -1,7 +1,7 @@
 package com.example.shopflowers.exception;
 
 public class UserAlreadyExistsException extends Exception {
-
+    @SuppressWarnings("unused")
     public UserAlreadyExistsException() {
         super("Username già esistente.");
     }

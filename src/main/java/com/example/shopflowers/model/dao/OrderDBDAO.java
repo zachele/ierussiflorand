@@ -54,8 +54,9 @@ public class OrderDBDAO implements OrderDAO {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
+            preparedStatement.setInt(1, orderId);
+
             for (CartItem item : order.getItems()) {
-                preparedStatement.setInt(1, orderId);
                 preparedStatement.setInt(2, item.getProduct().getId());
                 preparedStatement.setInt(3, item.getQuantity());
                 preparedStatement.setDouble(4, item.getProduct().getPrice());
@@ -238,8 +239,9 @@ public class OrderDBDAO implements OrderDAO {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
+            preparedStatement.setInt(1, orderId);
+
             for (CustomBouquetItem item : bouquet.getItems()) {
-                preparedStatement.setInt(1, orderId);
                 preparedStatement.setInt(2, item.getFlowerProduct().getId());
                 preparedStatement.setInt(3, item.getQuantity());
                 preparedStatement.setDouble(4, item.getFlowerProduct().getPrice());

@@ -1,5 +1,6 @@
 package com.example.shopflowers.exception;
 
+@SuppressWarnings("unused")
 public class EmptyOrderException extends Exception {
 
     public EmptyOrderException() {

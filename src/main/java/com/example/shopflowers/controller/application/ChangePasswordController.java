@@ -12,11 +12,7 @@ public class ChangePasswordController {
     private final UserDAO userDAO;
 
     public ChangePasswordController() {
-        try {
             this.userDAO = DAOFactory.getUserDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO degli utenti.", e);
-        }
     }
 
     public boolean changePassword(ChangePasswordBean changePasswordBean)

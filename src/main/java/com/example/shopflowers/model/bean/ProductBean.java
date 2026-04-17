@@ -10,9 +10,6 @@ public class ProductBean {
     private int stockQuantity;
     private String imageName;
 
-    public ProductBean() {
-    }
-
     public int getId() {
         return id;
     }

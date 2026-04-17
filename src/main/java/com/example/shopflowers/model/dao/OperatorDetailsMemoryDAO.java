@@ -10,31 +10,31 @@ import java.util.List;
 
 public class OperatorDetailsMemoryDAO implements OperatorDetailsDAO {
 
-    private static final List<OperatorDetails> operatorDetailsList = new ArrayList<>();
+    private static final List<OperatorDetails> OPERATOR_DETAILS_LIST = new ArrayList<>();
     private static boolean initialized = false;
 
     private final UserDAO userDAO;
 
-    public OperatorDetailsMemoryDAO() throws SQLException {
+    public OperatorDetailsMemoryDAO() {
         this.userDAO = new UserMemoryDAO();
         initializeIfNeeded();
     }
 
     @Override
-    public void save(OperatorDetails operatorDetails) throws SQLException {
-        operatorDetailsList.add(copyOperatorDetails(operatorDetails));
+    public void save(OperatorDetails operatorDetails) {
+        OPERATOR_DETAILS_LIST.add(copyOperatorDetails(operatorDetails));
     }
 
     @Override
-    public void deleteByUserId(int userId) throws SQLException {
-        operatorDetailsList.removeIf(details -> details.getUserId() == userId);
+    public void deleteByUserId(int userId) {
+        OPERATOR_DETAILS_LIST.removeIf(details -> details.getUserId() == userId);
     }
 
     @Override
-    public void update(OperatorDetails operatorDetails) throws SQLException {
-        for (int i = 0; i < operatorDetailsList.size(); i++) {
-            if (operatorDetailsList.get(i).getUserId() == operatorDetails.getUserId()) {
-                operatorDetailsList.set(i, copyOperatorDetails(operatorDetails));
+    public void update(OperatorDetails operatorDetails) {
+        for (int i = 0; i < OPERATOR_DETAILS_LIST.size(); i++) {
+            if (OPERATOR_DETAILS_LIST.get(i).getUserId() == operatorDetails.getUserId()) {
+                OPERATOR_DETAILS_LIST.set(i, copyOperatorDetails(operatorDetails));
                 return;
             }
         }
@@ -47,6 +47,7 @@ public class OperatorDetailsMemoryDAO implements OperatorDetailsDAO {
 
         for (User user : operators) {
             OperatorDetails details = findByUserId(user.getId());
+
             if (details != null) {
                 result.add(new OperatorFullData(
                         user.getId(),
@@ -63,22 +64,23 @@ public class OperatorDetailsMemoryDAO implements OperatorDetailsDAO {
         return result;
     }
 
-    private void initializeIfNeeded() {
+    private static void initializeIfNeeded() {
         if (initialized) {
             return;
         }
 
-        operatorDetailsList.clear();
-        operatorDetailsList.add(new OperatorDetails(3, 1450.0, 2022, 1600));
+        OPERATOR_DETAILS_LIST.clear();
+        OPERATOR_DETAILS_LIST.add(new OperatorDetails(3, 1450.0, 2022, 1600));
         initialized = true;
     }
 
     private OperatorDetails findByUserId(int userId) {
-        for (OperatorDetails details : operatorDetailsList) {
+        for (OperatorDetails details : OPERATOR_DETAILS_LIST) {
             if (details.getUserId() == userId) {
                 return details;
             }
         }
+
         return null;
     }
 

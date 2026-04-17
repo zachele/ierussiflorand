@@ -104,13 +104,10 @@ public class OperatorGraphicController {
 
     public OperatorGraphicController() {
         this.operatorOrdersController = new OperatorOrdersController();
-
-        try {
             this.customBouquetOrderDAO = DAOFactory.getCustomBouquetOrderDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO dei bouquet ordine.", e);
-        }
     }
+
+
 
     @FXML
     public void initialize() {

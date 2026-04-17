@@ -11,12 +11,22 @@ import java.sql.SQLException;
 
 public class CustomBouquetOrderDBDAO implements CustomBouquetOrderDAO {
 
+    private static final String INSERT_BOUQUET_ORDER = """
+            INSERT INTO custom_bouquet_order
+            (order_id, size, packaging, card_included, vase_included, total_price)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """;
+
+    private static final String SELECT_BOUQUET_BY_ORDER_ID = """
+            SELECT size, packaging, card_included, vase_included, total_price
+            FROM custom_bouquet_order
+            WHERE order_id = ?
+            """;
+
     @Override
     public void save(CustomBouquetOrderData bouquetData) throws SQLException {
-        String query = "INSERT INTO custom_bouquet_order (order_id, size, packaging, card_included, vase_included, total_price) VALUES (?, ?, ?, ?, ?, ?)";
-
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BOUQUET_ORDER)) {
 
             preparedStatement.setInt(1, bouquetData.getOrderId());
             preparedStatement.setString(2, bouquetData.getSize());
@@ -31,30 +41,24 @@ public class CustomBouquetOrderDBDAO implements CustomBouquetOrderDAO {
 
     @Override
     public CustomBouquetOrderSummary findByOrderId(int orderId) throws SQLException {
-        String query = """
-                SELECT size, packaging, card_included, vase_included, total_price
-                FROM custom_bouquet_order
-                WHERE order_id = ?
-                """;
-
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BOUQUET_BY_ORDER_ID)) {
 
             preparedStatement.setInt(1, orderId);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return new CustomBouquetOrderSummary(
-                            resultSet.getString("size"),
-                            resultSet.getString("packaging"),
-                            resultSet.getBoolean("card_included"),
-                            resultSet.getBoolean("vase_included"),
-                            resultSet.getDouble("total_price")
-                    );
+                if (!resultSet.next()) {
+                    return null;
                 }
+
+                return new CustomBouquetOrderSummary(
+                        resultSet.getString("size"),
+                        resultSet.getString("packaging"),
+                        resultSet.getBoolean("card_included"),
+                        resultSet.getBoolean("vase_included"),
+                        resultSet.getDouble("total_price")
+                );
             }
         }
-
-        return null;
     }
 }
