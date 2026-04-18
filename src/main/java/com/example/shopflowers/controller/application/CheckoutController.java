@@ -22,38 +22,32 @@ import java.util.Map;
 
 public class CheckoutController {
 
+    private static final String INITIAL_ORDER_STATUS = "IN_PREPARAZIONE";
+
     private final OrderDAO orderDAO;
     private final FlowerProductDAO flowerProductDAO;
     private final CustomBouquetOrderDAO customBouquetOrderDAO;
 
     public CheckoutController() {
-            this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
-            this.orderDAO = DAOFactory.getOrderDAO();
-            this.customBouquetOrderDAO = DAOFactory.getCustomBouquetOrderDAO();
+        this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
+        this.orderDAO = DAOFactory.getOrderDAO();
+        this.customBouquetOrderDAO = DAOFactory.getCustomBouquetOrderDAO();
     }
 
     public Order createOrder(CheckoutBean checkoutBean, List<CartItem> cartItems) {
-        double total = 0;
+        double total = calculateOrderTotal(cartItems);
 
-        for (CartItem item : cartItems) {
-            total += item.getTotalPrice();
-        }
-
-        if (CustomBouquetSession.hasBouquet()) {
-            total += CustomBouquetSession.getCurrentBouquet().getTotalPrice();
-        }
-
-        return new Order(
-                checkoutBean.getUsername(),
-                cartItems,
-                checkoutBean.getDeliveryMode(),
-                checkoutBean.getDeliveryAddress(),
-                checkoutBean.getPickupDate(),
-                checkoutBean.getPickupTime(),
-                checkoutBean.getPaymentMethod(),
-                "IN_PREPARAZIONE",
-                total
-        );
+        return new Order.Builder()
+                .username(checkoutBean.getUsername())
+                .items(cartItems)
+                .deliveryMode(checkoutBean.getDeliveryMode())
+                .deliveryAddress(checkoutBean.getDeliveryAddress())
+                .pickupDate(checkoutBean.getPickupDate())
+                .pickupTime(checkoutBean.getPickupTime())
+                .paymentMethod(checkoutBean.getPaymentMethod())
+                .status(INITIAL_ORDER_STATUS)
+                .total(total)
+                .build();
     }
 
     public void confirmOrder(Order order)
@@ -63,36 +57,12 @@ public class CheckoutController {
             throw new EmptyCartException("Impossibile confermare un ordine vuoto.");
         }
 
-        Map<Integer, Integer> requiredQuantities = new HashMap<>();
+        Map<Integer, Integer> requiredQuantities = buildRequiredQuantities(order);
+        CustomBouquet bouquet = CustomBouquetSession.hasBouquet()
+                ? CustomBouquetSession.getCurrentBouquet()
+                : null;
 
-        for (CartItem item : order.getItems()) {
-            int productId = item.getProduct().getId();
-            requiredQuantities.put(
-                    productId,
-                    requiredQuantities.getOrDefault(productId, 0) + item.getQuantity()
-            );
-        }
-
-        CustomBouquet bouquet = null;
-        if (CustomBouquetSession.hasBouquet()) {
-            bouquet = CustomBouquetSession.getCurrentBouquet();
-
-            for (CustomBouquetItem item : bouquet.getItems()) {
-                int productId = item.getFlowerProduct().getId();
-                requiredQuantities.put(
-                        productId,
-                        requiredQuantities.getOrDefault(productId, 0) + item.getQuantity()
-                );
-            }
-        }
-
-        for (Map.Entry<Integer, Integer> entry : requiredQuantities.entrySet()) {
-            FlowerProduct product = flowerProductDAO.findById(entry.getKey());
-
-            if (product == null || product.getStockQuantity() < entry.getValue()) {
-                throw new InsufficientStockException("Stock insufficiente per uno o più prodotti.");
-            }
-        }
+        validateStockAvailability(requiredQuantities);
 
         int orderId = orderDAO.saveOrder(order);
 
@@ -101,26 +71,84 @@ public class CheckoutController {
         }
 
         if (bouquet != null) {
-            orderDAO.saveCustomBouquetItems(orderId, bouquet);
-
-            CustomBouquetOrderData bouquetData = new CustomBouquetOrderData(
-                    orderId,
-                    bouquet.getSize(),
-                    bouquet.getPackaging(),
-                    bouquet.isCardIncluded(),
-                    bouquet.isVaseIncluded(),
-                    bouquet.getTotalPrice()
-            );
-
-            customBouquetOrderDAO.save(bouquetData);
+            saveCustomBouquet(orderId, bouquet);
         }
 
+        updateProductStocks(requiredQuantities);
+        CustomBouquetSession.clear();
+    }
+
+    private double calculateOrderTotal(List<CartItem> cartItems) {
+        double total = 0.0;
+
+        for (CartItem item : cartItems) {
+            total += item.getTotalPrice();
+        }
+
+        if (CustomBouquetSession.hasBouquet()) {
+            total += CustomBouquetSession.getCurrentBouquet().getTotalPrice();
+        }
+
+        return total;
+    }
+
+    private Map<Integer, Integer> buildRequiredQuantities(Order order) {
+        Map<Integer, Integer> requiredQuantities = new HashMap<>();
+
+        for (CartItem item : order.getItems()) {
+            addRequiredQuantity(requiredQuantities, item.getProduct().getId(), item.getQuantity());
+        }
+
+        if (CustomBouquetSession.hasBouquet()) {
+            CustomBouquet bouquet = CustomBouquetSession.getCurrentBouquet();
+
+            for (CustomBouquetItem item : bouquet.getItems()) {
+                addRequiredQuantity(requiredQuantities, item.getFlowerProduct().getId(), item.getQuantity());
+            }
+        }
+
+        return requiredQuantities;
+    }
+
+    private void addRequiredQuantity(Map<Integer, Integer> requiredQuantities, int productId, int quantity) {
+        requiredQuantities.put(
+                productId,
+                requiredQuantities.getOrDefault(productId, 0) + quantity
+        );
+    }
+
+    private void validateStockAvailability(Map<Integer, Integer> requiredQuantities)
+            throws SQLException, InsufficientStockException {
+
+        for (Map.Entry<Integer, Integer> entry : requiredQuantities.entrySet()) {
+            FlowerProduct product = flowerProductDAO.findById(entry.getKey());
+
+            if (product == null || product.getStockQuantity() < entry.getValue()) {
+                throw new InsufficientStockException("Stock insufficiente per uno o più prodotti.");
+            }
+        }
+    }
+
+    private void saveCustomBouquet(int orderId, CustomBouquet bouquet) throws SQLException {
+        orderDAO.saveCustomBouquetItems(orderId, bouquet);
+
+        CustomBouquetOrderData bouquetData = new CustomBouquetOrderData(
+                orderId,
+                bouquet.getSize(),
+                bouquet.getPackaging(),
+                bouquet.isCardIncluded(),
+                bouquet.isVaseIncluded(),
+                bouquet.getTotalPrice()
+        );
+
+        customBouquetOrderDAO.save(bouquetData);
+    }
+
+    private void updateProductStocks(Map<Integer, Integer> requiredQuantities) throws SQLException {
         for (Map.Entry<Integer, Integer> entry : requiredQuantities.entrySet()) {
             FlowerProduct product = flowerProductDAO.findById(entry.getKey());
             int newStock = product.getStockQuantity() - entry.getValue();
             flowerProductDAO.updateStock(entry.getKey(), newStock);
         }
-
-        CustomBouquetSession.clear();
     }
 }

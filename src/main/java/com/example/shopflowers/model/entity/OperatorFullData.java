@@ -1,32 +1,21 @@
 package com.example.shopflowers.model.entity;
 
-public class OperatorFullData {
+public record OperatorFullData(
+        int id,
+        String name,
+        String surname,
+        String username,
+        double salary,
+        int contractYear,
+        int annualHours
+) {
 
-    private final int userId;
-    private final String name;
-    private final String surname;
-    private final String username;
-    private final double salary;
-    private final int contractYear;
-    private final int annualHours;
-
-    public OperatorFullData(int userId, String name, String surname, String username,
-                            double salary, int contractYear, int annualHours) {
-        this.userId = userId;
-        this.name = name;
-        this.surname = surname;
-        this.username = username;
-        this.salary = salary;
-        this.contractYear = contractYear;
-        this.annualHours = annualHours;
+    public int getId() {
+        return id;
     }
 
     public int getUserId() {
-        return userId;
-    }
-
-    public int getId() {
-        return userId;
+        return getId();
     }
 
     public String getName() {
