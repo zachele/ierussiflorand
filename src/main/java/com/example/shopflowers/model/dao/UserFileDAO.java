@@ -10,18 +10,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class UserFileDAO implements UserDAO {
 
     private static final String FILE_PATH = "data/users.csv";
+    private static final String FILE_HEADER = "id;name;surname;username;password;role";
+    private static final int EXPECTED_PARTS = 6;
 
     @Override
     public User findByUsernameAndPassword(String username, String password) throws SQLException {
-        List<User> users = findAllUsers();
-
-        for (User user : users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+        for (User user : findAllUsers()) {
+            if (matchesUsernameAndPassword(user, username, password)) {
                 return copyUser(user);
             }
         }
@@ -31,10 +32,8 @@ public class UserFileDAO implements UserDAO {
 
     @Override
     public boolean existsByUsername(String username) throws SQLException {
-        List<User> users = findAllUsers();
-
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
+        for (User user : findAllUsers()) {
+            if (matchesUsername(user, username)) {
                 return true;
             }
         }
@@ -68,22 +67,17 @@ public class UserFileDAO implements UserDAO {
 
     @Override
     public List<User> findAllOperators() throws SQLException {
-        List<User> users = findAllUsers();
         List<User> operators = new ArrayList<>();
 
-        for (User user : users) {
-            if ("OPERATOR".equals(user.getRole())) {
+        for (User user : findAllUsers()) {
+            if (isOperator(user)) {
                 operators.add(copyUser(user));
             }
         }
 
-        operators.sort((u1, u2) -> {
-            int surnameCompare = safe(u1.getSurname()).compareToIgnoreCase(safe(u2.getSurname()));
-            if (surnameCompare != 0) {
-                return surnameCompare;
-            }
-            return safe(u1.getName()).compareToIgnoreCase(safe(u2.getName()));
-        });
+        operators.sort(Comparator
+                .comparing((User user) -> safe(user.getSurname()), String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(user -> safe(user.getName()), String.CASE_INSENSITIVE_ORDER));
 
         return operators;
     }
@@ -111,10 +105,8 @@ public class UserFileDAO implements UserDAO {
 
     @Override
     public boolean existsByUsernameAndPassword(String username, String password) throws SQLException {
-        List<User> users = findAllUsers();
-
-        for (User user : users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+        for (User user : findAllUsers()) {
+            if (matchesUsernameAndPassword(user, username, password)) {
                 return true;
             }
         }
@@ -127,7 +119,7 @@ public class UserFileDAO implements UserDAO {
         List<User> users = findAllUsers();
 
         for (User user : users) {
-            if (user.getUsername().equals(username)) {
+            if (matchesUsername(user, username)) {
                 user.setPassword(newPassword);
                 writeAll(users);
                 return;
@@ -141,32 +133,19 @@ public class UserFileDAO implements UserDAO {
         List<User> users = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(FILE_PATH))) {
+            String header = reader.readLine();
+
+            if (header == null) {
+                return users;
+            }
+
             String line;
-            boolean firstLine = true;
-
             while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
+                User parsedUser = parseUser(line);
 
-                if (line.isBlank()) {
-                    continue;
+                if (parsedUser != null) {
+                    users.add(parsedUser);
                 }
-
-                String[] parts = line.split(";", -1);
-                if (parts.length != 6) {
-                    continue;
-                }
-
-                users.add(new User(
-                        Integer.parseInt(parts[0]),
-                        parts[1],
-                        parts[2],
-                        parts[3],
-                        parts[4],
-                        parts[5]
-                ));
             }
 
         } catch (IOException e) {
@@ -180,7 +159,7 @@ public class UserFileDAO implements UserDAO {
         ensureFileExists();
 
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(FILE_PATH))) {
-            writer.write("id;name;surname;username;password;role");
+            writer.write(FILE_HEADER);
             writer.newLine();
 
             for (User user : users) {
@@ -212,7 +191,7 @@ public class UserFileDAO implements UserDAO {
 
             if (Files.notExists(filePath)) {
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                    writer.write("id;name;surname;username;password;role");
+                    writer.write(FILE_HEADER);
                     writer.newLine();
                     writer.write("1;Admin;File;admin;admin123;ADMIN");
                     writer.newLine();
@@ -225,6 +204,43 @@ public class UserFileDAO implements UserDAO {
         } catch (IOException e) {
             throw new SQLException("Errore nella creazione del file utenti.", e);
         }
+    }
+
+    private User parseUser(String line) {
+        if (line == null || line.isBlank()) {
+            return null;
+        }
+
+        String[] parts = line.split(";", -1);
+
+        if (parts.length != EXPECTED_PARTS) {
+            return null;
+        }
+
+        try {
+            return new User(
+                    Integer.parseInt(parts[0]),
+                    parts[1],
+                    parts[2],
+                    parts[3],
+                    parts[4],
+                    parts[5]
+            );
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private boolean matchesUsername(User user, String username) {
+        return user.getUsername().equals(username);
+    }
+
+    private boolean matchesUsernameAndPassword(User user, String username, String password) {
+        return matchesUsername(user, username) && user.getPassword().equals(password);
+    }
+
+    private boolean isOperator(User user) {
+        return "OPERATOR".equals(user.getRole());
     }
 
     private int getNextId(List<User> users) {

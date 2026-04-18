@@ -27,6 +27,7 @@
       <w>Crea</w>
       <w>Credenziali</w>
       <w>Distribuzione</w>
+      <w>Dmaven</w>
       <w>Effettua</w>
       <w>Elimina</w>
       <w>Eliminazione</w>
@@ -140,6 +141,7 @@
       <w>bottoni</w>
       <w>cambia</w>
       <w>caricamento</w>
+      <w>classworlds</w>
       <w>cliente</w>
       <w>coerente</w>
       <w>cognome</w>
@@ -180,6 +182,7 @@
       <w>defaul</w>
       <w>degli</w>
       <w>delicato</w>
+      <w>delims</w>
       <w>dell'applicazione</w>
       <w>dell'assistente</w>
       <w>dell'operatore</w>
@@ -204,8 +207,10 @@
       <w>eliminare</w>
       <w>eliminato</w>
       <w>eliminazione</w>
+      <w>endlocal</w>
       <w>entro</w>
       <w>errore</w>
+      <w>errorlevel</w>
       <w>esistente</w>
       <w>esistere</w>
       <w>essere</w>
@@ -219,6 +224,8 @@
       <w>gestione</w>
       <w>giglio</w>
       <w>grafico</w>
+      <w>homedrive</w>
+      <w>homepath</w>
       <w>ierussi</w>
       <w>ierussiflorand</w>
       <w>ignorata</w>
@@ -231,6 +238,8 @@
       <w>inizializzare</w>
       <w>inizializzazione</w>
       <w>inseriti</w>
+      <w>javacmd</w>
+      <w>jbeap</w>
       <w>l'accesso</w>
       <w>l'aggiornamento</w>
       <w>l'aggiunta</w>
@@ -250,11 +259,13 @@
       <w>lavorative</w>
       <w>lavorativi</w>
       <w>lettura</w>
+      <w>libexec</w>
       <w>lista</w>
       <w>mancante</w>
       <w>margherita</w>
       <w>mario</w>
       <w>massimo</w>
+      <w>mavenrc</w>
       <w>messaggi</w>
       <w>mezzi</w>
       <w>miei</w>
@@ -266,6 +277,7 @@
       <w>modifica</w>
       <w>modificare</w>
       <w>mostrate</w>
+      <w>mvnw</w>
       <w>nata</w>
       <w>nell'apertura</w>
       <w>nella</w>
@@ -299,6 +311,7 @@
       <w>prezzo</w>
       <w>principale</w>
       <w>prodotto</w>
+      <w>projectbasedir</w>
       <w>propone</w>
       <w>proposta</w>
       <w>proposte</w>
@@ -315,6 +328,7 @@
       <w>raggiungibile</w>
       <w>registrati</w>
       <w>registrazione</w>
+      <w>repourl</w>
       <w>ricavi</w>
       <w>ricerca</w>
       <w>richiesta</w>
@@ -333,6 +347,7 @@
       <w>rosso</w>
       <w>salvataggio</w>
       <w>salvato</w>
+      <w>saveddir</w>
       <w>sbagliata</w>
       <w>scaduta</w>
       <w>scegli</w>
@@ -343,6 +358,7 @@
       <w>selezionati</w>
       <w>selezionato</w>
       <w>sessione</w>
+      <w>setlocal</w>
       <w>siamo</w>
       <w>sintetica</w>
       <w>sistema</w>
@@ -366,6 +382,7 @@
       <w>tutto</w>
       <w>un'attività</w>
       <w>un'opzione</w>
+      <w>usebackq</w>
       <w>utente</w>
       <w>utenti</w>
       <w>valida</w>
@@ -388,6 +405,7 @@
       <w>vicine</w>
       <w>visualizzazione</w>
       <w>vuoti</w>
+      <w>wdir</w>
       <w>zona</w>
       <w>zulu</w>
     </words>
