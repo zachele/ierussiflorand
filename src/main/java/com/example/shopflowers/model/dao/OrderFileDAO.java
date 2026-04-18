@@ -98,12 +98,14 @@ public class OrderFileDAO implements OrderDAO {
         List<OrderSummary> orders = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(ORDERS_FILE_PATH))) {
-            skipHeader(reader);
+            String header = reader.readLine();
+            if (header == null) {
+                return orders;
+            }
 
             String line;
             while ((line = reader.readLine()) != null) {
                 OrderSummary orderSummary = parseOrderSummary(line);
-
                 if (orderSummary != null) {
                     orders.add(orderSummary);
                 }
@@ -190,12 +192,14 @@ public class OrderFileDAO implements OrderDAO {
         List<OrderItemSummary> items = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(ORDER_ITEMS_FILE_PATH))) {
-            skipHeader(reader);
+            String header = reader.readLine();
+            if (header == null) {
+                return items;
+            }
 
             String line;
             while ((line = reader.readLine()) != null) {
                 OrderItemSummary itemSummary = parseOrderItemSummaryIfMatching(line, orderId);
-
                 if (itemSummary != null) {
                     items.add(itemSummary);
                 }
@@ -251,12 +255,14 @@ public class OrderFileDAO implements OrderDAO {
         List<String[]> rows = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(ORDERS_FILE_PATH))) {
-            skipHeader(reader);
+            String header = reader.readLine();
+            if (header == null) {
+                return rows;
+            }
 
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] row = parseOrderRow(line);
-
+                String[] row = parseCsvRow(line, ORDER_PARTS_COUNT);
                 if (row.length == ORDER_PARTS_COUNT) {
                     rows.add(row);
                 }
@@ -287,11 +293,19 @@ public class OrderFileDAO implements OrderDAO {
     }
 
     private void ensureOrdersFileExists() throws SQLException {
-        ensureCsvFileExists(ORDERS_FILE_PATH, ORDERS_HEADER, "Errore nella creazione del file ordini.");
+        ensureCsvFileExists(
+                ORDERS_FILE_PATH,
+                ORDERS_HEADER,
+                "Errore nella creazione del file ordini."
+        );
     }
 
     private void ensureOrderItemsFileExists() throws SQLException {
-        ensureCsvFileExists(ORDER_ITEMS_FILE_PATH, ORDER_ITEMS_HEADER, "Errore nella creazione del file articoli ordine.");
+        ensureCsvFileExists(
+                ORDER_ITEMS_FILE_PATH,
+                ORDER_ITEMS_HEADER,
+                "Errore nella creazione del file articoli ordine."
+        );
     }
 
     private void ensureCsvFileExists(String filePathString, String header, String errorMessage) throws SQLException {
@@ -314,12 +328,8 @@ public class OrderFileDAO implements OrderDAO {
         }
     }
 
-    private void skipHeader(BufferedReader reader) throws IOException {
-        reader.readLine();
-    }
-
     private OrderSummary parseOrderSummary(String line) {
-        String[] row = parseOrderRow(line);
+        String[] row = parseCsvRow(line, ORDER_PARTS_COUNT);
 
         if (row.length != ORDER_PARTS_COUNT) {
             return null;
@@ -332,34 +342,8 @@ public class OrderFileDAO implements OrderDAO {
         }
     }
 
-    private String[] parseOrderRow(String line) {
-        if (line == null || line.isBlank()) {
-            return new String[0];
-        }
-
-        String[] parts = line.split(";", -1);
-        return parts.length == ORDER_PARTS_COUNT ? parts : new String[0];
-    }
-
-    private OrderSummary mapOrderSummary(String[] parts) {
-        return new OrderSummary(
-                Integer.parseInt(parts[0]),
-                parts[1],
-                parts[2],
-                parts[3],
-                parts[4],
-                parts[5],
-                parts[6],
-                parts[7],
-                parts[9],
-                parts[11],
-                Double.parseDouble(parts[8]),
-                parts[12]
-        );
-    }
-
     private OrderItemSummary parseOrderItemSummaryIfMatching(String line, int orderId) {
-        String[] parts = parseOrderItemRow(line);
+        String[] parts = parseCsvRow(line, ORDER_ITEM_PARTS_COUNT);
 
         if (parts.length != ORDER_ITEM_PARTS_COUNT) {
             return null;
@@ -382,13 +366,30 @@ public class OrderFileDAO implements OrderDAO {
         }
     }
 
-    private String[] parseOrderItemRow(String line) {
+    private String[] parseCsvRow(String line, int expectedParts) {
         if (line == null || line.isBlank()) {
             return new String[0];
         }
 
         String[] parts = line.split(";", -1);
-        return parts.length == ORDER_ITEM_PARTS_COUNT ? parts : new String[0];
+        return parts.length == expectedParts ? parts : new String[0];
+    }
+
+    private OrderSummary mapOrderSummary(String[] parts) {
+        return new OrderSummary(
+                Integer.parseInt(parts[0]),
+                parts[1],
+                parts[2],
+                parts[3],
+                parts[4],
+                parts[5],
+                parts[6],
+                parts[7],
+                parts[9],
+                parts[11],
+                Double.parseDouble(parts[8]),
+                parts[12]
+        );
     }
 
     private int getNextOrderId(List<OrderSummary> orders) {
