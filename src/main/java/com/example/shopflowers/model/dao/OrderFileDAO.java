@@ -23,6 +23,14 @@ public class OrderFileDAO implements OrderDAO {
     private static final String ORDERS_FILE_PATH = "data/orders.csv";
     private static final String ORDER_ITEMS_FILE_PATH = "data/order_items.csv";
 
+    private static final String ORDERS_HEADER =
+            "id;username;name;surname;deliveryMode;deliveryAddress;pickupDate;pickupTime;total;paymentMethod;statusNotified;status;orderDate";
+    private static final String ORDER_ITEMS_HEADER =
+            "orderId;productName;quantity;unitPrice";
+
+    private static final int ORDER_PARTS_COUNT = 13;
+    private static final int ORDER_ITEM_PARTS_COUNT = 4;
+
     @Override
     public int saveOrder(Order order) throws SQLException {
         List<OrderSummary> orders = findAllOrders();
@@ -90,38 +98,15 @@ public class OrderFileDAO implements OrderDAO {
         List<OrderSummary> orders = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(ORDERS_FILE_PATH))) {
+            skipHeader(reader);
+
             String line;
-            boolean firstLine = true;
-
             while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
+                OrderSummary orderSummary = parseOrderSummary(line);
 
-                if (line.isBlank()) {
-                    continue;
+                if (orderSummary != null) {
+                    orders.add(orderSummary);
                 }
-
-                String[] parts = line.split(";", -1);
-                if (parts.length != 13) {
-                    continue;
-                }
-
-                orders.add(new OrderSummary(
-                        Integer.parseInt(parts[0]),
-                        parts[1],
-                        parts[2],
-                        parts[3],
-                        parts[4],
-                        parts[5],
-                        parts[6],
-                        parts[7],
-                        parts[9],
-                        parts[11],
-                        Double.parseDouble(parts[8]),
-                        parts[12]
-                ));
             }
 
         } catch (IOException e) {
@@ -172,51 +157,14 @@ public class OrderFileDAO implements OrderDAO {
 
     @Override
     public List<OrderSummary> findOrdersWithStatusUpdate(String username) throws SQLException {
-        ensureOrdersFileExists();
-
         List<OrderSummary> result = new ArrayList<>();
 
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(ORDERS_FILE_PATH))) {
-            String line;
-            boolean firstLine = true;
+        for (String[] row : readOrderRows()) {
+            boolean statusNotified = Boolean.parseBoolean(row[10]);
 
-            while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
-
-                if (line.isBlank()) {
-                    continue;
-                }
-
-                String[] parts = line.split(";", -1);
-                if (parts.length != 13) {
-                    continue;
-                }
-
-                boolean statusNotified = Boolean.parseBoolean(parts[10]);
-
-                if (parts[1].equals(username) && !statusNotified) {
-                    result.add(new OrderSummary(
-                            Integer.parseInt(parts[0]),
-                            parts[1],
-                            parts[2],
-                            parts[3],
-                            parts[4],
-                            parts[5],
-                            parts[6],
-                            parts[7],
-                            parts[9],
-                            parts[11],
-                            Double.parseDouble(parts[8]),
-                            parts[12]
-                    ));
-                }
+            if (row[1].equals(username) && !statusNotified) {
+                result.add(mapOrderSummary(row));
             }
-
-        } catch (IOException e) {
-            throw new SQLException("Errore nella lettura aggiornamenti ordini da file.", e);
         }
 
         return result;
@@ -242,30 +190,14 @@ public class OrderFileDAO implements OrderDAO {
         List<OrderItemSummary> items = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(ORDER_ITEMS_FILE_PATH))) {
+            skipHeader(reader);
+
             String line;
-            boolean firstLine = true;
-
             while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
+                OrderItemSummary itemSummary = parseOrderItemSummaryIfMatching(line, orderId);
 
-                if (line.isBlank()) {
-                    continue;
-                }
-
-                String[] parts = line.split(";", -1);
-                if (parts.length != 4) {
-                    continue;
-                }
-
-                if (Integer.parseInt(parts[0]) == orderId) {
-                    items.add(new OrderItemSummary(
-                            parts[1],
-                            Integer.parseInt(parts[2]),
-                            Double.parseDouble(parts[3])
-                    ));
+                if (itemSummary != null) {
+                    items.add(itemSummary);
                 }
             }
 
@@ -319,22 +251,14 @@ public class OrderFileDAO implements OrderDAO {
         List<String[]> rows = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(ORDERS_FILE_PATH))) {
+            skipHeader(reader);
+
             String line;
-            boolean firstLine = true;
-
             while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
+                String[] row = parseOrderRow(line);
 
-                if (line.isBlank()) {
-                    continue;
-                }
-
-                String[] parts = line.split(";", -1);
-                if (parts.length == 13) {
-                    rows.add(parts);
+                if (row.length == ORDER_PARTS_COUNT) {
+                    rows.add(row);
                 }
             }
 
@@ -349,7 +273,7 @@ public class OrderFileDAO implements OrderDAO {
         ensureOrdersFileExists();
 
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(ORDERS_FILE_PATH))) {
-            writer.write("id;username;name;surname;deliveryMode;deliveryAddress;pickupDate;pickupTime;total;paymentMethod;statusNotified;status;orderDate");
+            writer.write(ORDERS_HEADER);
             writer.newLine();
 
             for (String[] row : rows) {
@@ -363,28 +287,16 @@ public class OrderFileDAO implements OrderDAO {
     }
 
     private void ensureOrdersFileExists() throws SQLException {
-        try {
-            Path filePath = Paths.get(ORDERS_FILE_PATH);
-            Path parent = filePath.getParent();
-
-            if (parent != null && Files.notExists(parent)) {
-                Files.createDirectories(parent);
-            }
-
-            if (Files.notExists(filePath)) {
-                try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                    writer.write("id;username;name;surname;deliveryMode;deliveryAddress;pickupDate;pickupTime;total;paymentMethod;statusNotified;status;orderDate");
-                    writer.newLine();
-                }
-            }
-        } catch (IOException e) {
-            throw new SQLException("Errore nella creazione del file ordini.", e);
-        }
+        ensureCsvFileExists(ORDERS_FILE_PATH, ORDERS_HEADER, "Errore nella creazione del file ordini.");
     }
 
     private void ensureOrderItemsFileExists() throws SQLException {
+        ensureCsvFileExists(ORDER_ITEMS_FILE_PATH, ORDER_ITEMS_HEADER, "Errore nella creazione del file articoli ordine.");
+    }
+
+    private void ensureCsvFileExists(String filePathString, String header, String errorMessage) throws SQLException {
         try {
-            Path filePath = Paths.get(ORDER_ITEMS_FILE_PATH);
+            Path filePath = Paths.get(filePathString);
             Path parent = filePath.getParent();
 
             if (parent != null && Files.notExists(parent)) {
@@ -393,13 +305,90 @@ public class OrderFileDAO implements OrderDAO {
 
             if (Files.notExists(filePath)) {
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                    writer.write("orderId;productName;quantity;unitPrice");
+                    writer.write(header);
                     writer.newLine();
                 }
             }
         } catch (IOException e) {
-            throw new SQLException("Errore nella creazione del file articoli ordine.", e);
+            throw new SQLException(errorMessage, e);
         }
+    }
+
+    private void skipHeader(BufferedReader reader) throws IOException {
+        reader.readLine();
+    }
+
+    private OrderSummary parseOrderSummary(String line) {
+        String[] row = parseOrderRow(line);
+
+        if (row.length != ORDER_PARTS_COUNT) {
+            return null;
+        }
+
+        try {
+            return mapOrderSummary(row);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private String[] parseOrderRow(String line) {
+        if (line == null || line.isBlank()) {
+            return new String[0];
+        }
+
+        String[] parts = line.split(";", -1);
+        return parts.length == ORDER_PARTS_COUNT ? parts : new String[0];
+    }
+
+    private OrderSummary mapOrderSummary(String[] parts) {
+        return new OrderSummary(
+                Integer.parseInt(parts[0]),
+                parts[1],
+                parts[2],
+                parts[3],
+                parts[4],
+                parts[5],
+                parts[6],
+                parts[7],
+                parts[9],
+                parts[11],
+                Double.parseDouble(parts[8]),
+                parts[12]
+        );
+    }
+
+    private OrderItemSummary parseOrderItemSummaryIfMatching(String line, int orderId) {
+        String[] parts = parseOrderItemRow(line);
+
+        if (parts.length != ORDER_ITEM_PARTS_COUNT) {
+            return null;
+        }
+
+        try {
+            int currentOrderId = Integer.parseInt(parts[0]);
+
+            if (currentOrderId != orderId) {
+                return null;
+            }
+
+            return new OrderItemSummary(
+                    parts[1],
+                    Integer.parseInt(parts[2]),
+                    Double.parseDouble(parts[3])
+            );
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private String[] parseOrderItemRow(String line) {
+        if (line == null || line.isBlank()) {
+            return new String[0];
+        }
+
+        String[] parts = line.split(";", -1);
+        return parts.length == ORDER_ITEM_PARTS_COUNT ? parts : new String[0];
     }
 
     private int getNextOrderId(List<OrderSummary> orders) {
