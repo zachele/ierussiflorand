@@ -1,23 +1,13 @@
 package com.example.shopflowers.model.entity;
 
-public class CustomBouquetOrderData {
-
-    private final int orderId;
-    private final String size;
-    private final String packaging;
-    private final boolean cardIncluded;
-    private final boolean vaseIncluded;
-    private final double totalPrice;
-
-    public CustomBouquetOrderData(int orderId, String size, String packaging,
-                                  boolean cardIncluded, boolean vaseIncluded, double totalPrice) {
-        this.orderId = orderId;
-        this.size = size;
-        this.packaging = packaging;
-        this.cardIncluded = cardIncluded;
-        this.vaseIncluded = vaseIncluded;
-        this.totalPrice = totalPrice;
-    }
+public record CustomBouquetOrderData(
+        int orderId,
+        String size,
+        String packaging,
+        boolean cardIncluded,
+        boolean vaseIncluded,
+        double totalPrice
+) {
 
     public int getOrderId() {
         return orderId;

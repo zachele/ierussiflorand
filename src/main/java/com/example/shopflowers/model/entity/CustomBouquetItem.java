@@ -1,14 +1,9 @@
 package com.example.shopflowers.model.entity;
 
-public class CustomBouquetItem {
-
-    private final FlowerProduct flowerProduct;
-    private final int quantity;
-
-    public CustomBouquetItem(FlowerProduct flowerProduct, int quantity) {
-        this.flowerProduct = flowerProduct;
-        this.quantity = quantity;
-    }
+public record CustomBouquetItem(
+        FlowerProduct flowerProduct,
+        int quantity
+) {
 
     public FlowerProduct getFlowerProduct() {
         return flowerProduct;
@@ -22,11 +17,11 @@ public class CustomBouquetItem {
         return flowerProduct.getName();
     }
 
-    public double getUnitPrice() {
-        return flowerProduct.getPrice();
-    }
-
     public double getSubtotal() {
         return flowerProduct.getPrice() * quantity;
+    }
+    @SuppressWarnings("unused")
+    public double getUnitPrice() {
+        return flowerProduct.getPrice();
     }
 }

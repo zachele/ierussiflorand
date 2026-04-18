@@ -18,6 +18,7 @@ public class RecommendationResult {
         return product;
     }
 
+    @SuppressWarnings("unused")
     public String getReason() {
         return reason;
     }
@@ -30,6 +31,7 @@ public class RecommendationResult {
         return withinBudget;
     }
 
+    @SuppressWarnings("unused")
     public String getBudgetCompatibility() {
         return withinBudget ? "Entro budget" : "Vicino al budget";
     }
@@ -42,10 +44,12 @@ public class RecommendationResult {
         return product.getPrice();
     }
 
+    @SuppressWarnings("unused")
     public String getProductColor() {
         return product.getColor();
     }
 
+    @SuppressWarnings("unused")
     public String getProductVariety() {
         return product.getVariety();
     }

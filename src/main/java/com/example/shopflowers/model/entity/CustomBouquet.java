@@ -2,23 +2,17 @@ package com.example.shopflowers.model.entity;
 
 import java.util.List;
 
-public class CustomBouquet {
+public record CustomBouquet(
+        String size,
+        String packaging,
+        boolean cardIncluded,
+        boolean vaseIncluded,
+        List<CustomBouquetItem> items,
+        double totalPrice
+) {
 
-    private final String size;
-    private final String packaging;
-    private final boolean cardIncluded;
-    private final boolean vaseIncluded;
-    private final List<CustomBouquetItem> items;
-    private final double totalPrice;
-
-    public CustomBouquet(String size, String packaging, boolean cardIncluded, boolean vaseIncluded,
-                         List<CustomBouquetItem> items, double totalPrice) {
-        this.size = size;
-        this.packaging = packaging;
-        this.cardIncluded = cardIncluded;
-        this.vaseIncluded = vaseIncluded;
-        this.items = items;
-        this.totalPrice = totalPrice;
+    public CustomBouquet {
+        items = items == null ? List.of() : List.copyOf(items);
     }
 
     public String getSize() {

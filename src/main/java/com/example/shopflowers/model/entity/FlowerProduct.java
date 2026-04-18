@@ -52,6 +52,7 @@ public class FlowerProduct {
         return price;
     }
 
+    @SuppressWarnings("unused")
     public void setPrice(double price) {
         this.price = price;
     }
@@ -68,6 +69,7 @@ public class FlowerProduct {
         return variety;
     }
 
+    @SuppressWarnings("unused")
     public void setVariety(String variety) {
         this.variety = variety;
     }
@@ -84,6 +86,7 @@ public class FlowerProduct {
         return imageName;
     }
 
+    @SuppressWarnings("unused")
     public void setImageName(String imageName) {
         this.imageName = imageName;
     }
