@@ -12,11 +12,7 @@ public class BrowseCatalogController {
     private final FlowerProductDAO flowerProductDAO;
 
     public BrowseCatalogController() {
-        try {
             this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
-        }
     }
 
     public List<FlowerProduct> getAllProducts() throws SQLException {

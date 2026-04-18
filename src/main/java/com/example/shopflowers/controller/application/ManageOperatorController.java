@@ -21,12 +21,8 @@ public class ManageOperatorController {
     private final OperatorDetailsDAO operatorDetailsDAO;
 
     public ManageOperatorController() {
-        try {
             this.userDAO = DAOFactory.getUserDAO();
             this.operatorDetailsDAO = DAOFactory.getOperatorDetailsDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare le DAO degli operatori.", e);
-        }
     }
 
     public boolean createOperator(OperatorBean operatorBean)

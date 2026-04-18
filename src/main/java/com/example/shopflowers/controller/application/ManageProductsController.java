@@ -12,11 +12,7 @@ public class ManageProductsController {
     private final FlowerProductDAO flowerProductDAO;
 
     public ManageProductsController() {
-        try {
             this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
-        }
     }
 
     public void addProduct(ProductBean productBean) throws SQLException {

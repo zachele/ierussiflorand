@@ -16,11 +16,7 @@ public class RecommendationController {
     private final RecommendationEngine recommendationEngine;
 
     public RecommendationController() {
-        try {
-            this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
-        }
+        this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
         this.recommendationEngine = new RecommendationEngine();
     }
 

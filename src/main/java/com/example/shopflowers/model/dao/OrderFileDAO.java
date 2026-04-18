@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -69,26 +68,17 @@ public class OrderFileDAO implements OrderDAO {
 
     @Override
     public void saveOrderItems(int orderId, Order order) throws SQLException {
-        ensureOrderItemsFileExists();
+        List<OrderItemSummary> itemsToWrite = new ArrayList<>();
 
-        try (BufferedWriter writer = Files.newBufferedWriter(
-                Paths.get(ORDER_ITEMS_FILE_PATH),
-                java.nio.file.StandardOpenOption.APPEND)) {
-
-            for (CartItem item : order.getItems()) {
-                writer.write(String.format(
-                        "%d;%s;%d;%.2f",
-                        orderId,
-                        escape(item.getProduct().getName()),
-                        item.getQuantity(),
-                        item.getProduct().getPrice()
-                ));
-                writer.newLine();
-            }
-
-        } catch (IOException e) {
-            throw new SQLException("Errore nel salvataggio articoli ordine su file.", e);
+        for (CartItem item : order.getItems()) {
+            itemsToWrite.add(new OrderItemSummary(
+                    item.getProduct().getName(),
+                    item.getQuantity(),
+                    item.getProduct().getPrice()
+            ));
         }
+
+        appendOrderItems(orderId, itemsToWrite, "Errore nel salvataggio articoli ordine su file.");
     }
 
     @Override
@@ -228,25 +218,39 @@ public class OrderFileDAO implements OrderDAO {
 
     @Override
     public void saveCustomBouquetItems(int orderId, CustomBouquet bouquet) throws SQLException {
+        List<OrderItemSummary> itemsToWrite = new ArrayList<>();
+
+        for (CustomBouquetItem item : bouquet.getItems()) {
+            itemsToWrite.add(new OrderItemSummary(
+                    item.getFlowerProduct().getName(),
+                    item.getQuantity(),
+                    item.getFlowerProduct().getPrice()
+            ));
+        }
+
+        appendOrderItems(orderId, itemsToWrite, "Errore nel salvataggio bouquet ordine su file.");
+    }
+
+    private void appendOrderItems(int orderId, List<OrderItemSummary> items, String errorMessage) throws SQLException {
         ensureOrderItemsFileExists();
 
         try (BufferedWriter writer = Files.newBufferedWriter(
                 Paths.get(ORDER_ITEMS_FILE_PATH),
                 java.nio.file.StandardOpenOption.APPEND)) {
 
-            for (CustomBouquetItem item : bouquet.getItems()) {
+            for (OrderItemSummary item : items) {
                 writer.write(String.format(
                         "%d;%s;%d;%.2f",
                         orderId,
-                        escape(item.getFlowerProduct().getName()),
+                        escape(item.getProductName()),
                         item.getQuantity(),
-                        item.getFlowerProduct().getPrice()
+                        item.getUnitPrice()
                 ));
                 writer.newLine();
             }
 
         } catch (IOException e) {
-            throw new SQLException("Errore nel salvataggio bouquet ordine su file.", e);
+            throw new SQLException(errorMessage, e);
         }
     }
 
@@ -310,8 +314,8 @@ public class OrderFileDAO implements OrderDAO {
 
     private void ensureCsvFileExists(String filePathString, String header, String errorMessage) throws SQLException {
         try {
-            Path filePath = Paths.get(filePathString);
-            Path parent = filePath.getParent();
+            java.nio.file.Path filePath = Paths.get(filePathString);
+            java.nio.file.Path parent = filePath.getParent();
 
             if (parent != null && Files.notExists(parent)) {
                 Files.createDirectories(parent);

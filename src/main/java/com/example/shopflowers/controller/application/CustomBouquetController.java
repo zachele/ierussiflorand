@@ -15,11 +15,7 @@ public class CustomBouquetController {
     private final CustomBouquetBuilder builder;
 
     public CustomBouquetController() {
-        try {
-            this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Impossibile inizializzare la DAO dei prodotti.", e);
-        }
+        this.flowerProductDAO = DAOFactory.getFlowerProductDAO();
         this.builder = new CustomBouquetBuilder();
     }
 
