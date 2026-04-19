@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.OrderStatusFilters;
 import com.example.shopflowers.config.UiTitles;
 import com.example.shopflowers.config.ViewPaths;
 import com.example.shopflowers.controller.application.CustomerOrdersController;
@@ -10,6 +11,7 @@ import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
 import com.example.shopflowers.util.SceneNavigator;
 import com.example.shopflowers.util.Session;
+import com.example.shopflowers.util.TableDataUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -24,9 +26,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import com.example.shopflowers.util.TableDataUtils;
 
 public class CustomerOrdersGraphicController {
+
+    private static final String DELIVERY_MODE_HOME = "CONSEGNA";
+    private static final String DELIVERY_MODE_PICKUP = "RITIRO";
 
     private static final String NO_BOUQUET_MESSAGE =
             "Questo ordine non contiene un bouquet personalizzato.";
@@ -130,9 +134,9 @@ public class CustomerOrdersGraphicController {
     }
 
     private void configureReadableCells() {
-        addressColumn.setCellFactory(column -> createDeliveryDependentTextCell("CONSEGNA"));
-        pickupDateColumn.setCellFactory(column -> createDeliveryDependentTextCell("RITIRO"));
-        pickupTimeColumn.setCellFactory(column -> createDeliveryDependentTextCell("RITIRO"));
+        addressColumn.setCellFactory(column -> createDeliveryDependentTextCell(DELIVERY_MODE_HOME));
+        pickupDateColumn.setCellFactory(column -> createDeliveryDependentTextCell(DELIVERY_MODE_PICKUP));
+        pickupTimeColumn.setCellFactory(column -> createDeliveryDependentTextCell(DELIVERY_MODE_PICKUP));
 
         totalColumn.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -176,11 +180,11 @@ public class CustomerOrdersGraphicController {
 
     private void configureStatusFilter() {
         statusFilterComboBox.setItems(FXCollections.observableArrayList(
-                "Tutti",
-                "IN_PREPARAZIONE",
-                "PRONTO"
+                OrderStatusFilters.ALL,
+                OrderStatusFilters.IN_PREPARATION,
+                OrderStatusFilters.READY
         ));
-        statusFilterComboBox.setValue("Tutti");
+        statusFilterComboBox.setValue(OrderStatusFilters.ALL);
         statusFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
     }
 
@@ -227,7 +231,7 @@ public class CustomerOrdersGraphicController {
     }
 
     private boolean matchesSelectedStatus(OrderSummary order, String selectedStatus) {
-        if (selectedStatus == null || selectedStatus.equalsIgnoreCase("Tutti")) {
+        if (selectedStatus == null || selectedStatus.equalsIgnoreCase(OrderStatusFilters.ALL)) {
             return true;
         }
 
