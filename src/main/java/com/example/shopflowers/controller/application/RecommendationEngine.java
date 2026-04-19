@@ -10,6 +10,65 @@ import java.util.List;
 
 public class RecommendationEngine {
 
+    private static final String COLOR_NONE = "NESSUNA";
+    private static final String COLOR_MIXED = "MISTO";
+
+    private static final String KEY_ROSA = "rosa";
+    private static final String KEY_ROSE = "rose";
+    private static final String KEY_ROSSO = "rosso";
+    private static final String KEY_ROSSA = "rossa";
+    private static final String KEY_GIALLO = "giallo";
+    private static final String KEY_MISTO = "misto";
+    private static final String KEY_BIANCO = "bianco";
+
+    private static final String KEY_VIVACE = "vivace";
+    private static final String KEY_DELICATO = "delicato";
+    private static final String KEY_ALLEGRO = "allegro";
+    private static final String KEY_SOBRIO = "sobrio";
+    private static final String KEY_ELEGANTE = "elegante";
+    private static final String KEY_GIGLIO = "giglio";
+    private static final String KEY_GERBERA = "gerbera";
+    private static final String KEY_SEMPLICE = "semplice";
+    private static final String KEY_RAFFINATO = "raffinato";
+    private static final String KEY_PREMIUM = "premium";
+    private static final String KEY_MARGHERITA = "margherita";
+
+    private static final String[] ROMANTIC_KEYWORDS = {
+            KEY_ROSA, KEY_ROSE, KEY_ROSSO, KEY_ROSSA
+    };
+
+    private static final String[] DEGREE_KEYWORDS = {
+            KEY_ROSSO, KEY_GIALLO, KEY_MISTO, KEY_VIVACE
+    };
+
+    private static final String[] THANK_YOU_KEYWORDS = {
+            KEY_BIANCO, KEY_GIALLO, KEY_DELICATO
+    };
+
+    private static final String[] BIRTHDAY_KEYWORDS = {
+            KEY_MISTO, KEY_ROSA, KEY_GIALLO, KEY_ALLEGRO
+    };
+
+    private static final String[] CONDOLENCES_KEYWORDS = {
+            KEY_BIANCO, KEY_SOBRIO, KEY_ELEGANTE
+    };
+
+    private static final String[] ELEGANT_STYLE_KEYWORDS = {
+            KEY_BIANCO, KEY_GIGLIO, KEY_ELEGANTE, KEY_RAFFINATO
+    };
+
+    private static final String[] CHEERFUL_STYLE_KEYWORDS = {
+            KEY_GIALLO, KEY_MISTO, KEY_GERBERA, KEY_VIVACE
+    };
+
+    private static final String[] SIMPLE_STYLE_KEYWORDS = {
+            KEY_MARGHERITA, KEY_SEMPLICE, KEY_DELICATO
+    };
+
+    private static final String[] REFINED_STYLE_KEYWORDS = {
+            KEY_GIGLIO, KEY_BIANCO, KEY_PREMIUM, KEY_ROSA
+    };
+
     public List<RecommendationResult> recommend(List<FlowerProduct> products, RecommendationRequest request) {
         List<RecommendationResult> allResults = new ArrayList<>();
 
@@ -109,7 +168,7 @@ public class RecommendationEngine {
     }
 
     private boolean matchesColor(FlowerProduct product, String preferredColor) {
-        if (preferredColor == null || preferredColor.isBlank() || preferredColor.equalsIgnoreCase("NESSUNA")) {
+        if (preferredColor == null || preferredColor.isBlank() || preferredColor.equalsIgnoreCase(COLOR_NONE)) {
             return true;
         }
 
@@ -124,15 +183,15 @@ public class RecommendationEngine {
 
         return switch (occasion.toUpperCase()) {
             case "ANNIVERSARIO", "ROMANTICO" ->
-                    containsOneOf(name, variety, color, "rosa", "rose", "rosso", "rossa");
+                    containsOneOf(name, variety, color, ROMANTIC_KEYWORDS);
             case "LAUREA" ->
-                    containsOneOf(name, variety, color, "rosso", "giallo", "misto", "vivace");
+                    containsOneOf(name, variety, color, DEGREE_KEYWORDS);
             case "RINGRAZIAMENTO" ->
-                    containsOneOf(name, variety, color, "bianco", "giallo", "delicato");
+                    containsOneOf(name, variety, color, THANK_YOU_KEYWORDS);
             case "COMPLEANNO" ->
-                    containsOneOf(name, variety, color, "misto", "rosa", "giallo", "allegro");
+                    containsOneOf(name, variety, color, BIRTHDAY_KEYWORDS);
             case "CONDOGLIANZE" ->
-                    containsOneOf(name, variety, color, "bianco", "sobrio", "elegante");
+                    containsOneOf(name, variety, color, CONDOLENCES_KEYWORDS);
             default -> false;
         };
     }
@@ -144,15 +203,15 @@ public class RecommendationEngine {
 
         return switch (style.toUpperCase()) {
             case "ROMANTICO" ->
-                    containsOneOf(name, variety, color, "rosa", "rose", "rosso");
+                    containsOneOf(name, variety, color, KEY_ROSA, KEY_ROSE, KEY_ROSSO);
             case "ELEGANTE" ->
-                    containsOneOf(name, variety, color, "bianco", "giglio", "elegante", "raffinato");
+                    containsOneOf(name, variety, color, ELEGANT_STYLE_KEYWORDS);
             case "ALLEGRO" ->
-                    containsOneOf(name, variety, color, "giallo", "misto", "gerbera", "vivace");
+                    containsOneOf(name, variety, color, CHEERFUL_STYLE_KEYWORDS);
             case "SEMPLICE" ->
-                    containsOneOf(name, variety, color, "margherita", "semplice", "delicato");
+                    containsOneOf(name, variety, color, SIMPLE_STYLE_KEYWORDS);
             case "RAFFINATO" ->
-                    containsOneOf(name, variety, color, "giglio", "bianco", "premium", "rosa");
+                    containsOneOf(name, variety, color, REFINED_STYLE_KEYWORDS);
             default -> false;
         };
     }
@@ -172,8 +231,8 @@ public class RecommendationEngine {
     private boolean mustRespectExactColor(String preferredColor) {
         return preferredColor != null
                 && !preferredColor.isBlank()
-                && !preferredColor.equalsIgnoreCase("NESSUNA")
-                && !preferredColor.equalsIgnoreCase("MISTO");
+                && !preferredColor.equalsIgnoreCase(COLOR_NONE)
+                && !preferredColor.equalsIgnoreCase(COLOR_MIXED);
     }
 
     private boolean matchesExactColor(FlowerProduct product, String preferredColor) {
