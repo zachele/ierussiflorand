@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.DeliveryModes;
 import com.example.shopflowers.config.UiTitles;
 import com.example.shopflowers.config.ViewPaths;
 import com.example.shopflowers.controller.application.CheckoutController;
@@ -40,6 +41,8 @@ public class CheckoutGraphicController {
     private static final String CHECKOUT_ERROR_MESSAGE = "Si è verificato un errore durante la conferma dell'ordine.";
     private static final String BACK_TO_CATALOG_ERROR_MESSAGE =
             "Si è verificato un errore durante il ritorno al catalogo.";
+    private static final String LOGOUT_ERROR_MESSAGE =
+            "Si è verificato un errore durante il logout.";
 
     @FXML
     private TableView<CartItem> checkoutTable;
@@ -157,6 +160,19 @@ public class CheckoutGraphicController {
         messageLabel.setText("Bouquet rimosso dal pagamento corrente con successo.");
     }
 
+    @FXML
+    @SuppressWarnings("unused")
+    private void handleLogout() {
+        try {
+            CartTimerManager.stopTimer();
+            CartSession.resetCart();
+            CustomBouquetSession.clear();
+            SceneNavigator.logoutToLogin((Stage) checkoutTable.getScene().getWindow());
+        } catch (IOException e) {
+            messageLabel.setText(LOGOUT_ERROR_MESSAGE);
+        }
+    }
+
     private CustomerCartController getCartController() {
         return CartSession.getCartController();
     }
@@ -168,7 +184,12 @@ public class CheckoutGraphicController {
     }
 
     private void configureDeliveryOptions() {
-        deliveryModeComboBox.setItems(FXCollections.observableArrayList("CONSEGNA", "RITIRO"));
+        deliveryModeComboBox.setItems(
+                FXCollections.observableArrayList(
+                        DeliveryModes.DELIVERY,
+                        DeliveryModes.PICKUP
+                )
+        );
 
         pickupTimeComboBox.setItems(FXCollections.observableArrayList(
                 "09:00", "09:30", "10:00", "10:30",
@@ -177,24 +198,35 @@ public class CheckoutGraphicController {
                 "18:00", "18:30", "19:00"
         ));
 
-        addressField.setDisable(true);
-        pickupDatePicker.setDisable(true);
-        pickupTimeComboBox.setDisable(true);
+        setDeliveryFieldsState(true);
+        setPickupFieldsState(true);
 
-        deliveryModeComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if ("CONSEGNA".equals(newValue)) {
-                addressField.setDisable(false);
-                pickupDatePicker.setDisable(true);
-                pickupTimeComboBox.setDisable(true);
-                pickupDatePicker.setValue(null);
-                pickupTimeComboBox.setValue(null);
-            } else if ("RITIRO".equals(newValue)) {
-                addressField.setDisable(true);
-                addressField.clear();
-                pickupDatePicker.setDisable(false);
-                pickupTimeComboBox.setDisable(false);
-            }
-        });
+        deliveryModeComboBox.valueProperty().addListener((obs, oldValue, newValue) -> updateDeliveryModeUi(newValue));
+    }
+
+    private void updateDeliveryModeUi(String deliveryMode) {
+        if (DeliveryModes.DELIVERY.equals(deliveryMode)) {
+            setDeliveryFieldsState(false);
+            setPickupFieldsState(true);
+            pickupDatePicker.setValue(null);
+            pickupTimeComboBox.setValue(null);
+            return;
+        }
+
+        if (DeliveryModes.PICKUP.equals(deliveryMode)) {
+            setDeliveryFieldsState(true);
+            addressField.clear();
+            setPickupFieldsState(false);
+        }
+    }
+
+    private void setDeliveryFieldsState(boolean disabled) {
+        addressField.setDisable(disabled);
+    }
+
+    private void setPickupFieldsState(boolean disabled) {
+        pickupDatePicker.setDisable(disabled);
+        pickupTimeComboBox.setDisable(disabled);
     }
 
     private void loadCheckoutData() {
@@ -240,11 +272,11 @@ public class CheckoutGraphicController {
             return false;
         }
 
-        if ("CONSEGNA".equals(checkoutBean.getDeliveryMode())) {
+        if (DeliveryModes.DELIVERY.equals(checkoutBean.getDeliveryMode())) {
             return validateDeliveryAddress(checkoutBean);
         }
 
-        if ("RITIRO".equals(checkoutBean.getDeliveryMode())) {
+        if (DeliveryModes.PICKUP.equals(checkoutBean.getDeliveryMode())) {
             return validatePickupData(checkoutBean);
         }
 
@@ -322,17 +354,5 @@ public class CheckoutGraphicController {
         );
 
         return bouquet.getTotalPrice();
-    }
-    @FXML
-    @SuppressWarnings("unused")
-    private void handleLogout() {
-        try {
-            CartTimerManager.stopTimer();
-            CartSession.resetCart();
-            CustomBouquetSession.clear();
-            SceneNavigator.logoutToLogin((Stage) checkoutTable.getScene().getWindow());
-        } catch (IOException e) {
-            messageLabel.setText("Si è verificato un errore durante il logout.");
-        }
     }
 }
