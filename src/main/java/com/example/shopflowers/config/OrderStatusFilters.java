@@ -5,6 +5,7 @@ public final class OrderStatusFilters {
     public static final String ALL = "Tutti";
     public static final String IN_PREPARATION = "IN_PREPARAZIONE";
     public static final String READY = "PRONTO";
+    public static final String FINISH = "CONSEGNATO";
 
     private OrderStatusFilters() {
         throw new UnsupportedOperationException("Utility class");

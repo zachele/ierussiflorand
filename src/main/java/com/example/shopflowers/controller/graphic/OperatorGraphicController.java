@@ -1,5 +1,6 @@
 package com.example.shopflowers.controller.graphic;
 
+import com.example.shopflowers.config.OrderStatusFilters;
 import com.example.shopflowers.controller.application.OperatorOrdersController;
 import com.example.shopflowers.model.dao.CustomBouquetOrderDAO;
 import com.example.shopflowers.model.dao.DAOFactory;
@@ -7,6 +8,7 @@ import com.example.shopflowers.model.entity.CustomBouquetOrderSummary;
 import com.example.shopflowers.model.entity.OrderItemSummary;
 import com.example.shopflowers.model.entity.OrderSummary;
 import com.example.shopflowers.util.SceneNavigator;
+import com.example.shopflowers.util.TableDataUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -21,7 +23,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import com.example.shopflowers.util.TableDataUtils;
 
 public class OperatorGraphicController {
 
@@ -104,10 +105,8 @@ public class OperatorGraphicController {
 
     public OperatorGraphicController() {
         this.operatorOrdersController = new OperatorOrdersController();
-            this.customBouquetOrderDAO = DAOFactory.getCustomBouquetOrderDAO();
+        this.customBouquetOrderDAO = DAOFactory.getCustomBouquetOrderDAO();
     }
-
-
 
     @FXML
     public void initialize() {
@@ -139,17 +138,17 @@ public class OperatorGraphicController {
 
     private void configureStatusBoxes() {
         statusComboBox.setItems(FXCollections.observableArrayList(
-                "IN_PREPARAZIONE",
-                "PRONTO",
-                "CONSEGNATO"
+                OrderStatusFilters.IN_PREPARATION,
+                OrderStatusFilters.READY,
+                OrderStatusFilters.FINISH
         ));
 
         statusFilterComboBox.setItems(FXCollections.observableArrayList(
-                "Tutti",
-                "IN_PREPARAZIONE",
-                "PRONTO"
+                OrderStatusFilters.ALL,
+                OrderStatusFilters.IN_PREPARATION,
+                OrderStatusFilters.READY
         ));
-        statusFilterComboBox.setValue("Tutti");
+        statusFilterComboBox.setValue(OrderStatusFilters.ALL);
     }
 
     private void configureFilters() {
@@ -220,7 +219,7 @@ public class OperatorGraphicController {
 
     private boolean matchesStatus(OrderSummary order, String selectedStatus) {
         return selectedStatus == null
-                || selectedStatus.equalsIgnoreCase("Tutti")
+                || selectedStatus.equalsIgnoreCase(OrderStatusFilters.ALL)
                 || safe(order.getStatus()).equals(selectedStatus.toLowerCase());
     }
 
