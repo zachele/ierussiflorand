@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Optional;
+import com.example.shopflowers.config.UiMessages;
 
 public class CheckoutGraphicController {
 
@@ -156,7 +157,7 @@ public class CheckoutGraphicController {
         bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
 
         double total = getSafeCartTotal();
-        totalLabel.setText(String.format("Totale ordine: € %.2f", total));
+        totalLabel.setText(UiMessages.formatOrderTotal(total));
         messageLabel.setText("Bouquet rimosso dal pagamento corrente con successo.");
     }
 
@@ -239,7 +240,7 @@ public class CheckoutGraphicController {
         double total = getSafeCartTotal();
         total += updateBouquetInfoAndGetTotal();
 
-        totalLabel.setText(String.format("Totale ordine: € %.2f", total));
+        totalLabel.setText(UiMessages.formatOrderTotal(total));
     }
 
     private boolean isCheckoutAvailable() {
@@ -318,7 +319,7 @@ public class CheckoutGraphicController {
         checkoutTable.getItems().clear();
         CustomBouquetSession.clear();
         bouquetInfoLabel.setText(NO_BOUQUET_MESSAGE);
-        totalLabel.setText(String.format("Totale ordine: € %.2f", 0.0));
+        totalLabel.setText(UiMessages.formatOrderTotal(0.0));
         addressField.clear();
         pickupDatePicker.setValue(null);
         pickupTimeComboBox.setValue(null);
