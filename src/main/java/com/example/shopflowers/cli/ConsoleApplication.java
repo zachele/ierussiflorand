@@ -9,6 +9,15 @@ import java.util.Scanner;
 
 public class ConsoleApplication {
 
+    private static final String INVALID_CHOICE_MESSAGE = "Scelta non valida.";
+    private static final String SELECT_OPTION_PROMPT = "Seleziona un'opzione: ";
+    private static final String MODE_SELECTION_PROMPT = "Scelta: ";
+
+    private static final String ROLE_CUSTOMER = "CUSTOMER";
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_OPERATOR = "OPERATOR";
+    private static final String ROLE_GUEST = "GUEST";
+
     private final Scanner scanner = new Scanner(System.in);
 
     public void start() {
@@ -16,7 +25,7 @@ public class ConsoleApplication {
 
         while (running) {
             printMainMenu();
-            String choice = scanner.nextLine().trim();
+            String choice = readChoice();
 
             switch (choice) {
                 case "1" -> handleModeSelection();
@@ -24,7 +33,7 @@ public class ConsoleApplication {
                 case "3" -> handleRegister();
                 case "4" -> handleGuestAccess();
                 case "5" -> running = false;
-                default -> ConsolePrinter.println("Scelta non valida.");
+                default -> ConsolePrinter.println(INVALID_CHOICE_MESSAGE);
             }
         }
 
@@ -42,7 +51,7 @@ public class ConsoleApplication {
         ConsolePrinter.println("3. Registrazione");
         ConsolePrinter.println("4. Accesso come ospite");
         ConsolePrinter.println("5. Esci");
-        ConsolePrinter.print("Seleziona un'opzione: ");
+        ConsolePrinter.print(SELECT_OPTION_PROMPT);
     }
 
     private void handleModeSelection() {
@@ -51,9 +60,9 @@ public class ConsoleApplication {
         ConsolePrinter.println("1. DEMO");
         ConsolePrinter.println("2. FILE");
         ConsolePrinter.println("3. FULL");
-        ConsolePrinter.print("Scelta: ");
+        ConsolePrinter.print(MODE_SELECTION_PROMPT);
 
-        String choice = scanner.nextLine().trim();
+        String choice = readChoice();
 
         switch (choice) {
             case "1" -> applyMode(AppMode.DEMO);
@@ -77,19 +86,27 @@ public class ConsoleApplication {
             return;
         }
 
-        String role = Session.getLoggedRole();
+        openAreaByRole(Session.getLoggedRole());
+        Session.clearSession();
+    }
 
-        if ("CUSTOMER".equalsIgnoreCase(role)) {
+    private void openAreaByRole(String role) {
+        if (ROLE_CUSTOMER.equalsIgnoreCase(role)) {
             openCustomerArea();
-        } else if ("ADMIN".equalsIgnoreCase(role)) {
-            openAdminArea();
-        } else if ("OPERATOR".equalsIgnoreCase(role)) {
-            openOperatorArea();
-        } else {
-            ConsolePrinter.println("Ruolo non riconosciuto.");
+            return;
         }
 
-        Session.clearSession();
+        if (ROLE_ADMIN.equalsIgnoreCase(role)) {
+            openAdminArea();
+            return;
+        }
+
+        if (ROLE_OPERATOR.equalsIgnoreCase(role)) {
+            openOperatorArea();
+            return;
+        }
+
+        ConsolePrinter.println("Ruolo non riconosciuto.");
     }
 
     private void handleRegister() {
@@ -98,11 +115,10 @@ public class ConsoleApplication {
     }
 
     private void handleGuestAccess() {
-        Session.setSession("guest", "GUEST");
+        Session.setSession("guest", ROLE_GUEST);
         ConsolePrinter.println("Accesso come ospite effettuato.");
 
-        ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
-        consoleCatalogUI.start();
+        new ConsoleCatalogUI(scanner).start();
 
         Session.clearSession();
     }
@@ -119,29 +135,17 @@ public class ConsoleApplication {
             ConsolePrinter.println("3. Checkout");
             ConsolePrinter.println("4. I miei ordini");
             ConsolePrinter.println("5. Logout");
-            ConsolePrinter.print("Seleziona un'opzione: ");
+            ConsolePrinter.print(SELECT_OPTION_PROMPT);
 
-            String choice = scanner.nextLine().trim();
+            String choice = readChoice();
 
             switch (choice) {
-                case "1" -> {
-                    ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
-                    consoleCatalogUI.start();
-                }
-                case "2" -> {
-                    ConsoleCartUI consoleCartUI = new ConsoleCartUI(scanner, customerCartController);
-                    consoleCartUI.start();
-                }
-                case "3" -> {
-                    ConsoleCheckoutUI consoleCheckoutUI = new ConsoleCheckoutUI(scanner, customerCartController);
-                    consoleCheckoutUI.start();
-                }
-                case "4" -> {
-                    ConsoleCustomerOrdersUI consoleCustomerOrdersUI = new ConsoleCustomerOrdersUI(scanner);
-                    consoleCustomerOrdersUI.start();
-                }
+                case "1" -> new ConsoleCatalogUI(scanner).start();
+                case "2" -> new ConsoleCartUI(scanner, customerCartController).start();
+                case "3" -> new ConsoleCheckoutUI(scanner, customerCartController).start();
+                case "4" -> new ConsoleCustomerOrdersUI(scanner).start();
                 case "5" -> running = false;
-                default -> ConsolePrinter.println("Scelta non valida.");
+                default -> ConsolePrinter.println(INVALID_CHOICE_MESSAGE);
             }
         }
     }
@@ -155,21 +159,15 @@ public class ConsoleApplication {
             ConsolePrinter.println("1. Gestione prodotti");
             ConsolePrinter.println("2. Visualizza catalogo");
             ConsolePrinter.println("3. Logout");
-            ConsolePrinter.print("Seleziona un'opzione: ");
+            ConsolePrinter.print(SELECT_OPTION_PROMPT);
 
-            String choice = scanner.nextLine().trim();
+            String choice = readChoice();
 
             switch (choice) {
-                case "1" -> {
-                    ConsoleAdminProductUI consoleAdminProductUI = new ConsoleAdminProductUI(scanner);
-                    consoleAdminProductUI.start();
-                }
-                case "2" -> {
-                    ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
-                    consoleCatalogUI.start();
-                }
+                case "1" -> new ConsoleAdminProductUI(scanner).start();
+                case "2" -> new ConsoleCatalogUI(scanner).start();
                 case "3" -> running = false;
-                default -> ConsolePrinter.println("Scelta non valida.");
+                default -> ConsolePrinter.println(INVALID_CHOICE_MESSAGE);
             }
         }
     }
@@ -183,23 +181,21 @@ public class ConsoleApplication {
             ConsolePrinter.println("1. Gestione ordini");
             ConsolePrinter.println("2. Visualizza catalogo");
             ConsolePrinter.println("3. Logout");
-            ConsolePrinter.print("Seleziona un'opzione: ");
+            ConsolePrinter.print(SELECT_OPTION_PROMPT);
 
-            String choice = scanner.nextLine().trim();
+            String choice = readChoice();
 
             switch (choice) {
-                case "1" -> {
-                    ConsoleOperatorOrdersUI consoleOperatorOrdersUI = new ConsoleOperatorOrdersUI(scanner);
-                    consoleOperatorOrdersUI.start();
-                }
-                case "2" -> {
-                    ConsoleCatalogUI consoleCatalogUI = new ConsoleCatalogUI(scanner);
-                    consoleCatalogUI.start();
-                }
+                case "1" -> new ConsoleOperatorOrdersUI(scanner).start();
+                case "2" -> new ConsoleCatalogUI(scanner).start();
                 case "3" -> running = false;
-                default -> ConsolePrinter.println("Scelta non valida.");
+                default -> ConsolePrinter.println(INVALID_CHOICE_MESSAGE);
             }
         }
+    }
+
+    private String readChoice() {
+        return scanner.nextLine().trim();
     }
 
     public static void main(String[] args) {
