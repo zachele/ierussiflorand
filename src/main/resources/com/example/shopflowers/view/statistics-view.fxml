@@ -12,26 +12,19 @@
 <VBox prefHeight="800" prefWidth="1500" spacing="18" style="-fx-padding: 20;" styleClass="app-root" stylesheets="@../../../../StyleDarkPremium.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shopflowers.controller.graphic.StatisticsGraphicController">
 
     <MenuBar nodeOrientation="RIGHT_TO_LEFT">
-        <menus>
-
             <Menu mnemonicParsing="false">
                 <graphic>
                     <Button onAction="#handleBackToAdmin" styleClass="secondary-button" text="Torna indietro" />
                 </graphic>
-                <items>
                     <MenuItem mnemonicParsing="false" text="Back" visible="false" />
-                </items>
             </Menu>
 
             <Menu mnemonicParsing="false">
                 <graphic>
                     <Button onAction="#handleLogout" styleClass="beige-button" text="Logout" />
                 </graphic>
-                <items>
                     <MenuItem mnemonicParsing="false" text="Logout" visible="false" />
-                </items>
             </Menu>
-        </menus>
     </MenuBar>
         <Label styleClass="page-title" text="Statistiche Vendite" />
 

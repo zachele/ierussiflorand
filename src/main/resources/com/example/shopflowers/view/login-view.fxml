@@ -63,6 +63,6 @@
             <Hyperlink onAction="#handleGoToChangePassword" styleClass="login-link" text="Cambia password" />
    
         </VBox>
-        <Label fx:id="messageLabel" alignment="CENTER" styleClass="message-label" text="" wrapText="true" />
+        <Label fx:id="messageLabel" alignment="CENTER" styleClass="message-label" wrapText="true" />
     </VBox>
 </StackPane>

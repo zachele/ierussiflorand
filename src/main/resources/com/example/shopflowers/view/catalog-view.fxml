@@ -30,25 +30,21 @@
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="I miei ordini">
-        <items>
                <MenuItem onAction="#handleMyOrders" text="I miei ordini" />
-        </items>
          <graphic>
             <HBox prefHeight="100.0" prefWidth="0.0" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="Bouquet personalizzato">
-        <items>
+
                <MenuItem onAction="#handleCustomBouquet" text="Bouquet personalizzato" />
-        </items>
+
          <graphic>
             <HBox prefHeight="100.0" prefWidth="14.0" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="Assistente bouquet">
-        <items>
                <MenuItem onAction="#handleRecommendationAssistant" text="Assistente bouquet" />
-        </items>
          <graphic>
             <HBox prefHeight="100.0" prefWidth="16.0" />
          </graphic>

@@ -35,5 +35,5 @@
 
     <Button onAction="#handleBackToCatalog" styleClass="title-label" text="Torna al catalogo" />
 
-    <Label fx:id="messageLabel" text="" />
+    <Label fx:id="messageLabel" />
 </VBox>

@@ -65,6 +65,6 @@
 
     <Label fx:id="bouquetDetailsLabel" alignment="CENTER" prefHeight="17.0" prefWidth="1460.0" style="-fx-font-size: 14px;" styleClass="text-field" text="Questo ordine non contiene un bouquet personalizzato." wrapText="true" />
 
-    <Label fx:id="messageLabel" text="" />
+    <Label fx:id="messageLabel" />
 
 </VBox>

@@ -1,18 +1,11 @@
 package com.example.shopflowers.model.entity;
 
-public class RecommendationResult {
-
-    private final FlowerProduct product;
-    private final String reason;
-    private final int score;
-    private final boolean withinBudget;
-
-    public RecommendationResult(FlowerProduct product, String reason, int score, boolean withinBudget) {
-        this.product = product;
-        this.reason = reason;
-        this.score = score;
-        this.withinBudget = withinBudget;
-    }
+public record RecommendationResult(
+        FlowerProduct product,
+        String reason,
+        int score,
+        boolean withinBudget
+) {
 
     public FlowerProduct getProduct() {
         return product;

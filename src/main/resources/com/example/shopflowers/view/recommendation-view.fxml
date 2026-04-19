@@ -71,5 +71,5 @@
         </columns>
     </TableView>
 
-    <Label fx:id="messageLabel" text="" />
+    <Label fx:id="messageLabel" />
 </VBox>

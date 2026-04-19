@@ -1,25 +1,29 @@
 package com.example.shopflowers.util;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-public class CartTimerManager {
+import java.util.function.Consumer;
 
-    private static final int TIMEOUT_SECONDS = 600; // 10 minuti
+public final class CartTimerManager {
+
+    private static final int TIMEOUT_SECONDS = 600;
     private static Timeline timeline;
     private static Runnable onTimeoutAction;
-    private static java.util.function.Consumer<Integer> onTickAction;
+    private static Consumer<Integer> onTickAction;
     private static int remainingSeconds = TIMEOUT_SECONDS;
 
     private CartTimerManager() {
+        throw new UnsupportedOperationException("Utility class");
     }
 
     public static void setOnTimeoutAction(Runnable action) {
         onTimeoutAction = action;
     }
 
-    public static void setOnTickAction(java.util.function.Consumer<Integer> action) {
+    public static void setOnTickAction(Consumer<Integer> action) {
         onTickAction = action;
     }
 
@@ -28,18 +32,8 @@ public class CartTimerManager {
         remainingSeconds = TIMEOUT_SECONDS;
         notifyTick();
 
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            remainingSeconds--;
-            notifyTick();
-
-            if (remainingSeconds <= 0) {
-                stopTimerInternal();
-                if (onTimeoutAction != null) {
-                    onTimeoutAction.run();
-                }
-            }
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> handleTimerTick()));
+        timeline.setCycleCount(Animation.INDEFINITE);
         timeline.playFromStart();
     }
 
@@ -49,8 +43,17 @@ public class CartTimerManager {
         notifyTick();
     }
 
-    public static boolean isRunning() {
-        return timeline != null;
+    private static void handleTimerTick() {
+        remainingSeconds--;
+        notifyTick();
+
+        if (remainingSeconds <= 0) {
+            stopTimerInternal();
+
+            if (onTimeoutAction != null) {
+                onTimeoutAction.run();
+            }
+        }
     }
 
     private static void stopTimerInternal() {

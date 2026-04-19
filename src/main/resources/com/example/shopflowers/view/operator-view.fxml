@@ -22,9 +22,9 @@
          </graphic>
         </Menu>
       <Menu disable="true" mnemonicParsing="false">
-        <items>
+
           <MenuItem mnemonicParsing="false" text="Action 1" />
-        </items>
+
          <graphic>
             <Label prefHeight="15.0" prefWidth="644.0" />
          </graphic>
@@ -79,6 +79,6 @@
 
     <Label fx:id="bouquetDetailsLabel" style="-fx-font-size: 14px;" text="Questo ordine non contiene un bouquet personalizzato." wrapText="true" />
 
-    <Label fx:id="messageLabel" text="" />
+    <Label fx:id="messageLabel" />
 
 </VBox>

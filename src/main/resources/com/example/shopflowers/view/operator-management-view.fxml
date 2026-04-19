@@ -69,13 +69,10 @@
       </rowConstraints>
     </GridPane>
    <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
-      <children>
-      
              <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Operatori registrati:" />
          <Label prefHeight="15.0" prefWidth="329.0" />
       
           <TextField fx:id="searchField" alignment="CENTER" prefHeight="38.0" prefWidth="434.0" promptText="Cerca per nome, cognome o username" />
-      </children>
    </HBox>
 
     <TableView fx:id="operatorTable" prefHeight="499.0" prefWidth="1460.0">
@@ -90,5 +87,5 @@
         </columns>
     </TableView>
 
-    <Label fx:id="messageLabel" text="" />
+    <Label fx:id="messageLabel" />
 </VBox>

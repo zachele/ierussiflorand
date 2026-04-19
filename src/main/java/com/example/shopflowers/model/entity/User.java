@@ -73,6 +73,7 @@ public class User {
         return role;
     }
 
+    @SuppressWarnings("unused")
     public void setRole(String role) {
         this.role = role;
     }

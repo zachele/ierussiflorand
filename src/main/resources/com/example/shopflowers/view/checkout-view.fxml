@@ -33,15 +33,13 @@
         </columns>
     </TableView>
    <HBox prefHeight="0.0" prefWidth="1460.0">
-      <children>
-      
+
           <Label fx:id="bouquetInfoLabel" alignment="CENTER" contentDisplay="BOTTOM" prefHeight="46.0" prefWidth="416.0" style="-fx-font-size: 14px;" styleClass="text" text="Nessun bouquet personalizzato nel pagamento corrente." wrapText="true" />
          <HBox prefHeight="46.0" prefWidth="176.0" />
       
           <Label fx:id="totalLabel" alignment="CENTER" prefHeight="46.0" prefWidth="306.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Totale ordine: € 0.0" />
          <HBox prefHeight="46.0" prefWidth="286.0" />
           <ComboBox fx:id="deliveryModeComboBox" prefHeight="46.0" prefWidth="270.0" promptText="MODALITA' DI CONSEGNA" />
-      </children>
    </HBox>
     <TextField fx:id="addressField" promptText="Indirizzo per la consegna" />
 
@@ -62,5 +60,5 @@
         <Button onAction="#handleConfirmOrder" styleClass="beige-button" text="Conferma ordine" />
     </HBox>
 
-    <Label fx:id="messageLabel" text="" />
+    <Label fx:id="messageLabel"/>
 </VBox>

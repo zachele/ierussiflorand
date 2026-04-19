@@ -41,6 +41,6 @@
                 <Button onAction="#handleBackToLogin" prefHeight="42" prefWidth="140" styleClass="login-secondary-button" text="Torna al login" />
             </HBox>
         </VBox>
-         <Label fx:id="messageLabel" alignment="CENTER" maxWidth="320" prefWidth="320" styleClass="message-label" text="" wrapText="true" />
+         <Label fx:id="messageLabel" alignment="CENTER" maxWidth="320" prefWidth="320" styleClass="message-label" wrapText="true" />
     </VBox>
 </StackPane>

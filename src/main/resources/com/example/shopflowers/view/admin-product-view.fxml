@@ -38,17 +38,13 @@
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="Nuovo operatore">
-         <items>
                <MenuItem onAction="#handleGoToOperatorManagement" text="Nuovo operatore" />
-         </items>
          <graphic>
             <HBox prefHeight="100.0" prefWidth="31.0" />
          </graphic>
       </Menu>
       <Menu mnemonicParsing="false" text="Statistiche vendite">
-        <items>
-               <MenuItem onAction="#handleGoToStatistics" text="Statistiche vendite" />
-        </items>
+          <MenuItem onAction="#handleGoToStatistics" text="Statistiche vendite" />
          <graphic>
             <HBox prefHeight="100.0" prefWidth="45.0" />
          </graphic>
@@ -62,13 +58,9 @@
         </Menu>
     </MenuBar>
    <HBox prefHeight="78.0" prefWidth="1460.0">
-      <children>
-      
-                            <Label alignment="CENTER" prefHeight="23.0" prefWidth="1583.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="login-title" text="GESTIONE PRODOTTI ADMIN" />
-      </children></HBox>
+       <Label alignment="CENTER" prefHeight="23.0" prefWidth="1583.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" styleClass="login-title" text="GESTIONE PRODOTTI ADMIN" />
+   </HBox>
    <HBox prefHeight="100.0" prefWidth="200.0">
-      <children>
-      
           <GridPane alignment="CENTER" hgap="10" minHeight="150.0" prefHeight="138.0" prefWidth="1460.0" vgap="10">
               <padding>
                   <Insets bottom="10" left="10" right="10" top="10" />
@@ -97,7 +89,6 @@
                </Button>
               </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <children>
                      <Button onAction="#handleAddProduct" prefHeight="37.0" prefWidth="175.0" styleClass="login-secondary-button" text="Aggiungi prodotto">
                      <font>
                         <Font size="10.0" />
@@ -110,7 +101,6 @@
                         <Font size="10.0" />
                      </font>
                   </Button>
-               </children>
             </HBox>
       
               <columnConstraints>
@@ -131,9 +121,8 @@
                <RowConstraints />
               </rowConstraints>
           </GridPane>
-      </children>
-   </HBox>
 
+   </HBox>
     <TableView fx:id="productTable" prefHeight="432.0" prefWidth="1460" styleClass="login-mode-button">
         <columns>
             <TableColumn fx:id="idColumn" prefWidth="156.00000381469727" text="ID" />
