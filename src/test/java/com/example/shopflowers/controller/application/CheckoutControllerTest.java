@@ -133,7 +133,7 @@ class CheckoutControllerTest {
         CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
         List<CartItem> cartItems = List.of(new CartItem(product, 1));
 
-        CustomBouquet bouquet = buildTestBouquet(product, 1);
+        CustomBouquet bouquet = buildTestBouquet(product);
         CustomBouquetSession.setCurrentBouquet(bouquet);
 
         Order order = checkoutController.createOrder(checkoutBean, cartItems);
@@ -145,7 +145,7 @@ class CheckoutControllerTest {
     void confirmOrder_onlyBouquetWithoutCart_shouldCompleteSuccessfully() {
         CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
 
-        CustomBouquet bouquet = buildTestBouquet(product, 1);
+        CustomBouquet bouquet = buildTestBouquet(product);
         CustomBouquetSession.setCurrentBouquet(bouquet);
 
         Order order = checkoutController.createOrder(checkoutBean, Collections.emptyList());
@@ -164,13 +164,13 @@ class CheckoutControllerTest {
         return checkoutBean;
     }
 
-    private CustomBouquet buildTestBouquet(FlowerProduct flowerProduct, int quantity) {
+    private CustomBouquet buildTestBouquet(FlowerProduct flowerProduct) {
         CustomBouquetBuilder builder = new CustomBouquetBuilder();
         builder.setSize("MEDIO");
         builder.setPackaging("PREMIUM");
         builder.setCardIncluded(true);
         builder.setVaseIncluded(false);
-        builder.addItem(new CustomBouquetItem(flowerProduct, quantity));
+        builder.addItem(new CustomBouquetItem(flowerProduct, 1));
         return builder.build();
     }
 }

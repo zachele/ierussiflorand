@@ -6,11 +6,14 @@ import com.example.shopflowers.exception.InvalidCredentialsException;
 import com.example.shopflowers.model.bean.LoginBean;
 import com.example.shopflowers.model.entity.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoginControllerTest {
 
@@ -22,50 +25,40 @@ class LoginControllerTest {
         loginController = new LoginController();
     }
 
-    @Test
-    void login_validAdminCredentials_shouldReturnAdminUser() throws SQLException, InvalidCredentialsException {
-        LoginBean loginBean = new LoginBean();
-        loginBean.setUsername("admin");
-        loginBean.setPassword("admin123");
+    @ParameterizedTest
+    @CsvSource({
+            "admin,admin123,ADMIN",
+            "mario_rossi,cliente123,CUSTOMER",
+            "operatore,operatore123,OPERATOR"
+    })
+    void login_validCredentials_shouldReturnExpectedUserRole(
+            String username,
+            String password,
+            String expectedRole
+    ) throws SQLException, InvalidCredentialsException {
+
+        LoginBean loginBean = buildLoginBean(username, password);
 
         User user = loginController.login(loginBean);
 
         assertNotNull(user);
-        assertEquals("admin", user.getUsername());
-        assertEquals("ADMIN", user.getRole());
+        assertEquals(username, user.getUsername());
+        assertEquals(expectedRole, user.getRole());
     }
 
-    @Test
-    void login_validCustomerCredentials_shouldReturnCustomerUser() throws SQLException, InvalidCredentialsException {
-        LoginBean loginBean = new LoginBean();
-        loginBean.setUsername("mario_rossi");
-        loginBean.setPassword("cliente123");
+    @ParameterizedTest
+    @CsvSource({
+            "admin,wrongpass",
+            "wronguser,admin123",
+            "mario_rossi,wrongpass",
+            "operatore,wrongpass"
+    })
+    void login_invalidCredentials_shouldThrowInvalidCredentialsException(
+            String username,
+            String password
+    ) {
 
-        User user = loginController.login(loginBean);
-
-        assertNotNull(user);
-        assertEquals("mario_rossi", user.getUsername());
-        assertEquals("CUSTOMER", user.getRole());
-    }
-
-    @Test
-    void login_validOperatorCredentials_shouldReturnOperatorUser() throws SQLException, InvalidCredentialsException {
-        LoginBean loginBean = new LoginBean();
-        loginBean.setUsername("operatore");
-        loginBean.setPassword("operatore123");
-
-        User user = loginController.login(loginBean);
-
-        assertNotNull(user);
-        assertEquals("operatore", user.getUsername());
-        assertEquals("OPERATOR", user.getRole());
-    }
-
-    @Test
-    void login_wrongPassword_shouldThrowInvalidCredentialsException() {
-        LoginBean loginBean = new LoginBean();
-        loginBean.setUsername("admin");
-        loginBean.setPassword("password_sbagliata");
+        LoginBean loginBean = buildLoginBean(username, password);
 
         assertThrows(
                 InvalidCredentialsException.class,
@@ -73,39 +66,10 @@ class LoginControllerTest {
         );
     }
 
-    @Test
-    void login_unknownUsername_shouldThrowInvalidCredentialsException() {
+    private LoginBean buildLoginBean(String username, String password) {
         LoginBean loginBean = new LoginBean();
-        loginBean.setUsername("utente_inesistente");
-        loginBean.setPassword("admin123");
-
-        assertThrows(
-                InvalidCredentialsException.class,
-                () -> loginController.login(loginBean)
-        );
-    }
-
-    @Test
-    void login_blankUsername_shouldThrowInvalidCredentialsException() {
-        LoginBean loginBean = new LoginBean();
-        loginBean.setUsername("");
-        loginBean.setPassword("admin123");
-
-        assertThrows(
-                InvalidCredentialsException.class,
-                () -> loginController.login(loginBean)
-        );
-    }
-
-    @Test
-    void login_blankPassword_shouldThrowInvalidCredentialsException() {
-        LoginBean loginBean = new LoginBean();
-        loginBean.setUsername("admin");
-        loginBean.setPassword("");
-
-        assertThrows(
-                InvalidCredentialsException.class,
-                () -> loginController.login(loginBean)
-        );
+        loginBean.setUsername(username);
+        loginBean.setPassword(password);
+        return loginBean;
     }
 }

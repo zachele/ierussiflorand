@@ -20,7 +20,7 @@ class RegisterControllerTest {
     private UserDAO userDAO;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() {
         AppConfig.setMode(AppMode.DEMO);
         registerController = new RegisterController();
         userDAO = DAOFactory.getUserDAO();

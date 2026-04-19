@@ -20,7 +20,7 @@ class ManageProductsControllerTest {
     private FlowerProductDAO flowerProductDAO;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() {
         AppConfig.setMode(AppMode.DEMO);
         manageProductsController = new ManageProductsController();
         flowerProductDAO = DAOFactory.getFlowerProductDAO();
