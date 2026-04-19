@@ -14,6 +14,10 @@ import java.util.Scanner;
 
 public class ConsoleCartUI {
 
+    private static final String INVALID_CHOICE_MESSAGE = "Scelta non valida.";
+    private static final String SELECT_OPTION_PROMPT = "Seleziona un'opzione: ";
+    private static final String ERROR_PREFIX = "Errore: ";
+
     private final Scanner scanner;
     private final BrowseCatalogController browseCatalogController;
     private final CustomerCartController customerCartController;
@@ -38,7 +42,7 @@ public class ConsoleCartUI {
                 case "4" -> handleRemoveFromCart();
                 case "5" -> handleClearCart();
                 case "6" -> running = false;
-                default -> ConsolePrinter.println("Scelta non valida.");
+                default -> ConsolePrinter.println(INVALID_CHOICE_MESSAGE);
             }
         }
     }
@@ -52,7 +56,7 @@ public class ConsoleCartUI {
         ConsolePrinter.println("4. Rimuovi prodotto dal carrello");
         ConsolePrinter.println("5. Svuota carrello");
         ConsolePrinter.println("6. Torna indietro");
-        ConsolePrinter.print("Seleziona un'opzione: ");
+        ConsolePrinter.print(SELECT_OPTION_PROMPT);
     }
 
     private void showCatalog() {
@@ -100,7 +104,7 @@ public class ConsoleCartUI {
         } catch (NumberFormatException e) {
             ConsolePrinter.println("Inserisci valori numerici validi.");
         } catch (InvalidQuantityException e) {
-            ConsolePrinter.println("Errore: " + e.getMessage());
+            ConsolePrinter.println(ERROR_PREFIX + e.getMessage());
         } catch (SQLException e) {
             ConsolePrinter.println("Errore durante la ricerca del prodotto.");
         }
@@ -144,7 +148,7 @@ public class ConsoleCartUI {
         } catch (NumberFormatException e) {
             ConsolePrinter.println("Inserisci un ID valido.");
         } catch (ProductNotFoundException e) {
-            ConsolePrinter.println("Errore: " + e.getMessage());
+            ConsolePrinter.println(ERROR_PREFIX + e.getMessage());
         }
     }
 
@@ -153,7 +157,7 @@ public class ConsoleCartUI {
             customerCartController.clearCart();
             ConsolePrinter.println("Carrello svuotato con successo.");
         } catch (EmptyCartException e) {
-            ConsolePrinter.println("Errore: " + e.getMessage());
+            ConsolePrinter.println(ERROR_PREFIX + e.getMessage());
         }
     }
 
