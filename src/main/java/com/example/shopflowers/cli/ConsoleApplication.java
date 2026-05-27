@@ -74,7 +74,7 @@ public class ConsoleApplication {
 
     private void applyMode(AppMode mode) {
         AppConfig.setMode(mode);
-        Session.clearSession();
+        Session.getInstance().clearSession();
         ConsolePrinter.println("Modalità applicata: " + mode.name());
     }
 
@@ -86,8 +86,8 @@ public class ConsoleApplication {
             return;
         }
 
-        openAreaByRole(Session.getLoggedRole());
-        Session.clearSession();
+        openAreaByRole(Session.getInstance().getLoggedRole());
+        Session.getInstance().clearSession();
     }
 
     private void openAreaByRole(String role) {
@@ -115,12 +115,12 @@ public class ConsoleApplication {
     }
 
     private void handleGuestAccess() {
-        Session.setSession("guest", ROLE_GUEST);
+        Session.getInstance().setSession("guest", ROLE_GUEST);
         ConsolePrinter.println("Accesso come ospite effettuato.");
 
         new ConsoleCatalogUI(scanner).start();
 
-        Session.clearSession();
+        Session.getInstance().clearSession();
     }
 
     private void openCustomerArea() {

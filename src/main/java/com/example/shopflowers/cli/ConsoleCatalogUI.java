@@ -74,14 +74,23 @@ public class ConsoleCatalogUI {
     }
 
     private void showSessionInfo() {
-        String username = Session.getLoggedUsername();
-        String role = Session.getLoggedRole();
+
+        String username =
+                Session.getInstance().getLoggedUsername();
+
+        String role =
+                Session.getInstance().getLoggedRole();
 
         if (username == null || role == null) {
             ConsolePrinter.println("Nessuna sessione attiva.");
             return;
         }
 
-        ConsolePrinter.println("Utente corrente: " + username + " | Ruolo: " + role);
+        ConsolePrinter.println(
+                "Utente corrente: "
+                        + username
+                        + " | Ruolo: "
+                        + role
+        );
     }
 }

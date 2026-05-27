@@ -1,28 +1,34 @@
 package com.example.shopflowers.util;
 
+@SuppressWarnings("java:S6548")
 public final class Session {
 
-    private static String loggedUsername;
-    private static String loggedRole;
+    private static final Session INSTANCE = new Session();
+
+    private String loggedUsername;
+    private String loggedRole;
 
     private Session() {
-        throw new UnsupportedOperationException("Utility class");
     }
 
-    public static void setSession(String username, String role) {
-        loggedUsername = username;
-        loggedRole = role;
+    public static Session getInstance() {
+        return INSTANCE;
     }
 
-    public static String getLoggedUsername() {
+    public void setSession(String username, String role) {
+        this.loggedUsername = username;
+        this.loggedRole = role;
+    }
+
+    public String getLoggedUsername() {
         return loggedUsername;
     }
 
-    public static String getLoggedRole() {
+    public String getLoggedRole() {
         return loggedRole;
     }
 
-    public static void clearSession() {
+    public void clearSession() {
         loggedUsername = null;
         loggedRole = null;
     }

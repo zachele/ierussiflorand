@@ -45,7 +45,9 @@ public class ConsoleCustomerOrdersUI {
     }
 
     private void showMyOrders() {
-        String username = Session.getLoggedUsername();
+
+        String username =
+                Session.getInstance().getLoggedUsername();
 
         if (username == null || username.isBlank()) {
             ConsolePrinter.println("Nessun utente autenticato.");

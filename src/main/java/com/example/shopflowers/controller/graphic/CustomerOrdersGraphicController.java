@@ -205,11 +205,20 @@ public class CustomerOrdersGraphicController {
     }
 
     private void loadOrders() {
-        try {
-            List<OrderSummary> orders =
-                    customerOrdersController.getOrdersByUsername(Session.getLoggedUsername());
 
-            filteredOrders = TableDataUtils.bindFilteredSortedTable(orderTable, orders);
+        try {
+
+            List<OrderSummary> orders =
+                    customerOrdersController.getOrdersByUsername(
+                            Session.getInstance().getLoggedUsername()
+                    );
+
+            filteredOrders =
+                    TableDataUtils.bindFilteredSortedTable(
+                            orderTable,
+                            orders
+                    );
+
             applyFilters();
             clearOrderDetails();
 
