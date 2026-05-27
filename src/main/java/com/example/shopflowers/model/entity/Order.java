@@ -1,6 +1,8 @@
 package com.example.shopflowers.model.entity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Order {
 
@@ -62,7 +64,51 @@ public class Order {
         return total;
     }
 
+    public boolean isEmpty() {
+        return items == null || items.isEmpty();
+    }
+
+    @SuppressWarnings("unused")
+    public double calculateItemsTotal() {
+
+        if (isEmpty()) {
+            return 0.0;
+        }
+
+        double calculatedTotal = 0.0;
+
+        for (CartItem item : items) {
+            calculatedTotal += item.getTotalPrice();
+        }
+
+        return calculatedTotal;
+    }
+
+    @SuppressWarnings("unused")
+    public Map<Integer, Integer> getRequiredQuantities() {
+
+        Map<Integer, Integer> requiredQuantities = new HashMap<>();
+
+        if (isEmpty()) {
+            return requiredQuantities;
+        }
+
+        for (CartItem item : items) {
+
+            int productId = item.getProduct().getId();
+
+            requiredQuantities.put(
+                    productId,
+                    requiredQuantities.getOrDefault(productId, 0)
+                            + item.getQuantity()
+            );
+        }
+
+        return requiredQuantities;
+    }
+
     public static class Builder {
+
         private String username;
         private List<CartItem> items;
         private String deliveryMode;

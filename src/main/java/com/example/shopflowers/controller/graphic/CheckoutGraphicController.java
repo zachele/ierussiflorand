@@ -29,12 +29,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import com.example.shopflowers.exception.InvalidDeliveryAddressException;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Optional;
 import com.example.shopflowers.config.UiMessages;
+import com.example.shopflowers.exception.PaymentFailedException;
 
 public class CheckoutGraphicController {
 
@@ -115,8 +117,13 @@ public class CheckoutGraphicController {
                     "Ordine confermato con successo."
             );
 
-        } catch (EmptyCartException | InsufficientStockException e) {
+        } catch (EmptyCartException
+                 | InsufficientStockException
+                 | PaymentFailedException
+                 | InvalidDeliveryAddressException e) {
+
             messageLabel.setText(e.getMessage());
+
         } catch (SQLException e) {
             messageLabel.setText(CHECKOUT_ERROR_MESSAGE);
         }

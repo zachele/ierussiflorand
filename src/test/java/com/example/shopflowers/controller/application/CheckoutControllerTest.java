@@ -4,6 +4,8 @@ import com.example.shopflowers.config.AppConfig;
 import com.example.shopflowers.config.AppMode;
 import com.example.shopflowers.exception.EmptyCartException;
 import com.example.shopflowers.exception.InsufficientStockException;
+import com.example.shopflowers.exception.InvalidDeliveryAddressException;
+import com.example.shopflowers.exception.PaymentFailedException;
 import com.example.shopflowers.model.bean.CheckoutBean;
 import com.example.shopflowers.model.dao.DAOFactory;
 import com.example.shopflowers.model.dao.FlowerProductDAO;
@@ -60,14 +62,7 @@ class CheckoutControllerTest {
 
     @Test
     void createOrder_validPickupCheckout_shouldBuildOrderCorrectly() {
-        CheckoutBean checkoutBean = new CheckoutBean();
-        checkoutBean.setUsername("customer_test");
-        checkoutBean.setDeliveryMode("RITIRO");
-        checkoutBean.setDeliveryAddress(null);
-        checkoutBean.setPickupDate("2026-04-20");
-        checkoutBean.setPickupTime("10:30");
-        checkoutBean.setPaymentMethod("CONTANTI");
-
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
         List<CartItem> cartItems = List.of(new CartItem(product, 1));
 
         Order order = checkoutController.createOrder(checkoutBean, cartItems);
@@ -82,7 +77,7 @@ class CheckoutControllerTest {
 
     @Test
     void confirmOrder_emptyOrderWithoutBouquet_shouldThrowEmptyCartException() {
-        CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
         Order order = checkoutController.createOrder(checkoutBean, Collections.emptyList());
 
         assertThrows(
@@ -93,7 +88,7 @@ class CheckoutControllerTest {
 
     @Test
     void confirmOrder_insufficientStock_shouldThrowInsufficientStockException() {
-        CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
         List<CartItem> cartItems = List.of(new CartItem(product, product.getStockQuantity() + 1));
         Order order = checkoutController.createOrder(checkoutBean, cartItems);
 
@@ -104,8 +99,36 @@ class CheckoutControllerTest {
     }
 
     @Test
-    void confirmOrder_validOrder_shouldCompleteSuccessfully() {
+    void confirmOrder_invalidPaymentMethod_shouldThrowPaymentFailedException() {
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
+        checkoutBean.setPaymentMethod("BITCOIN");
+
+        List<CartItem> cartItems = List.of(new CartItem(product, 1));
+        Order order = checkoutController.createOrder(checkoutBean, cartItems);
+
+        assertThrows(
+                PaymentFailedException.class,
+                () -> checkoutController.confirmOrder(order)
+        );
+    }
+
+    @Test
+    void confirmOrder_invalidDeliveryAddress_shouldThrowInvalidDeliveryAddressException() {
         CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
+        checkoutBean.setDeliveryAddress("indirizzo sicuramente inesistente zzzxxxqqq 999999");
+
+        List<CartItem> cartItems = List.of(new CartItem(product, 1));
+        Order order = checkoutController.createOrder(checkoutBean, cartItems);
+
+        assertThrows(
+                InvalidDeliveryAddressException.class,
+                () -> checkoutController.confirmOrder(order)
+        );
+    }
+
+    @Test
+    void confirmOrder_validPickupOrder_shouldCompleteSuccessfully() {
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
         List<CartItem> cartItems = List.of(new CartItem(product, 1));
         Order order = checkoutController.createOrder(checkoutBean, cartItems);
 
@@ -113,8 +136,14 @@ class CheckoutControllerTest {
     }
 
     @Test
-    void confirmOrder_validOrder_shouldReduceStock() throws SQLException, EmptyCartException, InsufficientStockException {
-        CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
+    void confirmOrder_validPickupOrder_shouldReduceStock()
+            throws SQLException,
+            EmptyCartException,
+            InsufficientStockException,
+            PaymentFailedException,
+            InvalidDeliveryAddressException {
+
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
         int initialStock = product.getStockQuantity();
 
         List<CartItem> cartItems = List.of(new CartItem(product, 1));
@@ -130,7 +159,7 @@ class CheckoutControllerTest {
 
     @Test
     void createOrder_withCustomBouquet_shouldIncludeBouquetInTotal() {
-        CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
         List<CartItem> cartItems = List.of(new CartItem(product, 1));
 
         CustomBouquet bouquet = buildTestBouquet(product);
@@ -143,7 +172,7 @@ class CheckoutControllerTest {
 
     @Test
     void confirmOrder_onlyBouquetWithoutCart_shouldCompleteSuccessfully() {
-        CheckoutBean checkoutBean = buildDeliveryCheckoutBean();
+        CheckoutBean checkoutBean = buildPickupCheckoutBean();
 
         CustomBouquet bouquet = buildTestBouquet(product);
         CustomBouquetSession.setCurrentBouquet(bouquet);
@@ -161,6 +190,17 @@ class CheckoutControllerTest {
         checkoutBean.setPickupDate(null);
         checkoutBean.setPickupTime(null);
         checkoutBean.setPaymentMethod("CARTA");
+        return checkoutBean;
+    }
+
+    private CheckoutBean buildPickupCheckoutBean() {
+        CheckoutBean checkoutBean = new CheckoutBean();
+        checkoutBean.setUsername("customer_test");
+        checkoutBean.setDeliveryMode("RITIRO");
+        checkoutBean.setDeliveryAddress(null);
+        checkoutBean.setPickupDate("2026-04-20");
+        checkoutBean.setPickupTime("10:30");
+        checkoutBean.setPaymentMethod("CONTANTI");
         return checkoutBean;
     }
 

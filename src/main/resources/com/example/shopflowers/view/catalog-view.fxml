@@ -74,13 +74,13 @@
     </HBox>
      <TableView fx:id="productTable" prefHeight="534.0" prefWidth="1460.0" styleClass="login-mode-button">
          <columns>
-             <TableColumn fx:id="imageColumn" prefWidth="120" text="Immagine" />
-             <TableColumn fx:id="idColumn" prefWidth="70" text="ID" />
-             <TableColumn fx:id="nameColumn" prefWidth="210" text="Nome" />
-             <TableColumn fx:id="priceColumn" prefWidth="130" text="Prezzo" />
-             <TableColumn fx:id="colorColumn" prefWidth="150" text="Colore" />
-             <TableColumn fx:id="varietyColumn" prefWidth="220" text="Varietà" />
-             <TableColumn fx:id="stockColumn" prefWidth="120" text="Stock" />
+             <TableColumn fx:id="imageColumn" prefWidth="166.3999900817871" text="Immagine" />
+             <TableColumn fx:id="idColumn" prefWidth="106.40000915527344" text="ID" />
+             <TableColumn fx:id="nameColumn" prefWidth="256.0" text="Nome" />
+             <TableColumn fx:id="priceColumn" prefWidth="174.4000244140625" text="Prezzo" />
+             <TableColumn fx:id="colorColumn" prefWidth="227.20001220703125" text="Colore" />
+             <TableColumn fx:id="varietyColumn" prefWidth="370.4000244140625" text="Varietà" />
+             <TableColumn fx:id="stockColumn" prefWidth="153.5999755859375" text="Stock" />
          </columns>
      </TableView>
 

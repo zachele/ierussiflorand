@@ -44,11 +44,11 @@
     <TextField fx:id="addressField" promptText="Indirizzo per la consegna" />
 
     <HBox alignment="CENTER" spacing="20">
-         <DatePicker fx:id="pickupDatePicker" prefWidth="180" promptText=" DATA RITIRO" styleClass="date-picker" />
+         <DatePicker fx:id="pickupDatePicker" prefHeight="27.0" prefWidth="209.0" promptText=" DATA RITIRO" styleClass="date-picker" />
          <ComboBox fx:id="pickupTimeComboBox" prefHeight="42.0" prefWidth="274.0" promptText="ORA RITIRO" />
     </HBox>
 
-    <Label alignment="TOP_LEFT" prefHeight="45.0" prefWidth="312.0" styleClass="title-label" text="Metodo di pagamento:" />
+    <Label alignment="TOP_LEFT" prefHeight="36.0" prefWidth="918.0" styleClass="title-label" text="Metodo di pagamento:" />
     <TextField fx:id="paymentField" prefHeight="26.0" prefWidth="1460.0" promptText="Es. Carta, PayPal, Contanti" />
 
     <HBox alignment="CENTER" spacing="12">
@@ -60,5 +60,5 @@
         <Button onAction="#handleConfirmOrder" styleClass="beige-button" text="Conferma ordine" />
     </HBox>
 
-    <Label fx:id="messageLabel"/>
+    <Label fx:id="messageLabel" />
 </VBox>
