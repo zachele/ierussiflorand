@@ -18,7 +18,7 @@ public class ShopFlowersApplication extends Application {
         );
 
         Scene scene = new Scene(fxmlLoader.load(), 1500, 800);
-        stage.setTitle("Ierussi Florand - Login");
+        stage.setTitle("Ierussi Flowers - Login");
         stage.setScene(scene);
         stage.show();
     }
