@@ -23,10 +23,6 @@ Customers can browse and filter the flower catalog according to color, variety, 
 
 Customers can create personalized bouquets by selecting flowers, bouquet size, packaging options, greeting cards and decorative accessories.
 
-### Recommendation System
-
-The application provides flower recommendations based on budget, occasion, preferred color and desired style.
-
 ### Order Management
 
 Customers can place orders through a complete checkout process supporting delivery and in-store pickup options.
